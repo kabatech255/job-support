@@ -30,6 +30,6 @@ class BlogComment extends Model
    */
   public function user()
   {
-    return $this->belongsTo(User::class, 'written_by', 'login_id');
+    return $this->belongsTo(User::class, 'written_by', 'id');
   }
 }

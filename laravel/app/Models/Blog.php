@@ -23,7 +23,7 @@ class Blog extends Model
    */
   public function writtenBy()
   {
-    return $this->belongsTo(User::class, 'written_by', 'login_id');
+    return $this->belongsTo(User::class, 'written_by', 'id');
   }
 
   /**

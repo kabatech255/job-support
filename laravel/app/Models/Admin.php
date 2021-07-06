@@ -9,10 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Admin extends Authenticatable
 {
-  protected $table = 'users';
-
-  protected $primaryKey = 'login_id';
-  public $incrementing = false;
+  protected $table = 'admins';
 
   use Notifiable;
 

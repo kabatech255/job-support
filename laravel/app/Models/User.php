@@ -11,9 +11,6 @@ class User extends Authenticatable
 {
   protected $table = 'users';
 
-  protected $primaryKey = 'login_id';
-  public $incrementing = false;
-
   use Notifiable;
 
   /**
@@ -59,6 +56,14 @@ class User extends Authenticatable
   public function ownTodos()
   {
     return $this->hasMany(Todo::class, 'login_id', 'id');
+  }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+   */
+  public function department()
+  {
+    return $this->belongsTo(Department::class, 'department_code', 'department_code');
   }
 
   /**

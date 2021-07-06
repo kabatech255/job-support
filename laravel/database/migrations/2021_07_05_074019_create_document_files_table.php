@@ -15,14 +15,14 @@ class CreateDocumentFilesTable extends Migration
   {
     Schema::create('document_files', function (Blueprint $table) {
       $table->id();
-      $table->unsignedInteger('uploaded_by')->comment('アップロード者');
+      $table->unsignedBigInteger('uploaded_by')->comment('アップロード者');
       $table->unsignedBigInteger('folder_id')->comment('フォルダID');
       $table->string('file_path')->comment('ファイルパス');
 
       $table->timestamps();
       $table->softDeletes();
 
-      $table->foreign('uploaded_by')->references('login_id')->on('users')
+      $table->foreign('uploaded_by')->references('id')->on('users')
         ->onUpdate('cascade')
         ->onDelete('no action');
 

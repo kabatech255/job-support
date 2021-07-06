@@ -35,7 +35,7 @@ class Schedule extends Model
    */
   public function scheduledBy()
   {
-    return $this->belongsTo(User::class, 'scheduled_by', 'login_id');
+    return $this->belongsTo(User::class, 'scheduled_by', 'id');
   }
   /**
    * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

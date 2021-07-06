@@ -22,7 +22,7 @@ class DocumentFolder extends Model
    */
   public function createdBy()
   {
-    return $this->belongsTo(User::class, 'created_by', 'login_id');
+    return $this->belongsTo(User::class, 'created_by', 'id');
   }
 
   /**

@@ -15,9 +15,9 @@ class CreateTodosTable extends Migration
   {
     Schema::create('todos', function (Blueprint $table) {
       $table->id();
-      $table->unsignedBigInteger('meeting_record_id')->nullable()->comment('担当者');
-      $table->unsignedInteger('owner_id')->comment('担当者');
-      $table->unsignedInteger('created_by')->comment('作成者');
+      $table->unsignedBigInteger('meeting_record_id')->nullable()->comment('議事録ID');
+      $table->unsignedBigInteger('owner_id')->comment('担当者');
+      $table->unsignedBigInteger('created_by')->comment('作成者');
       $table->unsignedBigInteger('priority_id')->nullable()->comment('優先順位ID');
       $table->unsignedBigInteger('progress_id')->nullable()->comment('進捗度ID');
       $table->string('body')->comment('内容');
@@ -29,10 +29,10 @@ class CreateTodosTable extends Migration
       $table->foreign('meeting_record_id')->references('id')->on('meeting_records')
         ->onUpdate('cascade')
         ->onDelete('no action');
-      $table->foreign('owner_id')->references('login_id')->on('users')
+      $table->foreign('owner_id')->references('id')->on('users')
         ->onUpdate('cascade')
         ->onDelete('no action');
-      $table->foreign('created_by')->references('login_id')->on('users')
+      $table->foreign('created_by')->references('id')->on('users')
         ->onUpdate('cascade')
         ->onDelete('no action');
       $table->foreign('priority_id')->references('id')->on('priorities')

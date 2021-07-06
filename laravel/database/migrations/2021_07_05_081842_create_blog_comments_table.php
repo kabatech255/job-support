@@ -15,14 +15,14 @@ class CreateBlogCommentsTable extends Migration
   {
     Schema::create('blog_comments', function (Blueprint $table) {
       $table->id();
-      $table->unsignedInteger('written_by')->comment('投稿者');
+      $table->unsignedBigInteger('written_by')->comment('投稿者');
       $table->unsignedBigInteger('blog_id')->comment('ブログID');
       $table->string('body')->comment('コメント');
 
       $table->timestamps();
       $table->softDeletes();
 
-      $table->foreign('written_by')->references('login_id')->on('users')
+      $table->foreign('written_by')->references('id')->on('users')
         ->onUpdate('cascade')
         ->onDelete('no action');
       $table->foreign('blog_id')->references('id')->on('blogs')

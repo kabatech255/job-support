@@ -16,8 +16,8 @@ class CreateChatMessagesTable extends Migration
     Schema::create('chat_messages', function (Blueprint $table) {
       $table->id();
       $table->unsignedBigInteger('chat_room_id')->comment('ルームID');
-      $table->unsignedInteger('written_by')->comment('投稿者');
-      $table->unsignedInteger('mentioned_to')->nullable()->comment('メンション相手');
+      $table->unsignedBigInteger('written_by')->comment('投稿者');
+      $table->unsignedBigInteger('mentioned_to')->nullable()->comment('メンション相手');
       $table->text('body')->comment('メッセージ');
 
       $table->timestamps();
@@ -26,10 +26,10 @@ class CreateChatMessagesTable extends Migration
       $table->foreign('chat_room_id')->references('id')->on('chat_rooms')
         ->onUpdate('cascade')
         ->onDelete('cascade');
-      $table->foreign('written_by')->references('login_id')->on('users')
+      $table->foreign('written_by')->references('id')->on('users')
         ->onUpdate('cascade')
         ->onDelete('no action');
-      $table->foreign('mentioned_to')->references('login_id')->on('users')
+      $table->foreign('mentioned_to')->references('id')->on('users')
         ->onUpdate('cascade')
         ->onDelete('no action');
     });
