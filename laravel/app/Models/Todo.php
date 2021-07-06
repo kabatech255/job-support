@@ -39,7 +39,7 @@ class Todo extends Model
    */
   public function owner()
   {
-    return $this->belongsTo(User::class, 'owner_id', 'login_id');
+    return $this->belongsTo(User::class, 'owner_id', 'id');
   }
   /**
    * 議事録作成者に登録されたTodo
@@ -47,7 +47,7 @@ class Todo extends Model
    */
   public function createdBy()
   {
-    return $this->belongsTo(User::class, 'created_by', 'login_id');
+    return $this->belongsTo(User::class, 'created_by', 'id');
   }
 
   /**

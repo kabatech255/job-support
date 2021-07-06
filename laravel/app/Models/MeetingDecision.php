@@ -25,7 +25,7 @@ class MeetingDecision extends Model
    */
   public function writtenBy()
   {
-    return $this->belongsTo(User::class, 'written_by', 'login_id');
+    return $this->belongsTo(User::class, 'written_by', 'id');
   }
   /**
    * 決定者
@@ -33,7 +33,7 @@ class MeetingDecision extends Model
    */
   public function decidedBy()
   {
-    return $this->belongsTo(User::class, 'decided_by', 'login_id');
+    return $this->belongsTo(User::class, 'decided_by', 'id');
   }
   /**
    * 決定者

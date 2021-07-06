@@ -16,8 +16,8 @@ class CreateMeetingDecisionsTable extends Migration
     Schema::create('meeting_decisions', function (Blueprint $table) {
       $table->id();
       $table->unsignedBigInteger('meeting_record_id')->comment('議事録ID');
-      $table->unsignedInteger('decided_by')->nullable()->comment('決定者');
-      $table->unsignedInteger('written_by')->comment('入力者');
+      $table->unsignedBigInteger('decided_by')->nullable()->comment('決定者');
+      $table->unsignedBigInteger('written_by')->comment('入力者');
       $table->string('subject')->nullable()->comment('議題');
       $table->string('body')->comment('決定内容');
 
@@ -27,10 +27,10 @@ class CreateMeetingDecisionsTable extends Migration
       $table->foreign('meeting_record_id')->references('id')->on('meeting_records')
         ->onUpdate('cascade')
         ->onDelete('cascade');
-      $table->foreign('decided_by')->references('login_id')->on('users')
+      $table->foreign('decided_by')->references('id')->on('users')
         ->onUpdate('cascade')
         ->onDelete('no action');
-      $table->foreign('written_by')->references('login_id')->on('users')
+      $table->foreign('written_by')->references('id')->on('users')
         ->onUpdate('cascade')
         ->onDelete('no action');
     });

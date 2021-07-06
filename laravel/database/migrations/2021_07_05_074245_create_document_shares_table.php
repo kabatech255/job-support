@@ -15,16 +15,16 @@ class CreateDocumentSharesTable extends Migration
   {
     Schema::create('document_shares', function (Blueprint $table) {
       $table->id();
-      $table->unsignedInteger('shared_with')->comment('共有相手');
-      $table->unsignedInteger('shared_by')->comment('共有者');
+      $table->unsignedBigInteger('shared_with')->comment('共有相手');
+      $table->unsignedBigInteger('shared_by')->comment('共有者');
       $table->unsignedBigInteger('file_id')->comment('ファイルID');
       // 物理削除
       $table->timestamps();
 
-      $table->foreign('shared_with')->references('login_id')->on('users')
+      $table->foreign('shared_with')->references('id')->on('users')
         ->onUpdate('cascade')
         ->onDelete('no action');
-      $table->foreign('shared_by')->references('login_id')->on('users')
+      $table->foreign('shared_by')->references('id')->on('users')
         ->onUpdate('cascade')
         ->onDelete('no action');
       $table->foreign('file_id')->references('id')->on('document_files')

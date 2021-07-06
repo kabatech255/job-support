@@ -39,7 +39,7 @@ class MeetingRecord extends Model
    */
   public function recordedBy()
   {
-    return $this->belongsTo(User::class, 'recorded_by', 'login_id');
+    return $this->belongsTo(User::class, 'recorded_by', 'id');
   }
   /**
    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -1,0 +1,19 @@
+<?php
+
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
+
+use App\Models\MeetingRecord;
+use App\Models\MeetingPlace;
+use Faker\Generator as Faker;
+use Faker\Factory;
+
+$faker = Factory::create('ja_JP');
+$factory->define(MeetingRecord::class, function ($faker) {
+  return [
+    'recorded_by' => $faker->randomNumber,
+    'place_id' => array_random(MeetingPlace::all()->pluck('id')->toArray()),
+    'meeting_date' => $faker->dateTimeThisYear,
+    'title' => $faker->word . ' meeting',
+    'summary' => $faker->realText,
+  ];
+});

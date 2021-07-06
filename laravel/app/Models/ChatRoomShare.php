@@ -16,6 +16,6 @@ class ChatRoomShare extends Model
    */
   public function sharedBy()
   {
-    return $this->belongsTo(User::class, 'shared_by', 'login_id');
+    return $this->belongsTo(User::class, 'shared_by', 'id');
   }
 }

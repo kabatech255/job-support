@@ -1,0 +1,39 @@
+<?php
+
+use Illuminate\Database\Seeder;
+use App\Models\Blog;
+use App\Models\User;
+use App\Models\Tag;
+
+class BlogSeeder extends Seeder
+{
+  /**
+   * Run the database seeds.
+   *
+   * @return void
+   */
+  public function run()
+  {
+    DB::table('blogs')->truncate();
+    DB::table('blog_tags')->truncate();
+
+    $users = User::all();
+    $role = DB::table('roles')
+      ->latest()
+      ->first();
+    $blogCount = 80;
+    $perUser = (int)ceil($blogCount / $users->count());
+    $users->each(function($user) use ($role, $perUser){
+      $blogs = factory(Blog::class, $perUser)->create([
+        'written_by' => $user->id,
+        'role_id' => $role->id,
+        'title' => $user->last_name . 'です',
+      ]);
+      $blogs->each(function($blog){
+        // タグ0~2個
+        $tagIds = Tag::all()->pluck('id')->shuffle()->splice(0, random_int(0,2))->toArray();
+        $blog->tags()->sync($tagIds);
+      });
+    });
+  }
+}
