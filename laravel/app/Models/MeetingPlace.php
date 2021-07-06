@@ -11,7 +11,7 @@ class MeetingPlace extends Model
 
   protected $table = 'meeting_places';
   protected $fillable = [
-    'body',
+    'name',
     'created_by',
     'updated_by',
     'deleted_by',

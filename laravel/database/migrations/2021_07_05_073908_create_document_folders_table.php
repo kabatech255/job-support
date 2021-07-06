@@ -15,14 +15,14 @@ class CreateDocumentFoldersTable extends Migration
   {
     Schema::create('document_folders', function (Blueprint $table) {
       $table->id();
-      $table->unsignedInteger('created_by')->comment('作成者');
+      $table->unsignedBigInteger('created_by')->comment('作成者');
       $table->unsignedBigInteger('role_id')->comment('ロールID');
       $table->string('name')->comment('フォルダ名');
 
       $table->timestamps();
       $table->softDeletes();
 
-      $table->foreign('created_by')->references('login_id')->on('users')
+      $table->foreign('created_by')->references('id')->on('users')
         ->onUpdate('cascade')
         ->onDelete('no action');
 

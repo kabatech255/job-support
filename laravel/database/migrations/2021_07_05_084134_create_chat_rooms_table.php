@@ -15,13 +15,13 @@ class CreateChatRoomsTable extends Migration
   {
     Schema::create('chat_rooms', function (Blueprint $table) {
       $table->id();
-      $table->unsignedInteger('created_by')->comment('作成者');
+      $table->unsignedBigInteger('created_by')->comment('作成者');
       $table->string('name')->nullable()->comment('ルーム名');
 
       $table->timestamps();
       $table->softDeletes();
 
-      $table->foreign('created_by')->references('login_id')->on('users')
+      $table->foreign('created_by')->references('id')->on('users')
         ->onUpdate('cascade')
         ->onDelete('no action');
 

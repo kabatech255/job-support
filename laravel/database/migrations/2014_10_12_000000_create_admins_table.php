@@ -15,10 +15,7 @@ class CreateAdminsTable extends Migration
   {
     Schema::create('admins', function (Blueprint $table) {
       $table->id();
-      $table->unsignedInteger('login_id')->unique()->comment('ログインID');
-      $table->unsignedInteger('created_by')->nullable()->comment('登録者');
-      $table->unsignedInteger('updated_by')->nullable()->comment('更新者');
-      $table->unsignedInteger('deleted_by')->nullable()->comment('削除者');
+      $table->string('login_id')->unique()->comment('ログインID');
       $table->string('last_name')->comment('姓');
       $table->string('first_name')->comment('名');
       $table->string('last_name_kana')->nullable()->comment('セイ');
@@ -28,6 +25,10 @@ class CreateAdminsTable extends Migration
       $table->timestamp('email_verified_at')->nullable();
       $table->string('password');
       $table->rememberToken();
+
+      $table->string('created_by')->nullable()->comment('登録者');
+      $table->string('updated_by')->nullable()->comment('更新者');
+      $table->string('deleted_by')->nullable()->comment('削除者');
 
       $table->timestamps();
       $table->softDeletes();

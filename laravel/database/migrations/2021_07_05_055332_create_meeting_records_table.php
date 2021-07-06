@@ -15,24 +15,24 @@ class CreateMeetingRecordsTable extends Migration
   {
     Schema::create('meeting_records', function (Blueprint $table) {
       $table->id();
-      $table->unsignedInteger('recorded_by')->comment('議事録作成者');
-      $table->unsignedInteger('updated_by')->nullable()->comment('議事録更新者');
-      $table->unsignedInteger('deleted_by')->nullable()->comment('議事録削除者');
-      $table->unsignedBigInteger('place_id')->comment('開催場所');
+      $table->unsignedBigInteger('recorded_by')->comment('議事録作成者');
+      $table->unsignedBigInteger('place_id')->nullable()->comment('開催場所');
       $table->dateTime('meeting_date')->comment('開催日');
       $table->string('title')->comment('会議名');
       $table->text('summary')->nullable()->comment('ミーティング概要');
+      $table->unsignedBigInteger('updated_by')->nullable()->comment('議事録更新者');
+      $table->unsignedBigInteger('deleted_by')->nullable()->comment('議事録削除者');
 
       $table->timestamps();
       $table->softDeletes();
 
-      $table->foreign('recorded_by')->references('login_id')->on('users')
+      $table->foreign('recorded_by')->references('id')->on('users')
         ->onUpdate('cascade')
         ->onDelete('no action');
-      $table->foreign('updated_by')->references('login_id')->on('users')
+      $table->foreign('updated_by')->references('id')->on('users')
         ->onUpdate('cascade')
         ->onDelete('no action');
-      $table->foreign('deleted_by')->references('login_id')->on('users')
+      $table->foreign('deleted_by')->references('id')->on('users')
         ->onUpdate('cascade')
         ->onDelete('no action');
       $table->foreign('place_id')->references('id')->on('meeting_places')->onDelete('no action');

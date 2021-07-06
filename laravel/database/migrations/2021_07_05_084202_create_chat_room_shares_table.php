@@ -16,18 +16,18 @@ class CreateChatRoomSharesTable extends Migration
     Schema::create('chat_room_shares', function (Blueprint $table) {
       $table->id();
       $table->unsignedBigInteger('chat_room_id')->comment('ルームID');
-      $table->unsignedInteger('shared_with')->comment('共有相手');
-      $table->unsignedInteger('shared_by')->comment('共有した人');
+      $table->unsignedBigInteger('shared_with')->comment('共有相手');
+      $table->unsignedBigInteger('shared_by')->comment('共有した人');
       // 物理削除
       $table->timestamps();
 
       $table->foreign('chat_room_id')->references('id')->on('chat_rooms')
         ->onUpdate('cascade')
         ->onDelete('cascade');
-      $table->foreign('shared_with')->references('login_id')->on('users')
+      $table->foreign('shared_with')->references('id')->on('users')
         ->onUpdate('cascade')
         ->onDelete('no action');
-      $table->foreign('shared_by')->references('login_id')->on('users')
+      $table->foreign('shared_by')->references('id')->on('users')
         ->onUpdate('cascade')
         ->onDelete('no action');
 

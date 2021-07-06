@@ -16,8 +16,8 @@ class CreateScheduleSharesTable extends Migration
     Schema::create('schedule_shares', function (Blueprint $table) {
       $table->id();
       $table->unsignedBigInteger('schedule_id')->comment('スケジュールID');
-      $table->unsignedInteger('shared_with')->comment('共有相手');
-      $table->unsignedInteger('shared_by')->comment('共有した人');
+      $table->unsignedBigInteger('shared_with')->comment('共有相手');
+      $table->unsignedBigInteger('shared_by')->comment('共有した人');
       $table->boolean('is_editable')->default(0)->comment('編集権限');
       // 物理削除
       $table->timestamps();
@@ -25,10 +25,10 @@ class CreateScheduleSharesTable extends Migration
       $table->foreign('schedule_id')->references('id')->on('schedules')
         ->onUpdate('cascade')
         ->onDelete('cascade');
-      $table->foreign('shared_with')->references('login_id')->on('users')
+      $table->foreign('shared_with')->references('id')->on('users')
         ->onUpdate('cascade')
         ->onDelete('no action');
-      $table->foreign('shared_by')->references('login_id')->on('users')
+      $table->foreign('shared_by')->references('id')->on('users')
         ->onUpdate('cascade')
         ->onDelete('no action');
     });
