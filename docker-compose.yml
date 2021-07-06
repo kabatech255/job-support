@@ -1,4 +1,3 @@
-
 version: "3"
 
 services:
@@ -31,25 +30,23 @@ services:
     links:
       - db_master
     environment:
-      - DB_CONNECTION=${DB_CONNECTION}
-      - DB_HOST=db_master
-      - DB_DATABASE=${DB_NAME}
-      - DB_USERNAME=${DB_USER}
-      - DB_PASSWORD=${DB_PASS}
       - TZ=${TZ}
+      - DB_HOST=${DB_HOST}
       - MAIL_HOST=${MAIL_HOST}
       - MAIL_PORT=${MAIL_PORT}
 
   db_master:
     image: mysql:5.7
     environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
       - MYSQL_DATABASE=${DB_NAME}
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASS}
-      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
+      - MYSQL_ALLOW_EMPTY_PASSWORD="yes"
       - TZ=${TZ}
     volumes:
       - ./mnt/mysql:/var/lib/mysql
       - ./docker/mysql/conf.d:/etc/mysql/conf.d
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
     ports:
       - ${DB_PORT}:3306
