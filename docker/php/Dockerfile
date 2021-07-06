@@ -7,7 +7,7 @@ COPY ./laravel/ /var/www/laravel/
 WORKDIR /var/www/laravel
 
 RUN apk upgrade --update && apk add --no-cache \
-  coreutils freetype-dev jpeg-dev libjpeg-turbo-dev libpng-dev libmcrypt-dev \
+  make coreutils freetype-dev jpeg-dev libjpeg-turbo-dev libpng-dev libmcrypt-dev \
   git vim unzip tzdata \
   libltdl && \
   docker-php-ext-install pdo_mysql mysqli mbstring && \
