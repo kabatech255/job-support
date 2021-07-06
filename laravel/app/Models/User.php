@@ -9,9 +9,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-  protected $table = 'users';
-
+  use SoftDeletes;
   use Notifiable;
+
+  protected $table = 'users';
 
   /**
    * The attributes that are mass assignable.
@@ -25,6 +26,8 @@ class User extends Authenticatable
     'first_name_kana',
     'file_name',
     'email',
+    'user_code',
+    'role_id',
     'login_id',
     'password',
     'created_by',
