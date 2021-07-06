@@ -14,6 +14,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => 'api'], function () {
+  // 認証中の一般ユーザーを返却
+  Route::get('/currentUser', 'UserController@currentUser')->name('currentUser');
+  // 認証手続
+  Route::namespace('Auth')->group(function() {
+    Route::post('/register', 'RegisterController@register')->name('register');
+    Route::post('/login', 'LoginController@login')->name('login');
+
+    Route::middleware('auth')->group(function() {
+      Route::post('/logout', 'LoginController@logout')->name('logout');
+    });
+  });
+
+  // 一般認証が必要なAPI
+  Route::middleware('auth')->group(function() {
+
+  });
 });
