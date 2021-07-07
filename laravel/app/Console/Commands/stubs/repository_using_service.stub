@@ -1,0 +1,22 @@
+<?php
+
+namespace DummyNamespace;
+
+use DummyContractRepository as Repository;
+use Illuminate\Support\Facades\Auth;
+use DummyTraitNamespace\WithRepositoryTrait;
+
+class DummyClass extends Service
+{
+  use WithRepositoryTrait;
+
+  /**
+   * UserService constructor.
+   * @param Repository $repository
+   */
+  public function __construct(Repository $repository)
+  {
+    $this->setRepository($repository);
+    // else repository...
+  }
+}

@@ -9,9 +9,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Admin extends Authenticatable
 {
-  protected $table = 'admins';
-
+  use SoftDeletes;
   use Notifiable;
+
+  protected $table = 'admins';
 
   /**
    * The attributes that are mass assignable.
