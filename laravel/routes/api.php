@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'api'], function () {
   // 認証中の一般ユーザーを返却
   Route::get('/user/current', 'UserController@currentUser')->name('currentUser');
+
   // 認証手続
   Route::namespace('Auth')->group(function() {
     Route::post('/register', 'RegisterController@register')->name('register');
