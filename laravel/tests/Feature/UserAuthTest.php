@@ -6,8 +6,6 @@ use App\Http\Controllers\UserController;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Symfony\Component\Yaml\Yaml;
-use Mmal\OpenapiValidator\Validator;
 
 class UserAuthTest extends TestCase
 {
@@ -77,7 +75,6 @@ class UserAuthTest extends TestCase
 
     $result = parent::$openApiValidator->validate('postLogin', 200, json_decode($response->getContent(), true));
     $this->assertFalse($result->hasErrors(), $result);
-
   }
 
   /**
