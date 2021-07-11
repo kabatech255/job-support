@@ -4,24 +4,18 @@ orbs:
 
 commands:
   notify_slack_fail:
-#    docker:
-#      - image: "cimg/base:stable"
     steps:
       - slack/notify:
           event: fail
           template: basic_fail_1
 
   notify_slack_pass:
-#      docker:
-#        - image: "cimg/base:stable"
     steps:
       - slack/notify:
           event: pass
           template: basic_success_1
 
   notify_slack_deploy:
-#      docker:
-#        - image: "cimg/base:stable"
     steps:
       - slack/notify:
           event: pass
@@ -106,6 +100,7 @@ jobs:
             composer phpstan
       - notify_slack_fail
       - notify_slack_pass
+
   deploy:
     docker:
       - image: circleci/python
