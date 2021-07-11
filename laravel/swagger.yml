@@ -41,7 +41,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                anyOf:
+                  - $ref: '#/components/schemas/EmptyItem'
+                  - $ref: '#/components/schemas/User'
         default:
           description: 'Unexpected Error'
           content:
@@ -122,7 +124,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Admin'
+                anyOf:
+                  - $ref: '#/components/schemas/EmptyItem'
+                  - $ref: '#/components/schemas/Admin'
         default:
           description: 'Unexpected Error'
           content:
@@ -237,7 +241,7 @@ components:
       description: データがないときの空配列
       type: array
       example: []
-      items: {}
+      items: []
     LoginBody:
       title: LoginBody
       description: ログインIDとパスワードのフォーム
@@ -256,10 +260,6 @@ components:
     User:
       title: User
       anyOf:
-        - type: array
-          example: []
-          items: []
-          description: 未認証時のデータ
         - type: object
           description: 認証時のデータ
           required:
@@ -301,10 +301,6 @@ components:
     Admin:
       title: Admin
       anyOf:
-        - type: array
-          example: []
-          items: []
-          description: 未認証時のデータ
         - type: object
           description: 認証時のデータ
           required:
@@ -377,7 +373,6 @@ components:
       description: チャットメッセージ
       required:
         - id
-        # - to
         - written_by
         - body
         - created_at
@@ -392,11 +387,16 @@ components:
         written_by:
           $ref: '#/components/schemas/User'
         to:
-          $ref: '#/components/schemas/User'
+          anyOf:
+            - type: string
+              nullable: true
+            - $ref: '#/components/schemas/User'
         images:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChatMessageImage'
+          anyOf:
+            - $ref: '#/components/schemas/EmptyItem'
+            - type: array
+              items:
+                $ref: '#/components/schemas/ChatMessageImage'
         created_at:
           type: string
         updated_at:
