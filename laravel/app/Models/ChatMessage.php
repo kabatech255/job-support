@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ChatMessageImage[] $images
  * @property-read int|null $images_count
+ * @property-read \App\Models\User|null $to
  */
 class ChatMessage extends Model
 {
@@ -50,6 +51,14 @@ class ChatMessage extends Model
   public function writtenBy()
   {
     return $this->belongsTo(User::class, 'written_by', 'id');
+  }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+   */
+  public function to()
+  {
+    return $this->belongsTo(User::class, 'mentioned_to', 'id');
   }
 
   /**
