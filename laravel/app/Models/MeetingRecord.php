@@ -97,6 +97,14 @@ class MeetingRecord extends Model
   }
 
   /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function decisions()
+  {
+    return $this->hasMany(MeetingDecision::class, 'meeting_record_id', 'id');
+  }
+
+  /**
    * ミーティング参加者
    * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
    */

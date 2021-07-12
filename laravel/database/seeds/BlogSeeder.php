@@ -18,15 +18,11 @@ class BlogSeeder extends Seeder
     DB::table('blog_tags')->truncate();
 
     $users = User::all();
-    $role = DB::table('roles')
-      ->latest()
-      ->first();
     $blogCount = 80;
     $perUser = (int)ceil($blogCount / $users->count());
-    $users->each(function($user) use ($role, $perUser){
+    $users->each(function($user) use ($perUser){
       $blogs = factory(Blog::class, $perUser)->create([
         'written_by' => $user->id,
-        'role_id' => $role->id,
         'title' => $user->last_name . 'です',
       ]);
       $blogs->each(function($blog){
