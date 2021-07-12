@@ -21,20 +21,21 @@ class ChatRoomService extends Service
   }
 
   /**
-   * @return \App\Models\ChatRoom[]|array|\Illuminate\Database\Eloquent\Collection
+   * @return array
    */
   public function findByOwner()
   {
     $author = Auth::user();
     if (!!$author) {
-      $chatRooms = $author->chatRooms;
-      $chatRooms->load([
+      $loads = [
         'members',
         'messages.writtenBy',
         'messages.to',
         'messages.writtenBy',
         'messages.images',
-      ]);
+      ];
+      $chatRooms = $author->chatRooms;
+      $chatRooms->load($loads);
       return $chatRooms;
     }
     return [];

@@ -18,6 +18,9 @@ class ChatRoomController extends Controller
     $this->service = $service;
   }
 
+  /**
+   * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+   */
   public function findByOwner()
   {
     return response($this->service->findByOwner());
