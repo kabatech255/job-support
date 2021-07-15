@@ -23,7 +23,7 @@ class BlogSeeder extends Seeder
     $users->each(function($user) use ($perUser){
       $blogs = factory(Blog::class, $perUser)->create([
         'written_by' => $user->id,
-        'title' => $user->last_name . 'です',
+        'title' => $user->family_name . 'です',
       ]);
       $blogs->each(function($blog){
         // タグ0~2個

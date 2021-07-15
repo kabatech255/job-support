@@ -48,6 +48,14 @@ class MeetingRecord extends Model
 {
   use SoftDeletes;
 
+  const RELATIONS_ARRAY = [
+    'recordedBy',
+    'place',
+    'todos',
+    'decisions',
+    'members',
+  ];
+
   protected $table = 'meeting_records';
 
   protected $fillable = [

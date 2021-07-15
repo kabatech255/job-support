@@ -3,14 +3,12 @@
 namespace App\Repositories\Abstracts;
 
 use App\Repositories\Traits\ModelTrait as ModelTrait;
-use App\Repositories\Traits\BuilderTrait as BuilderTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 abstract class EloquentRepository extends CommonAbstractRepository
 {
   use ModelTrait;
-  use BuilderTrait;
 
   /**
    * @return Model|null

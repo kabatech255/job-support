@@ -11,7 +11,7 @@ services:
     image: swaggerapi/swagger-ui
     restart: always
     volumes:
-      - ./swagger.yml:/usr/share/nginx/html/swagger.yml
+      - ./openapi.yml:/usr/share/nginx/html/openapi.yml
     environment:
       API_URL: ${SWAGGER_SPECIFICATION_URL}
     ports:

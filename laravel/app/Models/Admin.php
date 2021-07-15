@@ -12,10 +12,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property int $id
  * @property string $login_id ログインID
- * @property string $last_name 姓
- * @property string $first_name 名
- * @property string|null $last_name_kana セイ
- * @property string|null $first_name_kana メイ
+ * @property string $family_name 姓
+ * @property string $given_name 名
+ * @property string|null $family_name_kana セイ
+ * @property string|null $given_name_kana メイ
  * @property string|null $file_path 画像
  * @property string $email
  * @property \Illuminate\Support\Carbon|null $email_verified_at
@@ -69,10 +69,10 @@ class Admin extends Authenticatable
    * @var array
    */
   protected $fillable = [
-    'last_name',
-    'first_name',
-    'last_name_kana',
-    'first_name_kana',
+    'family_name',
+    'given_name',
+    'family_name_kana',
+    'given_name_kana',
     'file_path',
     'email',
     'login_id',
@@ -117,6 +117,6 @@ class Admin extends Authenticatable
    */
   public function getFullNameAttribute()
   {
-    return $this->last_name . ' ' . $this->first_name;
+    return $this->family_name . ' ' . $this->given_name;
   }
 }

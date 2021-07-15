@@ -31,5 +31,7 @@ Route::group(['middleware' => 'api'], function () {
   Route::middleware('auth')->group(function() {
     // チャットルーム
     Route::get('/author/chat_room', 'ChatRoomController@findByOwner')->name('chatRoom.findByOwner');
+    // 会議議事録
+    Route::get('/author/meeting_record', 'MeetingRecordController@index')->name('meetingRecord.index');
   });
 });

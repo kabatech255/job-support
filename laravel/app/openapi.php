@@ -42,13 +42,13 @@ namespace App;
  *     description="フルネーム"
  *   ),
  *   @OA\Property(
- *     property="first_name",
+ *     property="given_name",
  *     type="string",
  *     example="太郎",
  *     description="名"
  *   ),
  *   @OA\Property(
- *     property="last_name",
+ *     property="family_name",
  *     type="string",
  *     example="テスト",
  *     description="姓"

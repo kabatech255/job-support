@@ -52,8 +52,8 @@ class AdminAuthTest extends TestCase
   public function should_ログインに成功すると認証中のユーザーを返却する()
   {
     $expectData = [
-      'last_name' => 'expectadmin',
-      'first_name' => 'expectadmin',
+      'family_name' => 'expectadmin',
+      'given_name' => 'expectadmin',
       'email' => 'expect@example.com',
       'login_id' => 'expectadmin',
       'password' => \Hash::make($this->naked),
@@ -82,8 +82,8 @@ class AdminAuthTest extends TestCase
   {
     // 管理ユーザー保存
     $expectData = [
-      'last_name' => 'expectadmin2',
-      'first_name' => 'expectadmin2',
+      'family_name' => 'expectadmin2',
+      'given_name' => 'expectadmin2',
       'email' => 'expect2@example.com',
       'login_id' => 'expectadmin2',
       'password' => \Hash::make($this->naked),
@@ -121,8 +121,8 @@ class AdminAuthTest extends TestCase
   public function should_認証中にログインAPIにアクセスするとリダイレクトコードを返却する()
   {
     $expectData = [
-      'last_name' => 'expectadmin',
-      'first_name' => 'expectadmin',
+      'family_name' => 'expectadmin',
+      'given_name' => 'expectadmin',
       'email' => 'author@example.com',
       'login_id' => 'expectauthor',
       'password' => \Hash::make($this->naked),
