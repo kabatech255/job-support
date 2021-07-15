@@ -16,10 +16,10 @@ class CreateAdminsTable extends Migration
     Schema::create('admins', function (Blueprint $table) {
       $table->id();
       $table->string('login_id')->unique()->comment('ログインID');
-      $table->string('last_name')->comment('姓');
-      $table->string('first_name')->comment('名');
-      $table->string('last_name_kana')->nullable()->comment('セイ');
-      $table->string('first_name_kana')->nullable()->comment('メイ');
+      $table->string('family_name')->comment('姓');
+      $table->string('given_name')->comment('名');
+      $table->string('family_name_kana')->nullable()->comment('セイ');
+      $table->string('given_name_kana')->nullable()->comment('メイ');
       $table->string('file_path')->nullable()->comment('画像');
       $table->string('email')->unique();
       $table->timestamp('email_verified_at')->nullable();

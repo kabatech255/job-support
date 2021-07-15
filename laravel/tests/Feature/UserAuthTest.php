@@ -6,8 +6,6 @@ use App\Http\Controllers\UserController;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Symfony\Component\Yaml\Yaml;
-use Mmal\OpenapiValidator\Validator;
 
 class UserAuthTest extends TestCase
 {
@@ -57,8 +55,8 @@ class UserAuthTest extends TestCase
     $expectData = [
       'user_code' => 123456,
       'role_id' => 1,
-      'last_name' => 'expectuser',
-      'first_name' => 'expectuser',
+      'family_name' => 'expectuser',
+      'given_name' => 'expectuser',
       'email' => 'expect@example.com',
       'login_id' => 'expectuser',
       'password' => \Hash::make($this->naked),
@@ -77,7 +75,6 @@ class UserAuthTest extends TestCase
 
     $result = parent::$openApiValidator->validate('postLogin', 200, json_decode($response->getContent(), true));
     $this->assertFalse($result->hasErrors(), $result);
-
   }
 
   /**
@@ -90,8 +87,8 @@ class UserAuthTest extends TestCase
     $expectData = [
       'user_code' => 654321,
       'role_id' => 1,
-      'last_name' => 'expectuser2',
-      'first_name' => 'expectuser2',
+      'family_name' => 'expectuser2',
+      'given_name' => 'expectuser2',
       'email' => 'expect2@example.com',
       'login_id' => 'expectuser2',
       'password' => \Hash::make($this->naked),
@@ -130,8 +127,8 @@ class UserAuthTest extends TestCase
     $expectData = [
       'user_code' => 123457,
       'role_id' => 1,
-      'last_name' => 'expectuser',
-      'first_name' => 'expectuser',
+      'family_name' => 'expectuser',
+      'given_name' => 'expectuser',
       'email' => 'author@example.com',
       'login_id' => 'expectauthor',
       'password' => \Hash::make($this->naked),
