@@ -1,0 +1,774 @@
+openapi: 3.0.2
+info:
+  description: 主な機能：\ \     議事録の記録 \ スケジュール管理・共有 \ ファイル共有 \ チャット \ Todo管理等 \ \ key `special-key` to test the authorization     filters.
+  version: 1.0.0
+  title: 業務支援システム
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+servers:
+  - url: 'http://localhost:8080/api'
+    description: Laravelのローカルserver
+tags:
+  - name: user
+    description: employees
+  - name: admin
+    description: system administrator
+  - name: blog
+    description: blog
+  - name: chat_room
+    description: chat room
+  - name: meeting_record
+    description: meeting record
+paths:
+  /user/current:
+    get:
+      tags:
+        - user
+      summary: 現在のユーザーを返す
+      description: return current auth object
+      operationId: getCurrentUser
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/EmptyItem'
+                  - $ref: '#/components/schemas/User'
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+  /login:
+    post:
+      tags:
+        - user
+      description: return auth by login_id and password
+      operationId: postLogin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginBody'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Set-Cookie:
+              description: laravel_session
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '422':
+          description: Invalid Data Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidError'
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+  /logout:
+    post:
+      tags:
+        - user
+      description: return logout by login_id and password
+      operationId: postLogout
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyItem'
+        '401':
+          description: Unauthorized Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+  /admin/current:
+    get:
+      tags:
+        - admin
+      description: return current admin
+      operationId: getCurrentAdmin
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Admin'
+                  - $ref: '#/components/schemas/EmptyItem'
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+  /admin/login:
+    post:
+      tags:
+        - admin
+      description: return admin auth by login_id and password
+      operationId: postAdminLogin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginBody'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Admin'
+        '422':
+          description: Invalid Data Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidError'
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+  /admin/logout:
+    post:
+      tags:
+        - admin
+      description: return logout by login_id and password
+      operationId: postAdminLogout
+      responses:
+        '200':
+          description: successfull operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyItem'
+        '401':
+          description: Unauthorized Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+  /author/chat_room:
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+        - chat_room
+      operationId: getChatRoom
+      description: chat rooms user joined
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChatRoom'
+          headers: {}
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+  /author/meeting_record:
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+        - meeting_record
+      operationId: getMeetingRecord
+      description: meeting record user joined
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/EmptyItem'
+                  - $ref: '#/components/schemas/MeetingPage'
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+  /author/blog:
+    get:
+      security:
+        - cookieAuth: []
+      operationId: getBlog
+      description: blog user joined
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/Blog'
+                  - $ref: '#/components/schemas/EmptyItem'
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+      tags:
+        - blog
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: written_by
+          description: ユーザーコード
+        - schema:
+            type: integer
+          in: query
+          name: page
+          description: ページ
+    parameters: []
+components:
+  schemas:
+    Admin:
+      title: Admin
+      type: object
+      description: 認証時のデータ
+      required:
+        - id
+        - full_name
+        - created_at
+        - updated_at
+      properties:
+        id:
+          description: ユーザーID
+          type: integer
+        full_name:
+          description: フルネーム
+          type: string
+          example: 管理者 太郎
+        given_name:
+          description: 名
+          type: string
+          example: 太郎
+        family_name:
+          description: 姓
+          type: string
+          example: 管理者
+        file_path:
+          nullable: true
+          description: ファイルパス
+          type: string
+          example: admins/test1.jpg
+        created_at:
+          $ref: '#/components/schemas/DateFormat'
+        updated_at:
+          $ref: '#/components/schemas/DateFormat'
+    ChatMessage:
+      title: ChatMessage
+      description: チャットメッセージ
+      required:
+        - id
+        - written_by
+        - body
+        - created_at
+        - updated_at
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        body:
+          type: string
+        written_by:
+          $ref: '#/components/schemas/User'
+        to:
+          anyOf:
+            - type: string
+              nullable: true
+            - $ref: '#/components/schemas/User'
+        images:
+          anyOf:
+            - $ref: '#/components/schemas/EmptyItem'
+            - type: array
+              items:
+                $ref: '#/components/schemas/ChatMessageImage'
+        created_at:
+          $ref: '#/components/schemas/DateFormat'
+        updated_at:
+          $ref: '#/components/schemas/DateFormat'
+    ChatMessageImage:
+      title: ChatMessageImage
+      description: チャット画像
+      required:
+        - id
+        - file_path
+        - created_at
+        - updated_at
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        chat_message_id:
+          type: integer
+          format: int64
+        file_path:
+          type: string
+        created_at:
+          $ref: '#/components/schemas/DateFormat'
+        updated_at:
+          $ref: '#/components/schemas/DateFormat'
+    ChatRoom:
+      title: ChatRoom
+      description: チャットルーム
+      required:
+        - id
+        - name
+        - members
+        - messages
+        - created_at
+        - updated_at
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        messages:
+          anyOf:
+            - $ref: '#/components/schemas/EmptyItem'
+            - type: array
+              items:
+                $ref: '#/components/schemas/ChatMessage'
+        created_at:
+          $ref: '#/components/schemas/DateFormat'
+        updated_at:
+          $ref: '#/components/schemas/DateFormat'
+    DateFormat:
+      type: string
+      format: datetime
+      example: '2021-12-31 12:00:00'
+    DefaultError:
+      title: DefaultError
+      description: DefaultError
+      type: object
+      properties:
+        message:
+          description: エラーメッセージ
+          type: string
+    EmptyItem:
+      title: EmptyItem
+      description: データがないときの空配列
+      type: array
+      example: []
+      items:
+        nullable: true
+    InvalidError:
+      title: InvalidError
+      description: InvalidError
+      type: object
+      properties:
+        message:
+          description: エラーメッセージ
+          type: string
+        errors:
+          description: フォームアイテムごとのエラーメッセージ
+          type: object
+          additionalProperties: {}
+    LoginBody:
+      title: LoginBody
+      description: ログインIDとパスワードのフォーム
+      required:
+        - login_id
+        - password
+      type: object
+      properties:
+        login_id:
+          type: string
+          example: testman1
+        password:
+          type: string
+          format: password
+          example: password
+    MeetingDecision:
+      title: MeetingDecision
+      description: ミーティング決定事項
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        decided_by:
+          $ref: '#/components/schemas/User'
+        written_by:
+          $ref: '#/components/schemas/User'
+        subject:
+          type: string
+        body:
+          type: string
+        # meeting_record:
+        #   $ref: '#/components/schemas/MeetingRecord'
+      required:
+        - id
+        - decided_by
+        - written_by
+        - subject
+        - body
+    MeetingPage:
+      title: MeetingPage
+      description: 議事録一覧のページ（ページャつき）
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/MeetingRecord'
+        first_page_url:
+          description: 1ページ目のURL
+          type: string
+        from:
+          description: 現在のitemの開始位置
+          type: integer
+          nullable: true
+        last_page:
+          description: 最大ページ数
+          type: integer
+        last_page_url:
+          description: 最終ページのURL
+          type: string
+        next_page_url:
+          description: 次ページのURL
+          type: string
+          nullable: true
+        path:
+          description: 前ページのURL
+          type: string
+        per_page:
+          description: 1ページあたりのアイテム数
+          type: string
+        prev_page_url:
+          description: 前ページのURL
+          type: string
+        to:
+          description: 現在のitemの終了位置
+          type: integer
+          nullable: true
+        total:
+          description: item総数
+          type: integer
+      required:
+        - data
+        - first_page_url
+        - from
+        - last_page
+        - last_page_url
+        - next_page_url
+        - path
+        - per_page
+        - prev_page_url
+        - to
+        - total
+    MeetingPlace:
+      title: MeetingPlace
+      description: ミーティング開催場所
+      required:
+        - id
+        - name
+        - created_at
+        - updated_at
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        created_at:
+          $ref: '#/components/schemas/DateFormat'
+        updated_at:
+          $ref: '#/components/schemas/DateFormat'
+    MeetingRecord:
+      title: MeetingRecord
+      description: ミーティングレコード
+      required:
+        - id
+        - recorded_by
+        - meeting_date
+        - place
+        - members
+        - decisions
+        - title
+        - summary
+        - created_at
+        - updated_at
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        recorded_by:
+          $ref: '#/components/schemas/User'
+        meeting_date:
+          $ref: '#/components/schemas/DateFormat'
+        place:
+          anyOf:
+            - type: string
+              nullable: true
+            - $ref: '#/components/schemas/MeetingPlace'
+        title:
+          type: string
+          example: 〇〇会議
+        summary:
+          type: string
+          nullable: true
+          example: 〇〇会議の概要
+        todos:
+          anyOf:
+            - $ref: '#/components/schemas/EmptyItem'
+            - type: array
+              items:
+                $ref: '#/components/schemas/Todo'
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        decisions:
+          anyOf:
+            - $ref: '#/components/schemas/EmptyItem'
+            - type: array
+              items:
+                $ref: '#/components/schemas/MeetingDecision'
+        created_at:
+          $ref: '#/components/schemas/DateFormat'
+        updated_at:
+          $ref: '#/components/schemas/DateFormat'
+    Priority:
+      title: Priority
+      description: TODOの優先度
+      required:
+        - id
+        - name
+        - value
+        - created_at
+        - updated_at
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          description: 優先度
+          type: string
+        value:
+          description: 優先値
+          type: integer
+          format: int64
+        created_at:
+          $ref: '#/components/schemas/DateFormat'
+        updated_at:
+          $ref: '#/components/schemas/DateFormat'
+    Progress:
+      title: Progress
+      description: TODOの達成度
+      required:
+        - id
+        - name
+        - value
+        - created_at
+        - updated_at
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          description: 達成度
+          type: string
+        value:
+          description: 達成値
+          type: integer
+          format: int64
+        created_at:
+          $ref: '#/components/schemas/DateFormat'
+        updated_at:
+          $ref: '#/components/schemas/DateFormat'
+    Role:
+      title: Role
+      description: ロール
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          description: 権限名
+          type: string
+        value:
+          type: integer
+          description: 権限値
+          format: int64
+          minimum: 0
+          exclusiveMinimum: true
+        created_at:
+          $ref: '#/components/schemas/DateFormat'
+        updated_at:
+          $ref: '#/components/schemas/DateFormat'
+      required:
+        - id
+        - name
+        - value
+        - created_at
+        - updated_at
+    Todo:
+      title: Todo
+      description: TODO
+      required:
+        - id
+        - owner
+        - created_by
+        - priority
+        - progress
+        - body
+        - time_limit
+        - created_at
+        - updated_at
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        meeting_record_id:
+          type: integer
+          format: int64
+          example: 1
+          nullable: true
+        owner:
+          $ref: '#/components/schemas/User'
+        priority:
+          $ref: '#/components/schemas/Priority'
+        progress:
+          $ref: '#/components/schemas/Progress'
+        body:
+          type: string
+        time_limit:
+          $ref: '#/components/schemas/DateFormat'
+        created_at:
+          $ref: '#/components/schemas/DateFormat'
+        updated_at:
+          $ref: '#/components/schemas/DateFormat'
+    User:
+      title: User
+      description: ユーザーのデータ
+      type: object
+      required:
+        - id
+        - full_name
+        - created_at
+        - updated_at
+      properties:
+        id:
+          description: ユーザーID
+          type: integer
+        full_name:
+          description: フルネーム
+          type: string
+          example: テスト 太郎
+        given_name:
+          description: 名
+          type: string
+          example: 太郎
+        family_name:
+          description: 姓
+          type: string
+          example: テスト
+        file_path:
+          nullable: true
+          description: ファイルパス
+          type: string
+          example: users/test1.jpg
+        created_at:
+          $ref: '#/components/schemas/DateFormat'
+        updated_at:
+          $ref: '#/components/schemas/DateFormat'
+    Blog:
+      title: Blog
+      description: ブログ
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        written_by:
+          $ref: '#/components/schemas/User'
+        role:
+          $ref: '#/components/schemas/Role'
+        title:
+          type: string
+          description: タイトル
+        body:
+          type: string
+          description: 記事の内容
+        created_at:
+          $ref: '#/components/schemas/DateFormat'
+        updated_at:
+          $ref: '#/components/schemas/DateFormat'
+      required:
+        - id
+        - written_by
+        - role
+        - title
+        - body
+        - created_at
+        - updated_at
+  securitySchemes:
+    cookieAuth:
+      name: _session
+      type: apiKey
+      in: cookie
+      description: ''

@@ -48,6 +48,14 @@ class MeetingRecord extends Model
 {
   use SoftDeletes;
 
+  const RELATIONS_ARRAY = [
+    'recordedBy',
+    'place',
+    'todos',
+    'decisions',
+    'members',
+  ];
+
   protected $table = 'meeting_records';
 
   protected $fillable = [
@@ -94,6 +102,14 @@ class MeetingRecord extends Model
   public function todos()
   {
     return $this->hasMany(Todo::class, 'meeting_record_id', 'id');
+  }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function decisions()
+  {
+    return $this->hasMany(MeetingDecision::class, 'meeting_record_id', 'id');
   }
 
   /**

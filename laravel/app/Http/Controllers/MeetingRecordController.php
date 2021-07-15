@@ -3,34 +3,34 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Services\ChatRoomService;
+use App\Services\MeetingRecordService;
 
-class ChatRoomController extends Controller
+class MeetingRecordController extends Controller
 {
-  /**
-   * @var ChatRoomService
-   */
-  protected $service;
+  private $perPage = 10;
+  private $relation = ['meetingDecisions'];
+  private $service;
 
-  public function __construct(ChatRoomService $service)
+  public function __construct(MeetingRecordService $service)
   {
     $this->service = $service;
-  }
-
-  /**
-   * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
-   */
-  public function findByOwner()
-  {
-    return response($this->service->findByOwner());
   }
   /**
    * Display a listing of the resource.
    *
    * @return \Illuminate\Http\Response
    */
-  public function index()
+  public function index(Request $request)
+  {
+    return response($this->service->paginate($request->query(), ['recordedBy'], $this->perPage));
+  }
+
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function create()
   {
     //
   }
@@ -53,6 +53,17 @@ class ChatRoomController extends Controller
    * @return \Illuminate\Http\Response
    */
   public function show($id)
+  {
+    //
+  }
+
+  /**
+   * Show the form for editing the specified resource.
+   *
+   * @param int $id
+   * @return \Illuminate\Http\Response
+   */
+  public function edit($id)
   {
     //
   }

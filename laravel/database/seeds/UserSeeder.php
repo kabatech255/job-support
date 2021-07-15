@@ -44,10 +44,10 @@ class UserSeeder extends Seeder
       'user_code' => 111111,
       'role_id' => 1,
       'login_id' => 'testman1',
-      'last_name' => 'テスト',
-      'first_name' => '太郎',
-      'last_name_kana' => 'テスト',
-      'first_name_kana' => 'タロウ',
+      'family_name' => 'テスト',
+      'given_name' => '太郎',
+      'family_name_kana' => 'テスト',
+      'given_name_kana' => 'タロウ',
       'email' => 'test@example.com',
     ]);
     $departmentList->each(function($department){

@@ -18,7 +18,6 @@ abstract class TestCase extends BaseTestCase
   static public function setUpBeforeClass(): void
   {
     parent::setUpBeforeClass();
-    self::$openApiValidator = new Validator(Yaml::parse(file_get_contents(__DIR__ . '/../swagger.yml')));
+    self::$openApiValidator = new Validator(Yaml::parse(file_get_contents(__DIR__ . '/../openapi.yml')));
   }
-
 }

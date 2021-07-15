@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property int $id
  * @property int $written_by 投稿者
- * @property int $role_id 閲覧権限
  * @property string $title タイトル
  * @property string $body 本文
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -22,7 +21,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read int|null $images_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $likes
  * @property-read int|null $likes_count
- * @property-read \App\Models\Role $role
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BlogTag[] $tags
  * @property-read int|null $tags_count
  * @property-read \App\Models\User $writtenBy
@@ -34,7 +32,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|Blog whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Blog whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Blog whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Blog whereRoleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Blog whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Blog whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Blog whereWrittenBy($value)
@@ -50,7 +47,6 @@ class Blog extends Model
 
   protected $fillable = [
     'written_by',
-    'role_id',
     'title',
     'body',
   ];
@@ -61,14 +57,6 @@ class Blog extends Model
   public function writtenBy()
   {
     return $this->belongsTo(User::class, 'written_by', 'id');
-  }
-
-  /**
-   * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-   */
-  public function role()
-  {
-    return $this->belongsTo(Role::class, 'role_id', 'id');
   }
 
   /**

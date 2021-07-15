@@ -12,4 +12,5 @@ class UserRepository extends EloquentRepository implements UserRepositoryInterfa
   {
     $this->setModel($model);
   }
+
 }
