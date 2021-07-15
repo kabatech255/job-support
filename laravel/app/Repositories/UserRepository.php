@@ -11,6 +11,6 @@ class UserRepository extends EloquentRepository implements UserRepositoryInterfa
   public function __construct(User $model)
   {
     $this->setModel($model);
-    $this->setBuilder($model);
   }
+
 }

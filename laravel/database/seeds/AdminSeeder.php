@@ -16,10 +16,10 @@ class AdminSeeder extends Seeder
 
     factory(Admin::class, 1)->create([
       'login_id' => 'testadmin',
-      'last_name' => 'テスト',
-      'first_name' => '太郎',
-      'last_name_kana' => 'テスト',
-      'first_name_kana' => 'タロウ',
+      'family_name' => 'テスト',
+      'given_name' => '太郎',
+      'family_name_kana' => 'テスト',
+      'given_name_kana' => 'タロウ',
       'email' => 'test@example.com',
     ]);
   }
