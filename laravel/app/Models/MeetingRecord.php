@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Contracts\Models\RelationalDeleteInterface;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Abstracts\CommonModel as Model;
 
 /**
  * App\Models\MeetingRecord
@@ -23,8 +24,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read int|null $members_count
  * @property-read \App\Models\MeetingPlace|null $place
  * @property-read \App\Models\User $recordedBy
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Todo[] $todos
- * @property-read int|null $todos_count
  * @method static \Illuminate\Database\Eloquent\Builder|MeetingRecord newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|MeetingRecord newQuery()
  * @method static \Illuminate\Database\Query\Builder|MeetingRecord onlyTrashed()
@@ -44,14 +43,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|MeetingRecord withoutTrashed()
  * @mixin \Eloquent
  */
-class MeetingRecord extends Model
+class MeetingRecord extends Model implements RelationalDeleteInterface
 {
   use SoftDeletes;
 
   const RELATIONS_ARRAY = [
     'recordedBy',
     'place',
-    'todos',
     'decisions',
     'members',
   ];
@@ -99,14 +97,6 @@ class MeetingRecord extends Model
   /**
    * @return \Illuminate\Database\Eloquent\Relations\HasMany
    */
-  public function todos()
-  {
-    return $this->hasMany(Todo::class, 'meeting_record_id', 'id');
-  }
-
-  /**
-   * @return \Illuminate\Database\Eloquent\Relations\HasMany
-   */
   public function decisions()
   {
     return $this->hasMany(MeetingDecision::class, 'meeting_record_id', 'id');
@@ -120,4 +110,12 @@ class MeetingRecord extends Model
   {
     return $this->belongsToMany(User::class, 'meeting_members', 'meeting_record_id', 'member_id')->withTimestamps();
   }
+
+  public function getDeleteRelations(): array
+  {
+    return [
+      $this->decisions
+    ];
+  }
+
 }

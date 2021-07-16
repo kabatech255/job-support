@@ -55,10 +55,9 @@ class MeetingRecordQuery extends EloquentQuery implements MeetingRecordQueryInte
   public function queryByMemberCount($query, array $param): Builder
   {
     $min = $param['min'] ?? 0;
-    $query->withCount('members')
-      ->having('members_count', '>=', $min);
+    $query->has('members', '>=', $min);
     if (isset($param['max'])) {
-      $query->having('members_count', '<=', $param['max']);
+      $query->has('members', '<=', $param['max']);
     }
     return $query;
   }
