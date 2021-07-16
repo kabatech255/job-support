@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Abstracts\CommonModel as Model;
 
 /**
  * App\Models\ChatRoomShare

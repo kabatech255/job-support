@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Contracts\Models\RelationalDeleteInterface;
+use App\Models\Abstracts\CommonModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -37,7 +38,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|MeetingDecision withoutTrashed()
  * @mixin \Eloquent
  */
-class MeetingDecision extends Model
+class MeetingDecision extends CommonModel implements RelationalDeleteInterface
 {
   use SoftDeletes;
 
@@ -49,6 +50,12 @@ class MeetingDecision extends Model
     'written_by',
     'subject',
     'body',
+  ];
+
+  const RELATIONS_ARRAY = [
+    'todos',
+    'decidedBy',
+    'writtenBy',
   ];
 
   /**
@@ -75,4 +82,21 @@ class MeetingDecision extends Model
   {
     return $this->belongsTo(MeetingRecord::class, 'meeting_record_id', 'id');
   }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function todos()
+  {
+    return $this->hasMany(Todo::class, 'meeting_decision_id', 'id');
+  }
+
+  public function getDeleteRelations(): array
+  {
+    return [
+      $this->todos
+    ];
+  }
+
+
 }

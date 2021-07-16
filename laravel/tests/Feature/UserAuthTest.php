@@ -12,12 +12,6 @@ class UserAuthTest extends TestCase
   protected $user;
   protected $naked = 'password';
 
-  protected function setUp(): void
-  {
-    parent::setUp();
-    $this->user = User::first();
-  }
-
   /**
    * @test
    * @group auth

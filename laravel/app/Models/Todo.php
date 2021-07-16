@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Contracts\Models\ModelInterface;
+use App\Models\Abstracts\CommonModel as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * App\Models\Todo
  *
  * @property int $id
- * @property int|null $meeting_record_id 議事録ID
+ * @property int|null $meeting_decision_id 会議決定事項ID
  * @property int $owner_id 担当者
  * @property int $created_by 作成者
  * @property int|null $priority_id 優先順位ID
@@ -43,7 +44,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|Todo withoutTrashed()
  * @mixin \Eloquent
  */
-class Todo extends Model
+class Todo extends Model implements ModelInterface
 {
   use SoftDeletes;
 
@@ -53,6 +54,7 @@ class Todo extends Model
     'owner_id',
     'created_by',
     'priority_id',
+    'progress_id',
     'body',
     'time_limit',
   ];
@@ -67,9 +69,9 @@ class Todo extends Model
   /**
    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
    */
-  public function meeting()
+  public function meetingDecision()
   {
-    return $this->belongsTo(MeetingRecord::class, 'meeting_record_id', 'id');
+    return $this->belongsTo(MeetingDecision::class, 'meeting_decision_id', 'id');
   }
   /**
    * Todoの担当者
