@@ -4,6 +4,7 @@ namespace App\Queries\Abstracts;
 
 use App\Queries\Traits\BuilderTrait;
 use Illuminate\Database\Eloquent\Builder;
+use \Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 abstract class EloquentQuery extends CommonAbstractQuery
 {
@@ -47,9 +48,9 @@ abstract class EloquentQuery extends CommonAbstractQuery
    * @param array $params
    * @param array|null $relation
    * @param int|null $perPage
-   * @return mixed
+   * @return LengthAwarePaginator
    */
-  public function paginate(array $params, ?array $relation = null, ?int $perPage = null)
+  public function paginate(array $params, ?array $relation = null, ?int $perPage = null): LengthAwarePaginator
   {
     return $this->search($params, $relation ?? $this->relation())->paginate($perPage ?? $this->perPage());
   }

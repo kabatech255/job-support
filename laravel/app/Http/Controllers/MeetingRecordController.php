@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\MeetingRecord\StoreRequest;
+use App\Http\Requests\MeetingRecord\UpdateRequest;
 use App\Services\MeetingRecordService;
+use Illuminate\Support\Facades\DB;
 
 class MeetingRecordController extends Controller
 {
   private $perPage = 10;
-  private $relation = ['meetingDecisions'];
+  private $relation = ['recordedBy', 'place', 'decisions', 'members'];
   private $service;
 
   public function __construct(MeetingRecordService $service)
@@ -22,72 +25,62 @@ class MeetingRecordController extends Controller
    */
   public function index(Request $request)
   {
-    return response($this->service->paginate($request->query(), ['recordedBy'], $this->perPage));
+    return response($this->service->paginate($request->query(), $this->perPage));
   }
 
   /**
-   * Show the form for creating a new resource.
-   *
-   * @return \Illuminate\Http\Response
+   * @param StoreRequest $request
+   * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+   * @throws \Throwable
    */
-  public function create()
+  public function store(StoreRequest $request)
   {
-    //
+    DB::beginTransaction();
+    try {
+      $meetingRecord = $this->service->store($request->all());
+      DB::commit();
+    } catch(\Exception $e) {
+      DB::rollBack();
+      throw $e;
+    }
+    return response($meetingRecord, 201);
   }
-
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @param \Illuminate\Http\Request $request
-   * @return \Illuminate\Http\Response
-   */
-  public function store(Request $request)
-  {
-    //
-  }
-
   /**
    * Display the specified resource.
    *
    * @param int $id
    * @return \Illuminate\Http\Response
    */
-  public function show($id)
+  public function show(int $id)
   {
-    //
+    return $this->service->find($id);
   }
 
   /**
-   * Show the form for editing the specified resource.
-   *
+   * @param UpdateRequest $request
    * @param int $id
-   * @return \Illuminate\Http\Response
+   * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+   * @throws \Throwable
    */
-  public function edit($id)
+  public function update(UpdateRequest $request, int $id)
   {
-    //
+    DB::beginTransaction();
+    try {
+      $meetingRecord = $this->service->update($request->all(), $id);
+      DB::commit();
+    } catch(\Exception $e) {
+      DB::rollBack();
+      throw $e;
+    }
+    return response($meetingRecord, 200);
   }
 
   /**
-   * Update the specified resource in storage.
-   *
-   * @param \Illuminate\Http\Request $request
    * @param int $id
-   * @return \Illuminate\Http\Response
+   * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
    */
-  public function update(Request $request, $id)
+  public function destroy(int $id)
   {
-    //
-  }
-
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param int $id
-   * @return \Illuminate\Http\Response
-   */
-  public function destroy($id)
-  {
-    //
+    return response($this->service->delete($id), 204);
   }
 }

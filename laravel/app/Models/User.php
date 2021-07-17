@@ -193,4 +193,12 @@ class User extends Authenticatable
       ->withPivot('is_editable', 'shared_by');
   }
 
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function todos()
+  {
+    return $this->hasMany(Todo::class, 'owner_id', 'id');
+  }
+
 }

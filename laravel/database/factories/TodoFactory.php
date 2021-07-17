@@ -10,7 +10,7 @@ use App\Models\Progress;
 $faker = Factory::create('ja_JP');
 $factory->define(Todo::class, function ($faker) {
   return [
-    'meeting_record_id' => null,
+    'meeting_decision_id' => null,
     'owner_id' => $faker->randomNumber,
     'created_by' => $faker->randomNumber,
     'priority_id' => array_random(Priority::all()->pluck('id')->toArray()),
