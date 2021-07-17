@@ -52,9 +52,12 @@ class ServiceMakeCommand extends Command
   {
     $contractRepositoryName = $this->rootNamespace() . 'Contracts\Repositories\\';
     $contractRepositoryName .= str_replace($this->type, 'RepositoryInterface', $this->getNameInput());
+    $contractQueryName = $this->rootNamespace() . 'Contracts\Queries\\';
+    $contractQueryName .= str_replace($this->type, 'QueryInterface', $this->getNameInput());
     // 引数やオプションなどを使い'置換前'=>'置換後'のような配列を作る
     $replace = [
       'DummyContractRepository' => $contractRepositoryName,
+      'DummyContractQuery' => $contractQueryName,
       'DummyTraitNamespace' => $this->getDefaultNamespace(trim($this->rootNamespace(), '\\')) . '\Traits',
     ];
 

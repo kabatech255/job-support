@@ -3,6 +3,7 @@
 namespace DummyNamespace;
 
 use DummyContractRepository as Repository;
+use DummyContractQuery as Query;
 use Illuminate\Support\Facades\Auth;
 use DummyTraitNamespace\WithRepositoryTrait;
 
@@ -13,10 +14,15 @@ class DummyClass extends Service
   /**
    * UserService constructor.
    * @param Repository $repository
+   * @param Query $query
    */
-  public function __construct(Repository $repository)
+  public function __construct(
+    Repository $repository,
+    Query $query
+  )
   {
     $this->setRepository($repository);
+    $this->setQuery($query);
     // else repository...
   }
 }

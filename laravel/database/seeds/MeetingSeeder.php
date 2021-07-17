@@ -33,20 +33,20 @@ class MeetingSeeder extends Seeder
       // 参加者の追加
       $meetingRecord->members()->sync($members);
       // 決議事項の追加
-      factory(MeetingDecision::class, random_int(1, 4))->create([
+      $meetingDecisions = factory(MeetingDecision::class, random_int(1, 4))->create([
         'meeting_record_id' => $meetingRecord->id,
         'decided_by' => array_random($members),
         'written_by' => $writtenBy,
       ]);
       // 議事録からのTodoの追加
-      $random = array_random([0,0,1]);
-      factory(Todo::class, $random)->create([
-        'meeting_record_id' => $meetingRecord->id,
-        'owner_id' => array_random(User::all()->pluck('id')->toArray()),
-        'created_by' => $meetingRecord->recorded_by,
-        'priority_id' => array_random(Priority::all()->pluck('id')->toArray()),
-        'progress_id' => array_random(Progress::all()->pluck('id')->toArray()),
-      ]);
+      $meetingDecisions->each(function($meetingDecision) {
+        factory(Todo::class, 1)->create([
+          'meeting_decision_id' => $meetingDecision->id,
+          'owner_id' => array_random(User::all()->pluck('id')->toArray()),
+          'created_by' => $meetingDecision->written_by,
+        ]);
+      });
+//      $random = array_random([0,0,1]);
     }
   }
 }

@@ -1,0 +1,17 @@
+<?php
+
+namespace DummyNamespace;
+
+use App\Contracts\Queries\DummyClassInterface;
+use App\Queries\Abstracts\EloquentQuery;
+use App\Models\DummyModel;
+
+class DummyClass extends EloquentQuery implements DummyClassInterface
+{
+  public function __construct(DummyModel $model)
+  {
+    $this->setBuilder($model);
+    $this->setColumns([]);
+    $this->setRelationTargets([]);
+  }
+}

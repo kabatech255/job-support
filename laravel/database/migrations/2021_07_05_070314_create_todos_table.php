@@ -15,7 +15,7 @@ class CreateTodosTable extends Migration
   {
     Schema::create('todos', function (Blueprint $table) {
       $table->id();
-      $table->unsignedBigInteger('meeting_record_id')->nullable()->comment('議事録ID');
+      $table->unsignedBigInteger('meeting_decision_id')->nullable()->comment('会議決定事項ID');
       $table->unsignedBigInteger('owner_id')->comment('担当者');
       $table->unsignedBigInteger('created_by')->comment('作成者');
       $table->unsignedBigInteger('priority_id')->nullable()->comment('優先順位ID');
@@ -26,7 +26,7 @@ class CreateTodosTable extends Migration
       $table->timestamps();
       $table->softDeletes();
 
-      $table->foreign('meeting_record_id')->references('id')->on('meeting_records')
+      $table->foreign('meeting_decision_id')->references('id')->on('meeting_decisions')
         ->onUpdate('cascade')
         ->onDelete('no action');
       $table->foreign('owner_id')->references('id')->on('users')
@@ -56,7 +56,7 @@ class CreateTodosTable extends Migration
       $table->dropForeign('todos_progress_id_foreign');
       $table->dropForeign('todos_created_by_foreign');
       $table->dropForeign('todos_owner_id_foreign');
-      $table->dropForeign('todos_meeting_record_id_foreign');
+      $table->dropForeign('todos_meeting_decision_id_foreign');
     });
     Schema::dropIfExists('todos');
   }

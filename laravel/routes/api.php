@@ -33,5 +33,9 @@ Route::group(['middleware' => 'api'], function () {
     Route::get('/author/chat_room', 'ChatRoomController@findByOwner')->name('chatRoom.findByOwner');
     // 会議議事録
     Route::get('/author/meeting_record', 'MeetingRecordController@index')->name('meetingRecord.index');
+    Route::post('/meeting_record', 'MeetingRecordController@store')->name('meetingRecord.store');
+    Route::get('/meeting_record/{id}', 'MeetingRecordController@show')->name('meetingRecord.show');
+    Route::put('/meeting_record/{id}', 'MeetingRecordController@update')->name('meetingRecord.update');
+    Route::delete('/meeting_record/{id}', 'MeetingRecordController@destroy')->name('meetingRecord.destroy');
   });
 });
