@@ -72,6 +72,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|User withoutTrashed()
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|User whereFilePath($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Todo[] $todos
+ * @property-read int|null $todos_count
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereFamilyName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereFamilyNameKana($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereGivenName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereGivenNameKana($value)
  */
 class User extends Authenticatable
 {
@@ -199,6 +205,14 @@ class User extends Authenticatable
   public function todos()
   {
     return $this->hasMany(Todo::class, 'owner_id', 'id');
+  }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+   */
+  public function role()
+  {
+    return $this->belongsTo(Role::class, 'role_id', 'id');
   }
 
 }

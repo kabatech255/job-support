@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MeetingRecord\DeleteRequest;
+use App\Models\MeetingRecord;
 use Illuminate\Http\Request;
 use App\Http\Requests\MeetingRecord\StoreRequest;
 use App\Http\Requests\MeetingRecord\UpdateRequest;
@@ -45,24 +47,23 @@ class MeetingRecordController extends Controller
     }
     return response($meetingRecord, 201);
   }
+
   /**
-   * Display the specified resource.
-   *
    * @param int $id
-   * @return \Illuminate\Http\Response
+   * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
    */
   public function show(int $id)
   {
-    return $this->service->find($id);
+    return response($this->service->find($id));
   }
 
   /**
    * @param UpdateRequest $request
-   * @param int $id
+   * @param MeetingRecord $id
    * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
    * @throws \Throwable
    */
-  public function update(UpdateRequest $request, int $id)
+  public function update(UpdateRequest $request, MeetingRecord $id)
   {
     DB::beginTransaction();
     try {
@@ -76,10 +77,11 @@ class MeetingRecordController extends Controller
   }
 
   /**
-   * @param int $id
+   * @param DeleteRequest $request
+   * @param MeetingRecord $id
    * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
    */
-  public function destroy(int $id)
+  public function destroy(DeleteRequest $request, MeetingRecord $id)
   {
     return response($this->service->delete($id), 204);
   }

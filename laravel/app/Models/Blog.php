@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Contracts\Models\ModelInterface;
+use App\Contracts\Models\RelationalDeleteInterface;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Abstracts\CommonModel as Model;
 /**
@@ -39,7 +40,7 @@ use App\Models\Abstracts\CommonModel as Model;
  * @method static \Illuminate\Database\Query\Builder|Blog withoutTrashed()
  * @mixin \Eloquent
  */
-class Blog extends Model
+class Blog extends Model implements RelationalDeleteInterface
 {
   use SoftDeletes;
 
@@ -89,5 +90,12 @@ class Blog extends Model
   public function images()
   {
     return $this->hasMany(BlogImage::class, 'blog_id', 'id');
+  }
+
+  public function getDeleteRelations(): array
+  {
+    return [
+      $this->images,
+    ];
   }
 }

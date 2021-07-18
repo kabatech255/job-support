@@ -29,6 +29,6 @@ abstract class TestCase extends BaseTestCase
   protected function setUp(): void
   {
     parent::setUp();
-    $this->user = User::first();
+    $this->user = User::orderBy('id')->first();
   }
 }

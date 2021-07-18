@@ -10,6 +10,7 @@ $faker = Factory::create('ja_JP');
 
 $factory->define(Role::class, function ($faker) {
   return [
+    'label' => $faker->unique()->numberBetween(1, 100),
     'name' => $faker->unique()->jobTitle,
     'value' => $faker->unique()->numberBetween(1, 20),
   ];
