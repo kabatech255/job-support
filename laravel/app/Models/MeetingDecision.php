@@ -37,6 +37,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|MeetingDecision withTrashed()
  * @method static \Illuminate\Database\Query\Builder|MeetingDecision withoutTrashed()
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Todo[] $todos
+ * @property-read int|null $todos_count
  */
 class MeetingDecision extends CommonModel implements RelationalDeleteInterface
 {

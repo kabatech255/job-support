@@ -15,8 +15,12 @@ abstract class CommonModel extends Model
    */
   public function customDelete()
   {
-    $this->fetchDeletedBy();
-    $this->save();
+    if ($this->isSoftDeletes()) {
+      $this->fetchDeleteColumns();
+      $this->save();
+    } else {
+      $this->delete();
+    }
 
     if ($this instanceof RelationalDeleteInterface) {
       foreach($this->getDeleteRelations() as $relation) {
@@ -32,13 +36,19 @@ abstract class CommonModel extends Model
     return $this;
   }
 
-  protected function fetchDeletedBy(): void
+  protected function fetchDeleteColumns(): void
   {
-    if (trait_exists('Illuminate\Database\Eloquent\SoftDeletes')) {
-      $this->deleted_at = Carbon::now()->format('Y-m-d H:i:s');
-    }
+    $this->deleted_at = Carbon::now()->format('Y-m-d H:i:s');
     if (array_key_exists('deleted_by', $this->getAttributes())) {
       $this->deleted_by = Auth::check() ? Auth::user()->id : null;
     }
+  }
+
+  /**
+   * @return bool
+   */
+  protected function isSoftDeletes(): bool
+  {
+    return array_key_exists('Illuminate\Database\Eloquent\SoftDeletes', class_uses($this));
   }
 }

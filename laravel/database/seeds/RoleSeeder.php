@@ -15,19 +15,23 @@ class RoleSeeder extends Seeder
     DB::table('roles')->truncate();
     $roles = [
       [
-        'name' => '開発者',
+        'name' => 'administrator',
+        'label' => '開発者',
         'value' => 255,
       ],
       [
-        'name' => 'マネジャー',
+        'name' => 'manager',
+        'label' => 'マネージャー',
         'value' => 100,
       ],
       [
-        'name' => 'リーダー',
+        'name' => 'leader',
+        'label' => 'リーダー',
         'value' => 99,
       ],
       [
-        'name' => '一般',
+        'name' => 'staff',
+        'label' => '一般',
         'value' => 98,
       ],
     ];
