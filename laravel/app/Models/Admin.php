@@ -55,6 +55,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|Admin withoutTrashed()
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereFilePath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin whereFamilyName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin whereFamilyNameKana($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin whereGivenName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin whereGivenNameKana($value)
  */
 class Admin extends Authenticatable
 {

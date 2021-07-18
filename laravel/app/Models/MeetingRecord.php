@@ -42,6 +42,8 @@ use App\Models\Abstracts\CommonModel as Model;
  * @method static \Illuminate\Database\Query\Builder|MeetingRecord withTrashed()
  * @method static \Illuminate\Database\Query\Builder|MeetingRecord withoutTrashed()
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\MeetingDecision[] $decisions
+ * @property-read int|null $decisions_count
  */
 class MeetingRecord extends Model implements RelationalDeleteInterface
 {

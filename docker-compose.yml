@@ -19,7 +19,7 @@ services:
       - laravel
 
   laravel:
-    container_name: app
+    container_name: laravel
     build:
       context: .
       dockerfile: ./docker/php/Dockerfile
