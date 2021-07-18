@@ -79,16 +79,15 @@ class MeetingRecordService extends Service
 
   /**
    * @param array $params
-   * @param int $id
+   * @param $id
    * @return MeetingRecord
    */
-  public function update(array $params, int $id): MeetingRecord
+  public function update(array $params, $id): MeetingRecord
   {
     // 議事録の保存
     $meetingRecord = $this->repository()->saveWithMembers($params, $id);
     if (isset($params['meeting_decisions'])) {
       foreach ($params['meeting_decisions'] as $meetingDecisionParams) {
-//        $meetingDecisions[] = $this->saveDecisionByRecord($meetingDecisionParams, $meetingRecord);
         $this->saveDecisionByRecord($meetingDecisionParams, $meetingRecord);
       }
       $meetingRecord->load($this->query()->relation());
@@ -97,10 +96,10 @@ class MeetingRecordService extends Service
   }
 
   /**
-   * @param int $id
+   * @param $id
    * @return MeetingRecord
    */
-  public function delete(int $id): MeetingRecord
+  public function delete($id): MeetingRecord
   {
     return $this->repository()->delete($id);
   }

@@ -43,6 +43,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|Todo withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Todo withoutTrashed()
  * @mixin \Eloquent
+ * @property-read \App\Models\MeetingDecision|null $meetingDecision
+ * @method static \Illuminate\Database\Eloquent\Builder|Todo whereMeetingDecisionId($value)
  */
 class Todo extends Model implements ModelInterface
 {

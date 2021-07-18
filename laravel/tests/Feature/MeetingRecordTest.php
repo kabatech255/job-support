@@ -208,7 +208,6 @@ class MeetingRecordTest extends TestCase
     ];
     $decisionCount = MeetingDecision::count();
     $todoCount = Todo::count();
-
     $response = $this->actingAs($this->user)->putJson(route('meetingRecord.update', $meetingRecord->id), $expects);
     $response->assertOk();
 
@@ -266,6 +265,31 @@ class MeetingRecordTest extends TestCase
    * @test
    * @group meeting_record
    */
+  public function should_投稿者以外の更新リクエストにはForbiddenを返却する()
+  {
+    $meetingRecord = factory(MeetingRecord::class)->create([
+      'recorded_by' => $this->user->id,
+    ]);
+    $willDenied = [
+      'recorded_by' => $meetingRecord->recorded_by,
+      'place_id' => $meetingRecord->place_id,
+      'meeting_date' => Carbon::make($meetingRecord->meeting_date)->format('Y/m/d H:i:s'),
+      'title' => $meetingRecord->title . '_update',
+      'summary' => $meetingRecord->summary . '_update',
+      'members' => $meetingRecord->members->pluck('id')->toArray(),
+    ];
+    $user = User::where('id', '!=', $meetingRecord->recorded_by)->first();
+    $response = $this->actingAs($user)->putJson(route('meetingRecord.update', $meetingRecord->id), $willDenied);
+    $response->assertForbidden();
+
+    $result = parent::$openApiValidator->validate('putMeetingRecordId', 403, json_decode($response->getContent(), true));
+    $this->assertFalse($result->hasErrors(), $result);
+  }
+
+  /**
+   * @test
+   * @group meeting_record
+   */
   public function should_議事録の詳細表示()
   {
     $response = $this->actingAs($this->user)->getJson(route('meetingRecord.show', 1));
@@ -295,13 +319,31 @@ class MeetingRecordTest extends TestCase
   public function should_議事録の削除()
   {
     $meetingRecord = MeetingRecord::orderBy('id', 'desc')->first();
-    $id = $meetingRecord->id;
-    $response = $this->actingAs($this->user)->deleteJson(route('meetingRecord.destroy', $id));
+    $user = User::find($meetingRecord->recorded_by);
+    $response = $this->actingAs($user)->deleteJson(route('meetingRecord.destroy', $meetingRecord->id));
     $response->assertNoContent();
     $this->assertSoftDeleted('meeting_records', [
-      'id' => $id
+      'id' => $meetingRecord->id
     ]);
     $result = parent::$openApiValidator->validate('deleteMeetingRecordId', 204, json_decode($response->getContent(), true));
+    $this->assertFalse($result->hasErrors(), $result);
+  }
+  /**
+   * @test
+   * @group meeting_record
+   */
+  public function should_投稿者以外の削除リクエストにはForbiddenを返却する()
+  {
+    $meetingRecord = MeetingRecord::orderBy('id', 'desc')->first();
+    $exceptUser = User::where('id','!=', $meetingRecord->recorded_by)->first();
+    $response = $this->actingAs($exceptUser)->deleteJson(route('meetingRecord.destroy', $meetingRecord->id));
+    $response->assertForbidden();
+    $this->assertDatabaseHas('meeting_records', [
+      'id' => $meetingRecord->id,
+      'deleted_at' => null,
+    ]);
+
+    $result = parent::$openApiValidator->validate('deleteMeetingRecordId', 403, json_decode($response->getContent(), true));
     $this->assertFalse($result->hasErrors(), $result);
   }
 

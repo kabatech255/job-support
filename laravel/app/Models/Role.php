@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Contracts\Models\ModelInterface;
 use App\Models\Abstracts\CommonModel as Model;
 
 /**
@@ -21,8 +22,10 @@ use App\Models\Abstracts\CommonModel as Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Role whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Role whereValue($value)
  * @mixin \Eloquent
+ * @property string $label 権限名のラベル
+ * @method static \Illuminate\Database\Eloquent\Builder|Role whereLabel($value)
  */
-class Role extends Model
+class Role extends Model implements ModelInterface
 {
-    //
+  //
 }
