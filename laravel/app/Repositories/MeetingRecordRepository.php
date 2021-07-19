@@ -14,16 +14,4 @@ class MeetingRecordRepository extends EloquentRepository implements MeetingRecor
   {
     $this->setModel($model);
   }
-
-  /**
-   * @param array $params
-   * @param null $id
-   * @return Model
-   */
-  public function saveWithMembers(array $params, $id = null): Model
-  {
-    $meetingRecord = parent::save($params, $id);
-    $meetingRecord->members()->sync($params['members'] ?? []);
-    return $meetingRecord;
-  }
 }

@@ -75,22 +75,44 @@ abstract class EloquentRepository extends CommonAbstractRepository
   /**
    * @param array $params
    * @param Model $parent
-   * @param string $methodName
-   * @param int|null $id
+   * @param string $method
+   * @param $id
    * @return Model
    */
-  public function attach(array $params, Model $parent, string $methodName, int $id = null): Model
+  public function attach(array $params, Model $parent, string $method, $id = null): Model
   {
-    if (method_exists($parent, $methodName)) {
-      return $parent->{$methodName}()->updateOrCreate(
+    if ($id instanceof Model) {
+      $id = $id->id;
+    }
+    if (method_exists($parent, $method)) {
+      // 子モデル
+      return $parent->{$method}()->updateOrCreate(
         ['id' => $id],
         $this->qualifiedUpdateParams($params)
       );
     }
+    // リレーション定義が無かった場合は親モデルを返す
     return $parent;
   }
 
   /**
+   * @param array $params
+   * @param string $method
+   * @param $id
+   * @return Model
+   */
+  public function saveWithMembers(array $params, string $method = 'members', $id = null): Model
+  {
+    $model = $this->save($params, $id);
+    if (method_exists($model, $method)) {
+      $model->{$method}()->sync($params[$method]);
+    }
+    return $model;
+  }
+
+  /**
+   * @param $id
+   * @param array|null $loads
    * @return Model
    */
   public function find($id, ?array $loads = []): Model

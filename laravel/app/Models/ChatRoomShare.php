@@ -29,7 +29,12 @@ class ChatRoomShare extends Model
 {
   protected $table = 'chat_room_shares';
   protected $fillable = [
-    'shared_by'
+    'shared_by',
+    'is_editable',
+  ];
+
+  protected $casts = [
+    'is_editable' => 'boolean'
   ];
 
   /**
