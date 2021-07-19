@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Abstracts\CommonModel as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Contracts\Models\ModelInterface;
 
 /**
  * App\Models\ChatMessage
@@ -34,8 +35,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read int|null $images_count
  * @property-read \App\Models\User|null $to
  */
-class ChatMessage extends Model
+class ChatMessage extends Model implements ModelInterface
 {
+  use SoftDeletes;
+
   protected $table = 'chat_messages';
 
   protected $fillable = [
@@ -43,6 +46,11 @@ class ChatMessage extends Model
     'written_by',
     'mentioned_to',
     'body',
+  ];
+
+  const RELATIONS_ARRAY = [
+    'writtenBy',
+    'to',
   ];
 
   /**

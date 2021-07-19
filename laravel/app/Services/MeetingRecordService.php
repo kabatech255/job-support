@@ -85,7 +85,7 @@ class MeetingRecordService extends Service
   public function update(array $params, $id): MeetingRecord
   {
     // 議事録の保存
-    $meetingRecord = $this->repository()->saveWithMembers($params, $id);
+    $meetingRecord = $this->repository()->saveWithMembers($params, 'members', $id);
     if (isset($params['meeting_decisions'])) {
       foreach ($params['meeting_decisions'] as $meetingDecisionParams) {
         $this->saveDecisionByRecord($meetingDecisionParams, $meetingRecord);

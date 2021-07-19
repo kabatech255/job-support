@@ -21,6 +21,8 @@ tags:
     description: blog
   - name: chat_room
     description: chat room
+  - name: chat_message
+    description: chat message
   - name: meeting_record
     description: meeting record
 paths:
@@ -214,6 +216,382 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultError'
       summary: 認証者のチャットルーム取得
+  /chat_room:
+    parameters: []
+    post:
+      summary: チャットルームの作成
+      operationId: postChatRoom
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatRoom'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidError'
+      description: チャットルームの新規作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRoomForm'
+          text/plain:
+            schema:
+              type: object
+              properties: {}
+        description: チャットルームの投稿フォーム
+      tags:
+        - chat_room
+      security:
+        - cookieAuth: []
+  '/chat_room/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: チャットルームの詳細表示
+      operationId: getChatRoomId
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatRoom'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+      description: チャットルームのリストをクリックした時等
+      tags:
+        - chat_room
+      security:
+        - cookieAuth: []
+    put:
+      summary: チャットルームの更新
+      operationId: putChatRoomId
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatRoom'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRoomForm'
+      description: ルーム名を変えたいなど
+      tags:
+        - chat_room
+      security:
+        - cookieAuth: []
+    delete:
+      summary: チャットルームの削除
+      operationId: deleteChatRoomId
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+      description: チャットルームの削除
+      tags:
+        - chat_room
+      security:
+        - cookieAuth: []
+  '/chat_room/{id}/member/{member_id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: member_id
+        in: path
+        required: true
+    delete:
+      summary: チャットルームメンバーの削除
+      operationId: deleteChatMemberId
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+      description: メンバー自身が退室する、管理者が除名する等
+      tags:
+        - chat_room
+      security:
+        - cookieAuth: []
+  '/chat_room/{id}/message':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    post:
+      summary: チャットメッセージの追加
+      operationId: postChatMessage
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatMessage'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidError'
+      description: チャットメッセージの追加
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatMessageForm'
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+        description: ''
+      tags:
+        - chat_message
+        - chat_room
+      security:
+        - cookieAuth: []
+  '/chat_room/{id}/message/{message_id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: message_id
+        in: path
+        required: true
+    put:
+      summary: チャットメッセージの更新
+      operationId: putChatMessageId
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatMessage'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+      description: チャットメッセージの更新
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatMessageForm'
+      tags:
+        - chat_message
+        - chat_room
+      security:
+        - cookieAuth: []
+    delete:
+      summary: チャットメッセージの削除
+      operationId: deleteChatMessageId
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+      description: チャットメッセージの削除
+      tags:
+        - chat_message
+        - chat_room
+      security:
+        - cookieAuth: []
   /author/meeting_record:
     get:
       security:
@@ -345,7 +723,7 @@ paths:
     parameters: []
   '/meeting_record/{id}':
     put:
-      summary: 会議議事録の詳細、更新、削除
+      summary: 会議議事録の更新
       operationId: putMeetingRecordId
       responses:
         '200':
@@ -386,6 +764,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/MeetingRecordForm'
+      tags:
+        - meeting_record
     parameters:
       - schema:
           type: integer
@@ -394,7 +774,7 @@ paths:
         required: true
         description: 会議議事録ID
     get:
-      summary: ''
+      summary: 会議議事録の詳細表示
       operationId: getMeetingRecordId
       responses:
         '200':
@@ -424,8 +804,10 @@ paths:
       security:
         - cookieAuth: []
       description: 議事録の詳細情報取得
+      tags:
+        - meeting_record
     delete:
-      summary: ''
+      summary: 会議議事録の削除
       operationId: deleteMeetingRecordId
       responses:
         '204':
@@ -455,6 +837,8 @@ paths:
       description: 議事録の削除
       security:
         - cookieAuth: []
+      tags:
+        - meeting_record
 components:
   schemas:
     Admin:
@@ -549,13 +933,6 @@ components:
     ChatRoom:
       title: ChatRoom
       description: チャットルーム
-      required:
-        - id
-        - name
-        - members
-        - messages
-        - created_at
-        - updated_at
       type: object
       properties:
         id:
@@ -565,6 +942,7 @@ components:
           type: string
         members:
           type: array
+          minItems: 0
           items:
             $ref: '#/components/schemas/User'
         messages:
@@ -577,6 +955,13 @@ components:
           $ref: '#/components/schemas/DateFormat'
         updated_at:
           $ref: '#/components/schemas/DateFormat'
+      required:
+        - id
+        - name
+        - members
+        - messages
+        - created_at
+        - updated_at
     DateFormat:
       type: string
       format: date-time
@@ -753,6 +1138,65 @@ components:
         - created_by
         - body
         - time_limit
+    ChatRoomForm:
+      title: ChatRoomForm
+      description: ChatRoomの投稿フォーム
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 0
+          exclusiveMinimum: true
+        created_by:
+          type: integer
+          format: int64
+          example: 1
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        members:
+          type: array
+          items:
+            type: integer
+            minimum: 0
+            nullable: true
+      required:
+        - created_by
+        - name
+    ChatMessageForm:
+      title: ChatMessageForm
+      description: ChatMessageの投稿フォーム
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 0
+          exclusiveMinimum: true
+        written_by:
+          type: integer
+          format: int64
+          example: 1
+        mentioned_to:
+          type: integer
+          format: int64
+          example: 1
+          nullable: true
+        body:
+          type: string
+        files:
+          type: array
+          maxItems: 5
+          minItems: 0
+          items:
+            type: object
+            nullable: true
+      required:
+        - written_by
+        - mentioned_to
+        - body
     MeetingDecision:
       title: MeetingDecision
       description: ミーティング決定事項
