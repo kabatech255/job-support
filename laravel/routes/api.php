@@ -31,6 +31,14 @@ Route::group(['middleware' => 'api'], function () {
   Route::middleware('auth')->group(function() {
     // チャットルーム
     Route::get('/author/chat_room', 'ChatRoomController@findByOwner')->name('chatRoom.findByOwner');
+    Route::post('/chat_room', 'ChatRoomController@store')->name('chatRoom.store');
+    Route::put('/chat_room/{id}', 'ChatRoomController@update')->name('chatRoom.update');
+    Route::get('/chat_room/{id}', 'ChatRoomController@show')->name('chatRoom.show');
+    Route::delete('/chat_room/{id}', 'ChatRoomController@destroy')->name('chatRoom.destroy');
+    // チャットメッセージ
+    Route::post('/chat_room/{chat_room_id}/message', 'ChatMessageController@store')->name('chatMessage.store');
+    Route::put('/chat_room/{chat_room_id}/message/{id}', 'ChatMessageController@update')->name('chatMessage.update');
+    Route::delete('/chat_room/{chat_room_id}/message/{id}', 'ChatMessageController@destroy')->name('chatMessage.destroy');
     // 会議議事録
     Route::get('/author/meeting_record', 'MeetingRecordController@index')->name('meetingRecord.index');
     Route::post('/meeting_record', 'MeetingRecordController@store')->name('meetingRecord.store');

@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use App\Contracts\Models\RelationalDeleteInterface;
 use App\Models\Abstracts\CommonModel as Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 /**
  * App\Models\ChatRoom
  *
@@ -29,12 +32,19 @@ use App\Models\Abstracts\CommonModel as Model;
  * @mixin \Eloquent
  * @property-read int|null $members_count
  */
-class ChatRoom extends Model
+class ChatRoom extends Model implements RelationalDeleteInterface
 {
+  use SoftDeletes;
+
   protected $table = 'chat_rooms';
   protected $fillable = [
     'created_by',
     'name',
+  ];
+  const RELATIONS_ARRAY = [
+    'members',
+    'messages.writtenBy',
+    'messages.to',
   ];
 
   /**
@@ -51,7 +61,7 @@ class ChatRoom extends Model
   public function members()
   {
     return $this->belongsToMany(User::class, 'chat_room_shares', 'chat_room_id', 'shared_with')
-      ->withTimestamps()->withPivot('shared_by');
+      ->as('option')->withTimestamps()->withPivot('shared_by', 'is_editable');
   }
 
   /**
@@ -60,5 +70,12 @@ class ChatRoom extends Model
   public function messages()
   {
     return $this->hasMany(ChatMessage::class, 'chat_room_id', 'id');
+  }
+
+  public function getDeleteRelations(): array
+  {
+    return [
+      $this->messages
+    ];
   }
 }
