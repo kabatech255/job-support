@@ -35,6 +35,10 @@ class ScheduleShare extends Model
     'is_editable',
   ];
 
+  protected $casts = [
+    'is_editable' => 'boolean'
+  ];
+
   /**
    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
    */

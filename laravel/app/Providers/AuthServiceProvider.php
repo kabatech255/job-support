@@ -17,6 +17,8 @@ class AuthServiceProvider extends ServiceProvider
    */
   protected $policies = [
     'App\Models\MeetingRecord' => 'App\Policies\MeetingRecordPolicy',
+    'App\Models\ChatRoom' => 'App\Policies\ChatRoomPolicy',
+    'App\Models\ChatMessage' => 'App\Policies\ChatMessagePolicy',
   ];
 
   /**

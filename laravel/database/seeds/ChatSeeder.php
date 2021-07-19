@@ -26,7 +26,10 @@ class ChatSeeder extends Seeder
       ]);
       // 部署のチャットルームにメンバー追加
       $manager->department->members->each(function($member) use ($manager, $room) {
-        $room->members()->attach([$member->id => ['shared_by' => $manager->id]]);
+        $room->members()->attach([$member->id => [
+          'shared_by' => $manager->id,
+          'is_editable' => 1,
+        ]]);
       });
       factory(ChatMessage::class)->create([
         'chat_room_id' => $room->id,

@@ -18,6 +18,7 @@ class CreateChatRoomSharesTable extends Migration
       $table->unsignedBigInteger('chat_room_id')->comment('ルームID');
       $table->unsignedBigInteger('shared_with')->comment('共有相手');
       $table->unsignedBigInteger('shared_by')->comment('共有した人');
+      $table->boolean('is_editable')->default(false)->comment('編集権限');
       // 物理削除
       $table->timestamps();
 
