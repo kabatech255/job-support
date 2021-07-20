@@ -2,18 +2,18 @@
 
 namespace App\Services;
 
-use App\Contracts\Repositories\TodoRepositoryInterface as Repository;
+use App\Contracts\Repositories\TaskRepositoryInterface as Repository;
 use App\Enums\ProcessFlag;
 use App\Models\MeetingDecision;
-use App\Models\Todo as Task;
+use App\Models\Task as Task;
 use App\Services\Traits\WithRepositoryTrait;
-use App\Contracts\Queries\TodoQueryInterface as Query;
+use App\Contracts\Queries\TaskQueryInterface as Query;
 
-class TodoService extends Service
+class TaskService extends Service
 {
   use WithRepositoryTrait;
 
-  private $attachMethod = 'todos';
+  private $attachMethod = 'tasks';
 
   /**
    * UserService constructor.
@@ -53,10 +53,10 @@ class TodoService extends Service
   /**
    * @param array $params
    * @param MeetingDecision $meetingDecision
-   * @param int $id
+   * @param $id
    * @return Task
    */
-  public function update(array $params, MeetingDecision $meetingDecision, int $id): Task
+  public function update(array $params, MeetingDecision $meetingDecision, $id): Task
   {
     return $this->repository()->attach($params, $meetingDecision, $this->attachMethod, $id);
   }

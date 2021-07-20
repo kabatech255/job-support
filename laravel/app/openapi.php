@@ -9,7 +9,7 @@ namespace App;
    スケジュール管理・共有
    ファイル共有
    チャット
-   Todo管理等",
+   Task管理等",
    version="1.0.0",
  * )
  *

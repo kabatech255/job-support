@@ -7,7 +7,7 @@ use App\Models\Abstracts\CommonModel as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * App\Models\Todo
+ * App\Models\Task
  *
  * @property int $id
  * @property int|null $meeting_decision_id 会議決定事項ID
@@ -25,32 +25,32 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read \App\Models\User $owner
  * @property-read \App\Models\Priority|null $priority
  * @property-read \App\Models\Progress|null $progress
- * @method static \Illuminate\Database\Eloquent\Builder|Todo newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Todo newQuery()
- * @method static \Illuminate\Database\Query\Builder|Todo onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|Todo query()
- * @method static \Illuminate\Database\Eloquent\Builder|Todo whereBody($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Todo whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Todo whereCreatedBy($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Todo whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Todo whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Todo whereMeetingRecordId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Todo whereOwnerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Todo wherePriorityId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Todo whereProgressId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Todo whereTimeLimit($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Todo whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|Todo withTrashed()
- * @method static \Illuminate\Database\Query\Builder|Todo withoutTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Task newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Task newQuery()
+ * @method static \Illuminate\Database\Query\Builder|Task onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Task query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereMeetingRecordId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereOwnerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task wherePriorityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereProgressId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereTimeLimit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|Task withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Task withoutTrashed()
  * @mixin \Eloquent
  * @property-read \App\Models\MeetingDecision|null $meetingDecision
- * @method static \Illuminate\Database\Eloquent\Builder|Todo whereMeetingDecisionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereMeetingDecisionId($value)
  */
-class Todo extends Model implements ModelInterface
+class Task extends Model implements ModelInterface
 {
   use SoftDeletes;
 
-  protected $table = 'todos';
+  protected $table = 'tasks';
   protected $fillable = [
     'meeting_record_id',
     'owner_id',
@@ -76,7 +76,7 @@ class Todo extends Model implements ModelInterface
     return $this->belongsTo(MeetingDecision::class, 'meeting_decision_id', 'id');
   }
   /**
-   * Todoの担当者
+   * Taskの担当者
    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
    */
   public function owner()
@@ -84,7 +84,7 @@ class Todo extends Model implements ModelInterface
     return $this->belongsTo(User::class, 'owner_id', 'id');
   }
   /**
-   * 議事録作成者に登録されたTodo
+   * 議事録作成者に登録されたTask
    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
    */
   public function createdBy()

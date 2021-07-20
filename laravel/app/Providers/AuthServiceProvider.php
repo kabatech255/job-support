@@ -19,6 +19,9 @@ class AuthServiceProvider extends ServiceProvider
     'App\Models\MeetingRecord' => 'App\Policies\MeetingRecordPolicy',
     'App\Models\ChatRoom' => 'App\Policies\ChatRoomPolicy',
     'App\Models\ChatMessage' => 'App\Policies\ChatMessagePolicy',
+    'App\Models\Schedule' => 'App\Policies\SchedulePolicy',
+    'App\Models\DocumentFolder' => 'App\Policies\DocumentFolderPolicy',
+    'App\Models\DocumentFile' => 'App\Policies\DocumentFilePolicy',
   ];
 
   /**

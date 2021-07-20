@@ -31,7 +31,7 @@ class StoreRequest extends FormRequest
     return [
       'recorded_by' => 'required|integer|' . Rule::in(User::pluck('id')->toArray()),
       'place_id' => 'nullable|integer|' . Rule::in(MeetingPlace::pluck('id')->toArray()),
-      'meeting_date' => 'required|date_format:Y/m/d H:i:s',
+      'meeting_date' => 'required|date_format:Y/m/d H:i',
 //      'title' => 'required|string|max:80|regex:/^[ぁ-んァ-ヶー一-龠\s\w\$\(\)~\.=\+\-０-９、。（）「」\n\r]+$/u',
       'title' => 'required|string|max:80',
       'summary' => 'nullable|string',
@@ -42,13 +42,13 @@ class StoreRequest extends FormRequest
       'meeting_decisions.*.written_by' => 'required|integer|' . Rule::in(User::pluck('id')->toArray()),
       'meeting_decisions.*.subject' => 'nullable|string|max:80',
       'meeting_decisions.*.body' => 'required|string|max:140',
-      'meeting_decisions.*.todos' => 'nullable|array',
-      'meeting_decisions.*.todos.*.owner_id' => 'required|integer|' . Rule::in(User::pluck('id')->toArray()),
-      'meeting_decisions.*.todos.*.created_by' => 'required|integer|' . Rule::in(User::pluck('id')->toArray()),
-      'meeting_decisions.*.todos.*.priority_id' => 'nullable|integer|' . Rule::in(Priority::pluck('id')->toArray()),
-      'meeting_decisions.*.todos.*.progress_id' => 'nullable|integer|' . Rule::in(Progress::pluck('id')->toArray()),
-      'meeting_decisions.*.todos.*.body' => 'required|string|max:140|regex:/^[ぁ-んァ-ヶー一-龠\s\w\$\(\)~\.=\+\-０-９、。（）「」\n\r]+$/u',
-      'meeting_decisions.*.todos.*.time_limit' => 'required|date_format:Y/m/d H:i:s',
+      'meeting_decisions.*.tasks' => 'nullable|array',
+      'meeting_decisions.*.tasks.*.owner_id' => 'required|integer|' . Rule::in(User::pluck('id')->toArray()),
+      'meeting_decisions.*.tasks.*.created_by' => 'required|integer|' . Rule::in(User::pluck('id')->toArray()),
+      'meeting_decisions.*.tasks.*.priority_id' => 'nullable|integer|' . Rule::in(Priority::pluck('id')->toArray()),
+      'meeting_decisions.*.tasks.*.progress_id' => 'nullable|integer|' . Rule::in(Progress::pluck('id')->toArray()),
+      'meeting_decisions.*.tasks.*.body' => 'required|string|max:140|regex:/^[ぁ-んァ-ヶー一-龠\s\w\$\(\)~\.=\+\-０-９、。（）「」\n\r]+$/u',
+      'meeting_decisions.*.tasks.*.time_limit' => 'required|date_format:Y/m/d H:i',
     ];
   }
 
@@ -64,12 +64,12 @@ class StoreRequest extends FormRequest
       'meeting_decisions.*.written_by' => '入力者',
       'meeting_decisions.*.subject' => '議題',
       'meeting_decisions.*.body' => '決定内容',
-      'meeting_decisions.*.todos.*.owner_id' => 'タスク担当者',
-      'meeting_decisions.*.todos.*.created_by' => 'タスク登録者',
-      'meeting_decisions.*.todos.*.priority_id' => '優先度',
-      'meeting_decisions.*.todos.*.progress_id' => '進捗度',
-      'meeting_decisions.*.todos.*.body' => 'タスクの内容',
-      'meeting_decisions.*.todos.*.time_limit' => 'タスクの期限',
+      'meeting_decisions.*.tasks.*.owner_id' => 'タスク担当者',
+      'meeting_decisions.*.tasks.*.created_by' => 'タスク登録者',
+      'meeting_decisions.*.tasks.*.priority_id' => '優先度',
+      'meeting_decisions.*.tasks.*.progress_id' => '進捗度',
+      'meeting_decisions.*.tasks.*.body' => 'タスクの内容',
+      'meeting_decisions.*.tasks.*.time_limit' => 'タスクの期限',
     ];
   }
 }

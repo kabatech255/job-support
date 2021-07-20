@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
     $this->call(AdminSeeder::class);
     $this->call(BlogSeeder::class);
     $this->call(MeetingSeeder::class);
-    $this->call(TodoSeeder::class);
+    $this->call(TaskSeeder::class);
     $this->call(ScheduleSeeder::class);
     $this->call(ChatSeeder::class);
 
