@@ -72,6 +72,16 @@ trait BuilderTrait
   }
 
   /**
+   * @param string $relationName
+   * @param string $columnName
+   * @return bool
+   */
+  public function includesInRelationColumns(string $relationName, string $columnName)
+  {
+    return in_array($columnName, $this->relationTargets()[$relationName]);
+  }
+
+  /**
    * @param string $word
    * @return string
    */

@@ -136,4 +136,14 @@ abstract class EloquentRepository extends CommonAbstractRepository
     return $this->model()->all();
   }
 
+  /**
+   * @param $columnName
+   * @param $value
+   * @return Model[]
+   */
+  public function findBy($columnName, $value): array
+  {
+    return $this->model()->where($columnName, $value)->get()->all();
+  }
+
 }

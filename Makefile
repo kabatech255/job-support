@@ -1,7 +1,14 @@
 GROUP = auth
+GROUP = User
 
 start:
 	docker compose start
+
+exec:
+	docker compose exec laravel ash
+
+stop:
+	docker compose stop
 
 phpstan:
 	docker compose exec laravel ash -c "composer phpstan"
@@ -14,8 +21,5 @@ test-all:
 	cp ./openapi/openapi.yml ./laravel/
 	docker compose exec laravel ash -c "make test-all"
 
-exec:
-	docker compose exec laravel ash
-
-stop:
-	docker compose stop
+crud:
+	docker compose exec laravel ash -c "php artisan initial:api ${MODEL}"

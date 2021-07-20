@@ -13,8 +13,8 @@ use App\Models\Abstracts\CommonModel as Model;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Todo[] $todos
- * @property-read int|null $todos_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Task[] $tasks
+ * @property-read int|null $tasks_count
  * @method static \Illuminate\Database\Eloquent\Builder|Progress newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Progress newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Progress query()
@@ -38,8 +38,8 @@ class Progress extends Model
   /**
    * @return \Illuminate\Database\Eloquent\Relations\HasMany
    */
-  public function todos()
+  public function tasks()
   {
-    return $this->hasMany(Todo::class, 'progress_id', 'id');
+    return $this->hasMany(Task::class, 'progress_id', 'id');
   }
 }

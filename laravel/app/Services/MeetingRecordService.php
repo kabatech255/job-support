@@ -52,7 +52,7 @@ class MeetingRecordService extends Service
       'members',
       'decisions.decidedBy',
       'decisions.writtenBy',
-      'decisions.todos',
+      'decisions.tasks',
       'recordedBy',
       'place',
     ]);
@@ -113,9 +113,9 @@ class MeetingRecordService extends Service
   {
     if (isset($meetingDecisionParams['id']) && isset($meetingDecisionParams['flag'])) {
       return $this->meetingDecisionService->updateOrDelete($meetingDecisionParams, $meetingRecord, $meetingDecisionParams['id']);
-    } elseif(isset($meetingDecisionParams['id']) && isset($meetingDecisionParams['todos'])) {
+    } elseif(isset($meetingDecisionParams['id']) && isset($meetingDecisionParams['tasks'])) {
       $meetingDecision = $this->meetingDecisionService->find($meetingDecisionParams['id']);
-      return $this->meetingDecisionService->saveTodosByDecision($meetingDecisionParams, $meetingDecision);
+      return $this->meetingDecisionService->saveTasksByDecision($meetingDecisionParams, $meetingDecision);
     } else {
       return $this->meetingDecisionService->store($meetingDecisionParams, $meetingRecord);
     }

@@ -57,6 +57,16 @@ abstract class EloquentQuery extends CommonAbstractQuery
 
   /**
    * @param array $params
+   * @param array|null $relation
+   * @return array
+   */
+  public function all(array $params, ?array $relation = null)
+  {
+    return $this->search($params, $relation ?? $this->relation())->get()->all();
+  }
+
+  /**
+   * @param array $params
    * @param array $relation
    * @return Builder
    */
@@ -102,10 +112,10 @@ abstract class EloquentQuery extends CommonAbstractQuery
    */
   protected function searchOtherLocation(Builder $query, array $param)
   {
-    $s = key($param);
-    $keyword = $param[$s];
-    $relationalPair = $this->splitColumn($s);
-    $query = $this->otherLocationQuery($query, $relationalPair[0], $relationalPair[1], $keyword, '=');
+    $queryParamKey = key($param);
+    $queryValue = $param[$queryParamKey];
+    $relationalPair = $this->splitColumn($queryParamKey);
+    $query = $this->otherLocationQuery($query, $relationalPair[0], $relationalPair[1], $queryValue, '=');
 
     return $query;
   }
@@ -122,8 +132,8 @@ abstract class EloquentQuery extends CommonAbstractQuery
     if ($filter === 'like') {
       $value = $this->liked($value);
     }
-    $query->whereHas($tableName, function($q) use ($columnName, $value, $filter) {
-      if ($this->isValidColumnName($columnName)) {
+    $query->whereHas($tableName, function($q) use ($tableName, $columnName, $value, $filter) {
+      if ($this->includesInRelationColumns($tableName, $columnName)) {
         $q->where($columnName, $filter, $value);
       }
     });

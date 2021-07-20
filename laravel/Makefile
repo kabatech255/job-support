@@ -1,4 +1,6 @@
 GROUP = auth
+MODEL = User
+
 test:
 	php artisan migrate:reset --env=testing
 	php artisan migrate --seed --env=testing
