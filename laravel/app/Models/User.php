@@ -38,8 +38,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read int|null $meetings_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Todo[] $ownTodos
- * @property-read int|null $own_todos_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Task[] $ownTasks
+ * @property-read int|null $own_tasks_count
  * @property-read \Illuminate\Database\Eloquent\Collection|User[] $sharedDocuments
  * @property-read int|null $shared_documents_count
  * @property-read \Illuminate\Database\Eloquent\Collection|User[] $sharedSchedules
@@ -72,8 +72,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|User withoutTrashed()
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|User whereFilePath($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Todo[] $todos
- * @property-read int|null $todos_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Task[] $tasks
+ * @property-read int|null $tasks_count
  * @method static \Illuminate\Database\Eloquent\Builder|User whereFamilyName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereFamilyNameKana($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereGivenName($value)
@@ -148,9 +148,9 @@ class User extends Authenticatable
   /**
    * @return \Illuminate\Database\Eloquent\Relations\HasMany
    */
-  public function ownTodos()
+  public function ownTasks()
   {
-    return $this->hasMany(Todo::class, 'login_id', 'id');
+    return $this->hasMany(Task::class, 'login_id', 'id');
   }
 
   /**
@@ -167,7 +167,7 @@ class User extends Authenticatable
   public function chatRooms()
   {
     return $this->belongsToMany(ChatRoom::class, 'chat_room_shares', 'shared_with', 'chat_room_id')
-      ->withTimestamps()->withPivot('shared_by');
+      ->withTimestamps()->withPivot('shared_by', 'is_editable');
   }
 
   /**
@@ -194,7 +194,7 @@ class User extends Authenticatable
    */
   public function sharedSchedules()
   {
-    return $this->belongsToMany(User::class, 'schedule_shares', 'shared_with', 'schedule_id')
+    return $this->belongsToMany(Schedule::class, 'schedule_shares', 'shared_with', 'schedule_id')
       ->withTimestamps()
       ->withPivot('is_editable', 'shared_by');
   }
@@ -202,9 +202,9 @@ class User extends Authenticatable
   /**
    * @return \Illuminate\Database\Eloquent\Relations\HasMany
    */
-  public function todos()
+  public function tasks()
   {
-    return $this->hasMany(Todo::class, 'owner_id', 'id');
+    return $this->hasMany(Task::class, 'owner_id', 'id');
   }
 
   /**

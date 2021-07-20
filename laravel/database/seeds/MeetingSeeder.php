@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 use App\Models\MeetingRecord;
 use App\Models\MeetingDecision;
 use App\Models\User;
-use App\Models\Todo;
+use App\Models\Task;
 use App\Models\Priority;
 use App\Models\Progress;
 use App\Models\MeetingPlace;
@@ -18,7 +18,7 @@ class MeetingSeeder extends Seeder
    */
   public function run()
   {
-    DB::table('todos')->truncate();
+    DB::table('tasks')->truncate();
     DB::table('meeting_decisions')->truncate();
     DB::table('meeting_members')->truncate();
     DB::table('meeting_records')->truncate();
@@ -38,9 +38,9 @@ class MeetingSeeder extends Seeder
         'decided_by' => array_random($members),
         'written_by' => $writtenBy,
       ]);
-      // 議事録からのTodoの追加
+      // 議事録からのTaskの追加
       $meetingDecisions->each(function($meetingDecision) {
-        factory(Todo::class, 1)->create([
+        factory(Task::class, 1)->create([
           'meeting_decision_id' => $meetingDecision->id,
           'owner_id' => array_random(User::all()->pluck('id')->toArray()),
           'created_by' => $meetingDecision->written_by,

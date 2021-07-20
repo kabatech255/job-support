@@ -9,7 +9,7 @@ use App\Models\MeetingPlace;
 use App\Models\MeetingRecord;
 use App\Models\Priority;
 use App\Models\Progress;
-use App\Models\Todo;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -50,7 +50,7 @@ class MeetingRecordTest extends TestCase
     $expects = [
       'recorded_by' => $this->user->id,
       'place_id' => array_random(MeetingPlace::pluck('id')->toArray()),
-      'meeting_date' => Carbon::now()->format('Y/m/d H:i:s'),
+      'meeting_date' => Carbon::now()->format('Y/m/d H:i'),
       'title' => '会議名',
       'summary' => 'This is a summary of the meeting from expects.',
       'members' => User::pluck('id')->shuffle()->splice(0, 2)->all(),
@@ -80,9 +80,9 @@ class MeetingRecordTest extends TestCase
       'body' => $expects['meeting_decisions'][0]['body'],
     ]);
     // 決議事項にひもづくタスク
-    $this->assertDatabaseHas('todos', [
+    $this->assertDatabaseHas('tasks', [
       'meeting_decision_id' => $meetingRecord->decisions->first()->id,
-      'body' => $expects['meeting_decisions'][0]['todos'][0]['body'],
+      'body' => $expects['meeting_decisions'][0]['tasks'][0]['body'],
     ]);
 
     $result = parent::$openApiValidator->validate('postMeetingRecord', 201, json_decode($response->getContent(), true));
@@ -98,7 +98,7 @@ class MeetingRecordTest extends TestCase
     $willDenied = [
       'recorded_by' => 134, // usersテーブルにないID
       'place_id' => 9999, // placesテーブルにないID
-      'meeting_date' => Carbon::now()->format('Y-m-d H:i:s'), // フォーマットが違う
+      'meeting_date' => Carbon::now()->format('Y-m-d H:i'), // フォーマットが違う
       'title' => Str::random(81), // 80文字を超えている
       'members' => [134], // usersテーブルにないID
       'meeting_decisions' => [
@@ -108,14 +108,14 @@ class MeetingRecordTest extends TestCase
           'subject' => Str::random(81), // 80文字を超えている
           'body' => Str::random(141), // 140文字を超えている
           // タスク
-          'todos' => [
+          'tasks' => [
             [
               'owner_id' => 134,  // usersテーブルにないID
               'created_by' => 134,  // usersテーブルにないID
               'priority_id' => 9999,  // prioritiessテーブルにないID
               'progress_id' => 9999,  // progressテーブルにないID
               'body' => Str::random(141), // 140文字を超えている
-              'time_limit' => Carbon::now()->format('Y-m-d H:i:s'),  // フォーマットが違う
+              'time_limit' => Carbon::now()->format('Y-m-d H:i'),  // フォーマットが違う
             ]
           ]
         ],
@@ -133,12 +133,12 @@ class MeetingRecordTest extends TestCase
       'meeting_decisions.0.written_by',
       'meeting_decisions.0.subject',
       'meeting_decisions.0.body',
-      'meeting_decisions.0.todos.0.owner_id',
-      'meeting_decisions.0.todos.0.created_by',
-      'meeting_decisions.0.todos.0.priority_id',
-      'meeting_decisions.0.todos.0.progress_id',
-      'meeting_decisions.0.todos.0.body',
-      'meeting_decisions.0.todos.0.time_limit',
+      'meeting_decisions.0.tasks.0.owner_id',
+      'meeting_decisions.0.tasks.0.created_by',
+      'meeting_decisions.0.tasks.0.priority_id',
+      'meeting_decisions.0.tasks.0.progress_id',
+      'meeting_decisions.0.tasks.0.body',
+      'meeting_decisions.0.tasks.0.time_limit',
     ]);
     $this->assertDatabaseMissing('meeting_records', [
       'title' => $willDenied['title']
@@ -146,8 +146,8 @@ class MeetingRecordTest extends TestCase
     $this->assertDatabaseMissing('meeting_decisions', [
       'subject' => $willDenied['meeting_decisions'][0]['subject']
     ]);
-    $this->assertDatabaseMissing('todos', [
-      'body' => $willDenied['meeting_decisions'][0]['todos'][0]['body']
+    $this->assertDatabaseMissing('tasks', [
+      'body' => $willDenied['meeting_decisions'][0]['tasks'][0]['body']
     ]);
 
     $result = parent::$openApiValidator->validate('postMeetingRecord', 422, json_decode($response->getContent(), true));
@@ -163,7 +163,7 @@ class MeetingRecordTest extends TestCase
     $expects = [
       'recorded_by' => $this->user->id,
       'place_id' => array_random(MeetingPlace::pluck('id')->toArray()),
-      'meeting_date' => Carbon::now()->format('Y/m/d H:i:s'),
+      'meeting_date' => Carbon::now()->format('Y/m/d H:i'),
       'title' => '会議名',
       'summary' => 'This is a summary of the meeting from expects.',
       'members' => [],
@@ -192,7 +192,7 @@ class MeetingRecordTest extends TestCase
       'decided_by' => $this->user->id,
       'written_by' => $this->user->id,
     ]);
-    factory(Todo::class, 2)->create([
+    factory(Task::class, 2)->create([
       'meeting_decision_id' => $meetingDecisions->first()->id,
       'owner_id' => array_random($members),
       'created_by' => $this->user->id,
@@ -200,14 +200,14 @@ class MeetingRecordTest extends TestCase
     $expects = [
       'recorded_by' => $meetingRecord->recorded_by,
       'place_id' => $meetingRecord->place_id,
-      'meeting_date' => Carbon::make($meetingRecord->meeting_date)->format('Y/m/d H:i:s'),
+      'meeting_date' => Carbon::make($meetingRecord->meeting_date)->format('Y/m/d H:i'),
       'title' => $meetingRecord->title . '_update',
       'summary' => $meetingRecord->summary . '_update',
       'members' => $meetingRecord->members->pluck('id')->toArray(),
       'meeting_decisions' => array_merge($this->decisionsPutData($meetingDecisions), $this->decisionPostData()),
     ];
     $decisionCount = MeetingDecision::count();
-    $todoCount = Todo::count();
+    $taskCount = Task::count();
     $response = $this->actingAs($this->user)->putJson(route('meetingRecord.update', $meetingRecord->id), $expects);
     $response->assertOk();
 
@@ -238,24 +238,24 @@ class MeetingRecordTest extends TestCase
 
     // 決議事項にひもづくタスク
     $lastDecision = MeetingDecision::latest()->first();
-    $this->assertDatabaseHas('todos', [
+    $this->assertDatabaseHas('tasks', [
       // 更新したタスク
-      'id' => $meetingDecisions->first()->todos->first()->id,
-      'body' => $expects['meeting_decisions'][0]['todos'][0]['body'],
-    ])->assertDatabaseHas('todos', [
+      'id' => $meetingDecisions->first()->tasks->first()->id,
+      'body' => $expects['meeting_decisions'][0]['tasks'][0]['body'],
+    ])->assertDatabaseHas('tasks', [
       // 追加したタスク
       'meeting_decision_id' => $meetingDecisions->first()->id,
-      'body' => $expects['meeting_decisions'][0]['todos'][2]['body'],
-    ])->assertDatabaseHas('todos', [
+      'body' => $expects['meeting_decisions'][0]['tasks'][2]['body'],
+    ])->assertDatabaseHas('tasks', [
       // 新規追加した決議事項に紐づく新規タスク
       'meeting_decision_id' => $lastDecision->id,
-      'body' => $expects['meeting_decisions'][2]['todos'][0]['body'],
+      'body' => $expects['meeting_decisions'][2]['tasks'][0]['body'],
     ]);
-    $this->assertSoftDeleted('todos', [
-      'id' => $meetingDecisions->first()->todos->last()->id,
+    $this->assertSoftDeleted('tasks', [
+      'id' => $meetingDecisions->first()->tasks->last()->id,
     ]);
     // 1件ソフトデリートして2件新規追加 => プラス2
-    $this->assertDatabaseCount('todos', $todoCount + 2);
+    $this->assertDatabaseCount('tasks', $taskCount + 2);
 
     $result = parent::$openApiValidator->validate('putMeetingRecordId', 200, json_decode($response->getContent(), true));
     $this->assertFalse($result->hasErrors(), $result);
@@ -273,7 +273,7 @@ class MeetingRecordTest extends TestCase
     $willDenied = [
       'recorded_by' => $meetingRecord->recorded_by,
       'place_id' => $meetingRecord->place_id,
-      'meeting_date' => Carbon::make($meetingRecord->meeting_date)->format('Y/m/d H:i:s'),
+      'meeting_date' => Carbon::make($meetingRecord->meeting_date)->format('Y/m/d H:i'),
       'title' => $meetingRecord->title . '_update',
       'summary' => $meetingRecord->summary . '_update',
       'members' => $meetingRecord->members->pluck('id')->toArray(),
@@ -362,7 +362,7 @@ class MeetingRecordTest extends TestCase
         'subject' => $index > 0 ? $decision->subject : $decision->subject . '_update',
         'body' => $index > 0 ? $decision->body : $decision->body . '_update',
         // タスク
-        'todos' =>  $index > 0 ? $this->todosPutData($decision->todos) : array_merge($this->todosPutData($decision->todos), $this->todoPostData()),
+        'tasks' =>  $index > 0 ? $this->tasksPutData($decision->tasks) : array_merge($this->tasksPutData($decision->tasks), $this->taskPostData()),
       ];
     })->all();
   }
@@ -379,27 +379,27 @@ class MeetingRecordTest extends TestCase
         'subject' => 'this is a new subject from expects.',
         'body' => 'this is a new body of the decision from expects.',
         // タスク
-        'todos' => $this->todoPostData(),
+        'tasks' => $this->taskPostData(),
       ]
     ];
   }
 
   /**
-   * @param $todos
+   * @param $tasks
    * @return array[]
    */
-  private function todosPutData($todos): array
+  private function tasksPutData($tasks): array
   {
-    return $todos->map(function($todo, $i) {
+    return $tasks->map(function($task, $i) {
       return [
-        'id' => $todo->id,
+        'id' => $task->id,
         'flag' => $i > 0 ? ProcessFlag::value('delete') : ProcessFlag::value('update'),
-        'owner_id' => $todo->owner_id,
-        'created_by' => $todo->created_by,
-        'priority_id' => $todo->priority_id,
-        'progress_id' => $todo->progress_id,
-        'body' => $i > 0 ? $todo->body : $todo->body . '_update',
-        'time_limit' => Carbon::parse($todo->time_limit)->format('Y/m/d H:i:s'),
+        'owner_id' => $task->owner_id,
+        'created_by' => $task->created_by,
+        'priority_id' => $task->priority_id,
+        'progress_id' => $task->progress_id,
+        'body' => $i > 0 ? $task->body : $task->body . '_update',
+        'time_limit' => Carbon::parse($task->time_limit)->format('Y/m/d H:i'),
       ];
     })->all();
   }
@@ -407,7 +407,7 @@ class MeetingRecordTest extends TestCase
   /**
    * @return array[]
    */
-  private function todoPostData(): array
+  private function taskPostData(): array
   {
     return [
       [
@@ -416,7 +416,7 @@ class MeetingRecordTest extends TestCase
         'priority_id' => array_random(Priority::pluck('id')->toArray()),
         'progress_id' => array_random(Progress::pluck('id')->toArray()),
         'body' => 'this is a new body of the task.',
-        'time_limit' => Carbon::now()->format('Y/m/d H:i:s'),
+        'time_limit' => Carbon::now()->format('Y/m/d H:i'),
       ]
     ];
   }

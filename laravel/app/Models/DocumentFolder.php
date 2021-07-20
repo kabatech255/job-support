@@ -46,6 +46,11 @@ class DocumentFolder extends Model
     'name',
   ];
 
+  const RELATIONS_ARRAY = [
+    'createdBy',
+    'role',
+  ];
+
   /**
    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
    */

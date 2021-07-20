@@ -37,8 +37,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|MeetingDecision withTrashed()
  * @method static \Illuminate\Database\Query\Builder|MeetingDecision withoutTrashed()
  * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Todo[] $todos
- * @property-read int|null $todos_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Task[] $tasks
+ * @property-read int|null $tasks_count
  */
 class MeetingDecision extends CommonModel implements RelationalDeleteInterface
 {
@@ -55,7 +55,7 @@ class MeetingDecision extends CommonModel implements RelationalDeleteInterface
   ];
 
   const RELATIONS_ARRAY = [
-    'todos',
+    'tasks',
     'decidedBy',
     'writtenBy',
   ];
@@ -88,15 +88,15 @@ class MeetingDecision extends CommonModel implements RelationalDeleteInterface
   /**
    * @return \Illuminate\Database\Eloquent\Relations\HasMany
    */
-  public function todos()
+  public function tasks()
   {
-    return $this->hasMany(Todo::class, 'meeting_decision_id', 'id');
+    return $this->hasMany(Task::class, 'meeting_decision_id', 'id');
   }
 
   public function getDeleteRelations(): array
   {
     return [
-      $this->todos
+      $this->tasks
     ];
   }
 

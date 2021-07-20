@@ -39,11 +39,28 @@ Route::group(['middleware' => 'api'], function () {
     Route::post('/chat_room/{chat_room_id}/message', 'ChatMessageController@store')->name('chatMessage.store');
     Route::put('/chat_room/{chat_room_id}/message/{id}', 'ChatMessageController@update')->name('chatMessage.update');
     Route::delete('/chat_room/{chat_room_id}/message/{id}', 'ChatMessageController@destroy')->name('chatMessage.destroy');
+    // ドキュメントフォルダ
+    Route::get('/document_folder', 'DocumentFolderController@index')->name('documentFolder.index');
+    Route::post('/document_folder', 'DocumentFolderController@store')->name('documentFolder.store');
+    Route::put('/document_folder/{id}/', 'DocumentFolderController@update')->name('documentFolder.update');
+    Route::delete('/document_folder/{id}', 'DocumentFolderController@destroy')->name('documentFolder.destroy');
+    // TODO: ドキュメントファイル
+
+    // スケジュール
+    Route::get('/schedule', 'ScheduleController@index')->name('schedule.index');
+    Route::get('/user/{user_id}/schedule', 'ScheduleController@findByOwner')->name('schedule.findByOwner');
+    Route::post('/schedule', 'ScheduleController@store')->name('schedule.store');
+    Route::put('/schedule/{id}', 'ScheduleController@update')->name('schedule.update');
+    Route::get('/schedule/{id}', 'ScheduleController@show')->name('schedule.show');
+    Route::delete('/schedule/{id}', 'ScheduleController@destroy')->name('schedule.destroy');
     // 会議議事録
     Route::get('/author/meeting_record', 'MeetingRecordController@index')->name('meetingRecord.index');
     Route::post('/meeting_record', 'MeetingRecordController@store')->name('meetingRecord.store');
     Route::get('/meeting_record/{id}', 'MeetingRecordController@show')->name('meetingRecord.show');
     Route::put('/meeting_record/{id}', 'MeetingRecordController@update')->name('meetingRecord.update');
     Route::delete('/meeting_record/{id}', 'MeetingRecordController@destroy')->name('meetingRecord.destroy');
+    // TODO: ブログ
+
+    // TODO: タスク
   });
 });

@@ -16,7 +16,7 @@ class CreateDocumentFoldersTable extends Migration
     Schema::create('document_folders', function (Blueprint $table) {
       $table->id();
       $table->unsignedBigInteger('created_by')->comment('作成者');
-      $table->unsignedBigInteger('role_id')->comment('ロールID');
+      $table->unsignedBigInteger('role_id')->nullable()->comment('ロールID');
       $table->string('name')->comment('フォルダ名');
 
       $table->timestamps();
@@ -27,6 +27,7 @@ class CreateDocumentFoldersTable extends Migration
         ->onDelete('no action');
 
       $table->foreign('role_id')->references('id')->on('roles')
+        ->onUpdate('cascade')
         ->onDelete('no action');
     });
   }

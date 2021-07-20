@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTodosTable extends Migration
+class CreateTasksTable extends Migration
 {
   /**
    * Run the migrations.
@@ -13,7 +13,7 @@ class CreateTodosTable extends Migration
    */
   public function up()
   {
-    Schema::create('todos', function (Blueprint $table) {
+    Schema::create('tasks', function (Blueprint $table) {
       $table->id();
       $table->unsignedBigInteger('meeting_decision_id')->nullable()->comment('会議決定事項ID');
       $table->unsignedBigInteger('owner_id')->comment('担当者');
@@ -51,13 +51,13 @@ class CreateTodosTable extends Migration
    */
   public function down()
   {
-    Schema::table('todos', function(Blueprint $table){
-      $table->dropForeign('todos_priority_id_foreign');
-      $table->dropForeign('todos_progress_id_foreign');
-      $table->dropForeign('todos_created_by_foreign');
-      $table->dropForeign('todos_owner_id_foreign');
-      $table->dropForeign('todos_meeting_decision_id_foreign');
+    Schema::table('tasks', function(Blueprint $table){
+      $table->dropForeign('tasks_priority_id_foreign');
+      $table->dropForeign('tasks_progress_id_foreign');
+      $table->dropForeign('tasks_created_by_foreign');
+      $table->dropForeign('tasks_owner_id_foreign');
+      $table->dropForeign('tasks_meeting_decision_id_foreign');
     });
-    Schema::dropIfExists('todos');
+    Schema::dropIfExists('tasks');
   }
 }

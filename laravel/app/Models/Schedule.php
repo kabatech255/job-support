@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Contracts\Models\ModelInterface;
 use App\Models\Abstracts\CommonModel as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -39,7 +40,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|Schedule withoutTrashed()
  * @mixin \Eloquent
  */
-class Schedule extends Model
+class Schedule extends Model implements ModelInterface
 {
   use SoftDeletes;
 
@@ -51,17 +52,23 @@ class Schedule extends Model
     'end_date',
     'is_public',
     'color',
+    'memo',
   ];
 
   protected $casts = [
     'is_public' => 'boolean',
-    'start_date' => 'timestamp',
-    'end_date' => 'timestamp',
+    'start_date' => 'datetime',
+    'end_date' => 'datetime',
   ];
 
   protected $dates = [
     'start_date',
     'end_date',
+  ];
+
+  const RELATIONS_ARRAY = [
+    'sharedMembers',
+    'scheduledBy',
   ];
 
   /**
@@ -77,6 +84,7 @@ class Schedule extends Model
   public function sharedMembers()
   {
     return $this->belongsToMany(User::class, 'schedule_shares', 'schedule_id', 'shared_with')
+      ->as('option')
       ->withTimestamps()
       ->withPivot('is_editable', 'shared_by');
   }
