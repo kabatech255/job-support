@@ -51,8 +51,8 @@ use App\Contracts\Repositories\ScheduleShareRepositoryInterface;
 use App\Repositories\ScheduleShareRepository;
 use App\Contracts\Repositories\TagRepositoryInterface;
 use App\Repositories\TagRepository;
-use App\Contracts\Repositories\TodoRepositoryInterface;
-use App\Repositories\TodoRepository;
+use App\Contracts\Repositories\TaskRepositoryInterface;
+use App\Repositories\TaskRepository;
 use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Repositories\UserRepository;
 
@@ -89,7 +89,7 @@ class RepositoryServiceProvider extends ServiceProvider
     $this->app->bind(ScheduleRepositoryInterface::class, ScheduleRepository::class);
     $this->app->bind(ScheduleShareRepositoryInterface::class, ScheduleShareRepository::class);
     $this->app->bind(TagRepositoryInterface::class, TagRepository::class);
-    $this->app->bind(TodoRepositoryInterface::class, TodoRepository::class);
+    $this->app->bind(TaskRepositoryInterface::class, TaskRepository::class);
     $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
   }
 

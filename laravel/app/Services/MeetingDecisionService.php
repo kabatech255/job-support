@@ -7,7 +7,7 @@ use App\Contracts\Repositories\MeetingDecisionRepositoryInterface as Repository;
 use App\Enums\ProcessFlag;
 use App\Models\MeetingDecision;
 use App\Models\MeetingRecord;
-use App\Models\Todo;
+use App\Models\Task;
 use App\Services\Traits\WithRepositoryTrait;
 
 class MeetingDecisionService extends Service
@@ -20,26 +20,26 @@ class MeetingDecisionService extends Service
   private $attachMethod = 'decisions';
 
   /**
-   * @var TodoService
+   * @var TaskService
    */
-  protected $todoService;
+  protected $taskService;
 
   /**
    * UserService constructor.
    * @param Repository $repository
    * @param Query $query
-   * @param TodoService $todoService
+   * @param TaskService $taskService
    */
 
   public function __construct(
     Repository $repository,
     Query $query,
-    TodoService $todoService
+    TaskService $taskService
   )
   {
     $this->setRepository($repository);
     $this->setQuery($query);
-    $this->todoService = $todoService;
+    $this->taskService = $taskService;
   }
 
   /**
@@ -60,8 +60,8 @@ class MeetingDecisionService extends Service
   public function store(array $params, MeetingRecord $meetingRecord): MeetingDecision
   {
     $meetingDecision = $this->repository()->attach($params, $meetingRecord, $this->attachMethod);
-    if (isset($params['todos'])) {
-      return $this->saveTodosByDecision($params, $meetingDecision);
+    if (isset($params['tasks'])) {
+      return $this->saveTasksByDecision($params, $meetingDecision);
     }
     return $meetingDecision;
   }
@@ -75,8 +75,8 @@ class MeetingDecisionService extends Service
   public function update(array $params, MeetingRecord $meetingRecord, int $id): MeetingDecision
   {
     $meetingDecision = $this->repository()->attach($params, $meetingRecord, $this->attachMethod, $id);
-    if (isset($params['todos'])) {
-      return $this->saveTodosByDecision($params, $meetingDecision);
+    if (isset($params['tasks'])) {
+      return $this->saveTasksByDecision($params, $meetingDecision);
     }
     return $meetingDecision;
   }
@@ -88,9 +88,9 @@ class MeetingDecisionService extends Service
   public function delete(int $id)
   {
     $deletedDecision = $this->repository()->delete($id);
-    if (!!$deletedDecision->todos->count()) {
-      $deletedDecision->todos->each(function($todo) {
-        $this->todoService->delete($todo->id);
+    if (!!$deletedDecision->tasks->count()) {
+      $deletedDecision->tasks->each(function($task) {
+        $this->taskService->delete($task->id);
       });
     }
     return $deletedDecision;
@@ -115,27 +115,27 @@ class MeetingDecisionService extends Service
    * @param MeetingDecision $meetingDecision
    * @return MeetingDecision
    */
-  public function saveTodosByDecision(array $params, MeetingDecision $meetingDecision): MeetingDecision
+  public function saveTasksByDecision(array $params, MeetingDecision $meetingDecision): MeetingDecision
   {
-    foreach($params['todos'] as $todoParams) {
-      $todos[] = $this->saveTodoByDecision($todoParams, $meetingDecision);
+    foreach($params['tasks'] as $taskParams) {
+      $tasks[] = $this->saveTaskByDecision($taskParams, $meetingDecision);
     }
     $meetingDecision->load($this->query()->relation());
     return $meetingDecision;
   }
 
   /**
-   * @param array $todoParams
+   * @param array $taskParams
    * @param MeetingDecision $meetingDecision
-   * @return Todo
+   * @return Task
    */
-  private function saveTodoByDecision(array $todoParams, MeetingDecision $meetingDecision): Todo
+  private function saveTaskByDecision(array $taskParams, MeetingDecision $meetingDecision): Task
   {
-    if (isset($todoParams['id']) && isset($todoParams['flag'])) {
-      return $this->todoService->updateOrDelete($todoParams, $meetingDecision, $todoParams['id']);
-    } elseif(isset($todoParams['id'])) {
-      return $this->todoService->find($todoParams['id']);
+    if (isset($taskParams['id']) && isset($taskParams['flag'])) {
+      return $this->taskService->updateOrDelete($taskParams, $meetingDecision, $taskParams['id']);
+    } elseif(isset($taskParams['id'])) {
+      return $this->taskService->find($taskParams['id']);
     }
-    return $this->todoService->store($todoParams, $meetingDecision);
+    return $this->taskService->store($taskParams, $meetingDecision);
   }
 }

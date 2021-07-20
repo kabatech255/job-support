@@ -2,13 +2,13 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\Todo;
+use App\Models\Task;
 use Faker\Factory;
 use App\Models\Priority;
 use App\Models\Progress;
 
 $faker = Factory::create('ja_JP');
-$factory->define(Todo::class, function ($faker) {
+$factory->define(Task::class, function ($faker) {
   return [
     'meeting_decision_id' => null,
     'owner_id' => $faker->randomNumber,

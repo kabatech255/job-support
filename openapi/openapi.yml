@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  description: 主な機能：\ \     議事録の記録 \ スケジュール管理・共有 \ ファイル共有 \ チャット \ Todo管理等 \ \ key `special-key` to test the authorization     filters.
+  description: 主な機能：\ \     議事録の記録 \ スケジュール管理・共有 \ ファイル共有 \ チャット \ Task管理等 \ \ key `special-key` to test the authorization     filters.
   version: 1.0.0
   title: 業務支援システム
   termsOfService: 'http://swagger.io/terms/'
@@ -23,8 +23,16 @@ tags:
     description: chat room
   - name: chat_message
     description: chat message
+  - name: document_folder
+    description: document_folder
+  - name: document_file
+    description: document_file
+  - name: task
+    description: task
   - name: meeting_record
     description: meeting record
+  - name: schedule
+    description: schedule
 paths:
   /user/current:
     get:
@@ -191,6 +199,498 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultError'
       summary: 管理者ログアウト
+  /document_folder:
+    parameters: []
+    post:
+      summary: ドキュメントフォルダの新規作成
+      operationId: postDocumentFolder
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentFolder'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidError'
+      description: ドキュメントフォルダの新規作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentFolderForm'
+          text/plain:
+            schema:
+              type: object
+              properties: {}
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+        description: チャットルームの投稿フォーム
+      security:
+        - cookieAuth: []
+      tags:
+        - document_folder
+    get:
+      summary: ドキュメントフォルダ一覧
+      operationId: getDocumentFolder
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/DocumentFolder'
+                  - $ref: '#/components/schemas/EmptyItem'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      security:
+        - cookieAuth: []
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: keyword
+          description: キーワード
+      description: ドキュメントフォルダ一覧
+      tags:
+        - document_folder
+  '/document_folder/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: ドキュメントフォルダの詳細
+      operationId: getDocumentFolderId
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentFolder'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+      description: ドキュメントフォルダの詳細
+      security:
+        - cookieAuth: []
+      tags:
+        - document_folder
+    put:
+      summary: ドキュメントフォルダの更新
+      operationId: putDocumentFolderId
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentFolder'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentFolderForm'
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+      description: ドキュメントフォルダの更新
+      security:
+        - cookieAuth: []
+      tags:
+        - document_folder
+    delete:
+      summary: ドキュメントフォルダの削除
+      operationId: deleteDocumentFolderId
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+      description: ドキュメントフォルダの削除
+      security:
+        - cookieAuth: []
+      tags:
+        - document_folder
+  '/user/{user_id}/schedule':
+    parameters:
+      - schema:
+          type: string
+        name: user_id
+        in: path
+        required: true
+    get:
+      summary: 特定のユーザのスケジュール一覧
+      operationId: getUserIdSchedule
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/Schedule'
+                  - $ref: '#/components/schemas/EmptyItem'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+      security:
+        - cookieAuth: []
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: 'sharedMembers:department_code'
+          description: 部署コード
+      description: 特定のユーザのスケジュール一覧
+      tags:
+        - schedule
+        - user
+  /schedule:
+    parameters: []
+    post:
+      summary: スケジュールの作成
+      operationId: postSchedule
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidError'
+      description: スケジュールの新規作成
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleForm'
+          text/plain:
+            schema:
+              type: object
+              properties: {}
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+        description: チャットルームの投稿フォーム
+      tags:
+        - chat_room
+      security:
+        - cookieAuth: []
+    get:
+      summary: みんなのデイリースケジュール
+      operationId: getSchedule
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/Schedule'
+                  - $ref: '#/components/schemas/EmptyItem'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+      security:
+        - cookieAuth: []
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: 'sharedMembers:department_code'
+          description: 部署コード
+      description: みんなのデイリースケジュール
+      tags:
+        - schedule
+  '/schedule/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: スケジュールの詳細表示
+      operationId: getScheduleId
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+      description: スケジュールの詳細表示
+      security:
+        - cookieAuth: []
+      tags:
+        - schedule
+    put:
+      summary: スケジュールの更新
+      operationId: putScheduleId
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleForm'
+      description: スケジュールの更新
+      security:
+        - cookieAuth: []
+      tags:
+        - schedule
+    delete:
+      summary: スケジュールの削除
+      operationId: deleteScheduleId
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+      description: スケジュールの削除
+      security:
+        - cookieAuth: []
+      tags:
+        - schedule
   /author/chat_room:
     get:
       security:
@@ -592,36 +1092,6 @@ paths:
         - chat_room
       security:
         - cookieAuth: []
-  /author/meeting_record:
-    get:
-      security:
-        - cookieAuth: []
-      tags:
-        - meeting_record
-      operationId: getMeetingRecord
-      description: meeting record user joined
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                anyOf:
-                  - $ref: '#/components/schemas/EmptyItem'
-                  - $ref: '#/components/schemas/MeetingPage'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultError'
-        default:
-          description: Unexpected Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultError'
-      summary: 認証者の会議議事録一覧
   /author/blog:
     get:
       security:
@@ -660,11 +1130,42 @@ paths:
           description: ページ
       summary: 認証者が閲覧できるブログ
     parameters: []
+  /author/meeting_record:
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+        - meeting_record
+      operationId: getMeetingRecord
+      description: meeting record user joined
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/EmptyItem'
+                  - $ref: '#/components/schemas/MeetingPage'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+      summary: 認証者の会議議事録一覧
   /meeting_record:
     post:
       summary: 会議議事録の投稿
       tags:
         - meeting_record
+        - task
       responses:
         '201':
           description: Created
@@ -712,7 +1213,7 @@ paths:
                       written_by: 1
                       subject: 〇〇店のクレームについて
                       body: 再発防止策を立てる
-                      todos:
+                      tasks:
                         - owner_id: 1
                           created_by: 1
                           priority_id: 'null'
@@ -766,6 +1267,7 @@ paths:
               $ref: '#/components/schemas/MeetingRecordForm'
       tags:
         - meeting_record
+        - task
     parameters:
       - schema:
           type: integer
@@ -806,6 +1308,7 @@ paths:
       description: 議事録の詳細情報取得
       tags:
         - meeting_record
+        - task
     delete:
       summary: 会議議事録の削除
       operationId: deleteMeetingRecordId
@@ -839,6 +1342,7 @@ paths:
         - cookieAuth: []
       tags:
         - meeting_record
+        - task
 components:
   schemas:
     Admin:
@@ -960,6 +1464,120 @@ components:
         - name
         - members
         - messages
+        - created_at
+        - updated_at
+    Schedule:
+      title: Schedule
+      description: スケジュール
+      type: object
+      x-examples:
+        example-1:
+          value:
+            id: 0
+            scheduled_by: 0
+            content: string
+            start_date: '2019-08-24T14:15:22Z'
+            end_date: '2019-08-24T14:15:22Z'
+            is_public: true
+            color: string
+            messages: []
+            shared_members:
+              - id: 0
+                full_name: テスト 太郎
+                given_name: 太郎
+                family_name: テスト
+                file_path: users/test1.jpg
+                created_at: '2021-12-31 12:00:00'
+                updated_at: '2021-12-31 12:00:00'
+            created_at: '2021-12-31 12:00:00'
+            updated_at: '2021-12-31 12:00:00'
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 0
+        scheduled_by:
+          $ref: '#/components/schemas/User'
+        content:
+          type: string
+        start_date:
+          $ref: '#/components/schemas/DateFormat'
+        end_date:
+          $ref: '#/components/schemas/DateFormat'
+        is_public:
+          type: boolean
+          default: true
+        color:
+          type: string
+          nullable: true
+        memo:
+          type: string
+          nullable: true
+        shared_members:
+          anyOf:
+            - items:
+                $ref: '#/components/schemas/User'
+          type: array
+        created_at:
+          $ref: '#/components/schemas/DateFormat'
+        updated_at:
+          $ref: '#/components/schemas/DateFormat'
+      required:
+        - id
+        - scheduled_by
+        - content
+        - start_date
+        - end_date
+        - shared_members
+        - created_at
+        - updated_at
+    DocumentFolder:
+      title: DocumentFolder
+      description: ドキュメントフォルダ
+      type: object
+      x-examples:
+        example-1:
+          value:
+            id: 0
+            scheduled_by: 0
+            content: string
+            start_date: '2019-08-24T14:15:22Z'
+            end_date: '2019-08-24T14:15:22Z'
+            is_public: true
+            color: string
+            messages: []
+            shared_members:
+              - id: 0
+                full_name: テスト 太郎
+                given_name: 太郎
+                family_name: テスト
+                file_path: users/test1.jpg
+                created_at: '2021-12-31 12:00:00'
+                updated_at: '2021-12-31 12:00:00'
+            created_at: '2021-12-31 12:00:00'
+            updated_at: '2021-12-31 12:00:00'
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 0
+        createdBy:
+          $ref: '#/components/schemas/User'
+        name:
+          type: string
+        role:
+          anyOf:
+            - $ref: '#/components/schemas/Role'
+            - $ref: '#/components/schemas/EmptyItem'
+        created_at:
+          $ref: '#/components/schemas/DateFormat'
+        updated_at:
+          $ref: '#/components/schemas/DateFormat'
+      required:
+        - id
+        - createdBy
+        - name
+        - role
         - created_at
         - updated_at
     DateFormat:
@@ -1090,15 +1708,15 @@ components:
         body:
           type: string
           example: 来月から〇〇とする
-        todos:
+        tasks:
           type: array
           items:
-            $ref: '#/components/schemas/TodoForm'
+            $ref: '#/components/schemas/TaskForm'
       required:
         - written_by
         - body
-    TodoForm:
-      title: TodoForm
+    TaskForm:
+      title: TaskForm
       description: TODOの投稿フォーム
       type: object
       properties:
@@ -1143,11 +1761,6 @@ components:
       description: ChatRoomの投稿フォーム
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          minimum: 0
-          exclusiveMinimum: true
         created_by:
           type: integer
           format: int64
@@ -1157,11 +1770,7 @@ components:
           type: string
           nullable: true
         members:
-          type: array
-          items:
-            type: integer
-            minimum: 0
-            nullable: true
+          type: object
       required:
         - created_by
         - name
@@ -1197,6 +1806,67 @@ components:
         - written_by
         - mentioned_to
         - body
+    DocumentFolderForm:
+      title: DocumentFolderForm
+      description: DocumentFolderの投稿フォーム
+      type: object
+      properties:
+        created_by:
+          type: integer
+          format: int64
+          example: 1
+          minimum: 0
+        name:
+          type: string
+          format: int64
+        role_id:
+          type: integer
+          format: date-time
+          example: 0
+      required:
+        - name
+    ScheduleForm:
+      title: ScheduleForm
+      description: Scheduleの投稿フォーム
+      type: object
+      properties:
+        scheduled_by:
+          type: integer
+          format: int64
+          example: 1
+          minimum: 0
+        content:
+          type: string
+          format: int64
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+        is_public:
+          type: boolean
+          format: date-time
+          default: true
+          nullable: true
+        color:
+          type: string
+          default: 'true'
+          nullable: true
+        memo:
+          type: string
+          default: 'true'
+          nullable: true
+        sharedMembers:
+          type: object
+      required:
+        - scheduled_by
+        - content
+        - start_date
+        - end_date
+        - is_public
+        - color
+        - memo
     MeetingDecision:
       title: MeetingDecision
       description: ミーティング決定事項
@@ -1213,11 +1883,11 @@ components:
           type: string
         body:
           type: string
-        todos:
+        tasks:
           type: array
           items:
             anyOf:
-              - $ref: '#/components/schemas/Todo'
+              - $ref: '#/components/schemas/Task'
               - $ref: '#/components/schemas/EmptyItem'
       required:
         - id
@@ -1425,8 +2095,8 @@ components:
         - value
         - created_at
         - updated_at
-    Todo:
-      title: Todo
+    Task:
+      title: Task
       description: TODO
       required:
         - id

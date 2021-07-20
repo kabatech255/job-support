@@ -21,6 +21,7 @@ class CreateSchedulesTable extends Migration
       $table->dateTime('end_date')->comment('終了日時');
       $table->boolean('is_public')->default(1)->comment('公開設定');
       $table->string('color')->nullable()->comment('カラー');
+      $table->text('memo')->nullable()->comment('メモ');
 
       $table->timestamps();
       $table->softDeletes();
