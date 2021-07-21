@@ -26,7 +26,6 @@ class ScheduleRepository extends EloquentRepository implements ScheduleRepositor
     if (is_null($id)) {
       $params['scheduled_by'] = Auth::user()->id;
     }
-
     $schedule = parent::saveWithMembers($params, $method, $id);
     $schedule->load(Schedule::RELATIONS_ARRAY);
     return $schedule;
