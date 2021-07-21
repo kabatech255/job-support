@@ -30,7 +30,7 @@ class UpdateRequest extends StoreRequest
     return array_merge([
       'meeting_decisions.*.id' => 'nullable|integer|' . Rule::in(MeetingDecision::pluck('id')->toArray()),
       'meeting_decisions.*.tasks.*.id' => 'nullable|integer|' . Rule::in(Task::pluck('id')->toArray()),
-      'meeting_decisions.*.flag' => 'nullable|integer|' . Rule::in(MeetingDecision::pluck('id')->toArray()),
+      'meeting_decisions.*.flag' => 'nullable|integer|' . Rule::in(ProcessFlag::values()),
       'meeting_decisions.*.tasks.*.flag' => 'nullable|integer|' . Rule::in(ProcessFlag::values()),
     ],parent::rules());
   }

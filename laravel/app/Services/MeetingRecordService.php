@@ -105,6 +105,10 @@ class MeetingRecordService extends Service
   }
 
   /**
+   * 決議事項のフォームは議事録のフォームに包含されている
+   * idがあってupdate(1)かdelete(2)のフラグが立っていれば、updateOrDelete()
+   * フラグはないけどtasksがあればtask保存の処理
+   * idがない場合は新規保存
    * @param array $meetingDecisionParams
    * @param MeetingRecord $meetingRecord
    * @return MeetingDecision

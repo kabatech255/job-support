@@ -11,7 +11,15 @@ class DocumentFolderQuery extends EloquentQuery implements DocumentFolderQueryIn
   public function __construct(DocumentFolder $model)
   {
     $this->setBuilder($model);
-    $this->setColumns([]);
-    $this->setRelationTargets([]);
+    $this->setColumns(['name']);
+    $this->setRelationTargets([
+      'createdBy' => [
+        'given_name',
+        'family_name'
+      ],
+      'files' => [
+        'name'
+      ],
+    ]);
   }
 }
