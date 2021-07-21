@@ -131,11 +131,13 @@ class MeetingDecisionService extends Service
    */
   private function saveTaskByDecision(array $taskParams, MeetingDecision $meetingDecision): Task
   {
-    if (isset($taskParams['id']) && isset($taskParams['flag'])) {
-      return $this->taskService->updateOrDelete($taskParams, $meetingDecision, $taskParams['id']);
-    } elseif(isset($taskParams['id'])) {
+    if (empty($taskParams['id'] ?? '')) {
+      return $this->taskService->attach($taskParams, $meetingDecision);
+    } elseif (empty($taskParams['flag'] ?? '')) {
       return $this->taskService->find($taskParams['id']);
+    } elseif($taskParams['flag'] === ProcessFlag::value('delete')) {
+      return $this->taskService->delete($taskParams['id']);
     }
-    return $this->taskService->store($taskParams, $meetingDecision);
+    return $this->taskService->attach($taskParams, $meetingDecision, $taskParams['id']);
   }
 }

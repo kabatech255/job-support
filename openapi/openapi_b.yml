@@ -152,50 +152,6 @@ paths:
           description: ページ
       summary: 認証者が閲覧できるブログ
     parameters: []
-  /author/task:
-    get:
-      security:
-        - cookieAuth: []
-      operationId: getTask
-      description: 認証者のタスク
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                anyOf:
-                  - type: array
-                    items:
-                      $ref: '#/components/schemas/Task'
-                  - $ref: '#/components/schemas/EmptyItem'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultError'
-        default:
-          description: Unexpected Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultError'
-      parameters:
-        - schema:
-            type: integer
-          in: query
-          name: prioriy_id
-          description: 優先度
-        - schema:
-            type: integer
-          in: query
-          name: progress_id
-          description: 進捗度
-      summary: 認証者のタスク
-      tags:
-        - task
-    parameters: []
   /author/chat_room:
     get:
       security:
@@ -251,109 +207,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultError'
       summary: 認証者の会議議事録一覧
-  /task:
-    parameters: []
-    post:
-      summary: タスクの新規投稿
-      operationId: postTask
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Task'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultError'
-        '422':
-          description: Unprocessable Entity (WebDAV)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InvalidError'
-      description: タスクの新規投稿
-      security:
-        - cookieAuth: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TaskForm'
-        description: ''
-      tags:
-        - task
-  '/task/{id}':
-    parameters:
-      - schema:
-          type: string
-        name: id
-        in: path
-        required: true
-    put:
-      summary: タスクの更新
-      operationId: putTaskId
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Task'
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultError'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenError'
-        '422':
-          description: Unprocessable Entity (WebDAV)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InvalidError'
-      description: タスクの更新
-      security:
-        - cookieAuth: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TaskForm'
-      tags:
-        - task
-    delete:
-      summary: タスクの削除
-      operationId: deleteTaskId
-      responses:
-        '204':
-          description: No Content
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultError'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenError'
-      description: タスクの削除
-      security:
-        - cookieAuth: []
-      tags:
-        - task
   /chat_room:
     parameters: []
     post:
@@ -2573,34 +2426,7 @@ components:
         - memo
     Task:
       title: Task
-      description: Task
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        owner:
-          $ref: '#/components/schemas/User'
-        created_by:
-          $ref: '#/components/schemas/User'
-        priority:
-          anyOf:
-            - $ref: '#/components/schemas/Priority'
-            - properties: {}
-              nullable: true
-        progress:
-          anyOf:
-            - $ref: '#/components/schemas/Progress'
-            - properties: {}
-              nullable: true
-        body:
-          type: string
-        time_limit:
-          $ref: '#/components/schemas/DateFormat'
-        created_at:
-          $ref: '#/components/schemas/DateFormat'
-        updated_at:
-          $ref: '#/components/schemas/DateFormat'
+      description: TODO
       required:
         - id
         - owner
@@ -2611,6 +2437,30 @@ components:
         - time_limit
         - created_at
         - updated_at
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        meeting_record_id:
+          type: integer
+          format: int64
+          example: 1
+          nullable: true
+        owner:
+          $ref: '#/components/schemas/User'
+        priority:
+          $ref: '#/components/schemas/Priority'
+        progress:
+          $ref: '#/components/schemas/Progress'
+        body:
+          type: string
+        time_limit:
+          $ref: '#/components/schemas/DateFormat'
+        created_at:
+          $ref: '#/components/schemas/DateFormat'
+        updated_at:
+          $ref: '#/components/schemas/DateFormat'
     TaskForm:
       title: TaskForm
       description: TODOの投稿フォーム

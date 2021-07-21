@@ -42,10 +42,14 @@ Route::group(['middleware' => 'api'], function () {
     // ドキュメントフォルダ
     Route::get('/document_folder', 'DocumentFolderController@index')->name('documentFolder.index');
     Route::post('/document_folder', 'DocumentFolderController@store')->name('documentFolder.store');
-    Route::put('/document_folder/{id}/', 'DocumentFolderController@update')->name('documentFolder.update');
+    Route::put('/document_folder/{id}', 'DocumentFolderController@update')->name('documentFolder.update');
     Route::delete('/document_folder/{id}', 'DocumentFolderController@destroy')->name('documentFolder.destroy');
-    // TODO: ドキュメントファイル
-
+    // ドキュメントファイル
+    Route::get('/document_folder/{folder_id}/document_file', 'DocumentFileController@index')->name('documentFile.index');
+    Route::post('/document_folder/{folder_id}/document_file', 'DocumentFileController@store')->name('documentFile.store');
+    Route::get('/document_folder/{folder_id}/document_file/{id}', 'DocumentFileController@show')->name('documentFile.show');
+    Route::put('/document_folder/{folder_id}/document_file/{id}', 'DocumentFileController@update')->name('documentFile.update');
+    Route::delete('/document_folder/{folder_id}/document_file/{id}', 'DocumentFileController@destroy')->name('documentFile.destroy');
     // スケジュール
     Route::get('/schedule', 'ScheduleController@index')->name('schedule.index');
     Route::get('/user/{user_id}/schedule', 'ScheduleController@findByOwner')->name('schedule.findByOwner');
@@ -62,5 +66,10 @@ Route::group(['middleware' => 'api'], function () {
     // TODO: ブログ
 
     // TODO: タスク
+    Route::get('/task', 'TaskController@index')->name('task.index');
+    Route::get('/author/task', 'TaskController@findByOwner')->name('task.findByOwner');
+    Route::post('/task', 'TaskController@store')->name('task.store');
+    Route::put('/task/{id}', 'TaskController@update')->name('task.update');
+    Route::delete('/task/{id}', 'TaskController@destroy')->name('task.destroy');
   });
 });

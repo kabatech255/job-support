@@ -18,6 +18,8 @@ class CreateDocumentFilesTable extends Migration
       $table->unsignedBigInteger('uploaded_by')->comment('アップロード者');
       $table->unsignedBigInteger('folder_id')->comment('フォルダID');
       $table->string('file_path')->comment('ファイルパス');
+      $table->string('is_public')->default(0)->comment('公開設定');
+      $table->string('original_name')->comment('オリジナルファイル名');
 
       $table->timestamps();
       $table->softDeletes();

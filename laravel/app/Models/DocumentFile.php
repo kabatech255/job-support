@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\Abstracts\CommonModel as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 /**
  * App\Models\DocumentFile
@@ -43,6 +45,11 @@ class DocumentFile extends Model
     'uploaded_by',
     'folder_id',
     'file_path',
+    'original_name',
+  ];
+
+  const RELATIONS_ARRAY = [
+    'uploadedBy', 'sharedMembers'
   ];
 
   /**
@@ -67,6 +74,15 @@ class DocumentFile extends Model
   public function sharedMembers()
   {
     return $this->belongsToMany(User::class, 'document_shares', 'file_id', 'shared_with')
-      ->withTimestamps()->withPivot('shared_by');
+      ->as('option')->withTimestamps()->withPivot('shared_by', 'is_editable');
   }
+
+  /**
+   * @param $fileName
+   */
+  public function setPublicName($fileName)
+  {
+    $this->attributes['public_name'] = \Crypt::decrypt($fileName);
+  }
+
 }

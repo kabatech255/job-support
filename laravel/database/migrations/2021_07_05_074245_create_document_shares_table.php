@@ -16,8 +16,9 @@ class CreateDocumentSharesTable extends Migration
     Schema::create('document_shares', function (Blueprint $table) {
       $table->id();
       $table->unsignedBigInteger('shared_with')->comment('共有相手');
-      $table->unsignedBigInteger('shared_by')->comment('共有者');
       $table->unsignedBigInteger('file_id')->comment('ファイルID');
+      $table->unsignedBigInteger('shared_by')->comment('共有者');
+      $table->boolean('is_editable')->default(0)->comment('編集権限');
       // 物理削除
       $table->timestamps();
 
