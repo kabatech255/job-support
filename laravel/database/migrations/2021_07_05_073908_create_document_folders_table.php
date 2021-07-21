@@ -18,6 +18,7 @@ class CreateDocumentFoldersTable extends Migration
       $table->unsignedBigInteger('created_by')->comment('作成者');
       $table->unsignedBigInteger('role_id')->nullable()->comment('ロールID');
       $table->string('name')->comment('フォルダ名');
+      $table->string('random_name')->comment('ランダムフォルダ名');
 
       $table->timestamps();
       $table->softDeletes();

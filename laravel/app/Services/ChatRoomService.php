@@ -63,6 +63,7 @@ class ChatRoomService extends Service
   public function store(array $params): ChatRoom
   {
     $params = $this->addMe($params);
+    // ルーム名が指定されていない時は代わりに参加者の名前を連ねる
     if (empty($params['name'] ?? '')) {
       $params['name'] = Str::limit($this->userRepository->names(array_keys($params['members'])), 191);
     }

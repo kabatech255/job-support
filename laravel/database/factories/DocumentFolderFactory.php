@@ -7,7 +7,8 @@ use Faker\Generator as Faker;
 
 $factory->define(DocumentFolder::class, function (Faker $faker) {
   return [
-    'name' => $faker->title,
+    'name' => \Illuminate\Support\Str::random(50),
+    'random_name' => \Illuminate\Support\Str::random(50),
     'created_by' => array_random(\App\Models\User::pluck('id')->toArray()),
   ];
 });

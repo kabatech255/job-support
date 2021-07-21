@@ -62,10 +62,14 @@ class Task extends Model implements ModelInterface
   ];
 
   protected $casts = [
-    'time_limit' => 'timestamp',
+    'time_limit' => 'date_time',
   ];
   protected $dates = [
     'time_limit',
+  ];
+
+  const RELATIONS_ARRAY = [
+    'createdBy', 'owner', 'priority', 'progress',
   ];
 
   /**

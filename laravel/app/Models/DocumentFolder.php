@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\Abstracts\CommonModel as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 /**
  * App\Models\DocumentFolder
@@ -44,12 +46,21 @@ class DocumentFolder extends Model
     'created_by',
     'role_id',
     'name',
+    'random_name',
   ];
 
   const RELATIONS_ARRAY = [
     'createdBy',
     'role',
   ];
+
+  public function __construct(array $attributes = [])
+  {
+    parent::__construct($attributes);
+    if (! Arr::get($this->attributes, 'public_name')) {
+      $this->setRandomName();
+    }
+  }
 
   /**
    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -73,5 +84,10 @@ class DocumentFolder extends Model
   public function files()
   {
     return $this->hasMany(DocumentFile::class, 'folder_id', 'id');
+  }
+
+  public function setRandomName()
+  {
+    $this->attributes['random_name'] = Str::uuid();
   }
 }

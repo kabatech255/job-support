@@ -30,6 +30,25 @@ class TaskService extends Service
   }
 
   /**
+   * @param array $params
+   * @param array|null $relation
+   * @return Task[]
+   */
+  public function index(array $params, ?array $relation = null): array
+  {
+    return $this->query()->all($params, $relation);
+  }
+
+  /**
+   * @param int $ownerId
+   * @return Task[]
+   */
+  public function findByOwner(int $ownerId): array
+  {
+    return $this->repository()->findBy('owner_id', $ownerId, $this->query()->relation());
+  }
+
+  /**
    * @param int $id
    * @param array $loads
    * @return Task
@@ -42,23 +61,21 @@ class TaskService extends Service
 
   /**
    * @param array $params
-   * @param MeetingDecision $meetingDecision
    * @return Task
    */
-  public function store(array $params, MeetingDecision $meetingDecision): Task
+  public function store(array $params): Task
   {
-    return $this->repository()->attach($params, $meetingDecision, $this->attachMethod);
+    return $this->repository()->save($params);
   }
 
   /**
    * @param array $params
-   * @param MeetingDecision $meetingDecision
    * @param $id
    * @return Task
    */
-  public function update(array $params, MeetingDecision $meetingDecision, $id): Task
+  public function update(array $params, $id): Task
   {
-    return $this->repository()->attach($params, $meetingDecision, $this->attachMethod, $id);
+    return $this->repository()->save($params, $id);
   }
 
   /**
@@ -71,16 +88,13 @@ class TaskService extends Service
   }
 
   /**
-   * @param array $params
-   * @param MeetingDecision $meetingDecision
-   * @param int $id
+   * @param $params
+   * @param $meetingDecision
+   * @param $id
    * @return Task
    */
-  public function updateOrDelete(array $params, MeetingDecision $meetingDecision, int $id): Task
+  public function attach($params, $meetingDecision, $id = null): Task
   {
-    if ($params['flag'] === ProcessFlag::value('delete')) {
-      return $this->delete($id);
-    }
-    return $this->update($params, $meetingDecision, $id);
+    return $this->repository()->attach($params, $meetingDecision, $this->attachMethod, $id);
   }
 }

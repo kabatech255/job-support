@@ -27,6 +27,9 @@ class DocumentFolderTest extends TestCase
       'id' => $new->id,
       'name' => $expects['name'],
     ]);
+
+    $result = parent::$openApiValidator->validate('postDocumentFolder', 201, json_decode($response->getContent(), true));
+    $this->assertFalse($result->hasErrors(), $result);
   }
 
   /**
@@ -38,8 +41,7 @@ class DocumentFolderTest extends TestCase
     $invalidData = [
       // 80文字を超えている
       'name' => Str::random(81),
-      // ↓必須項目がない
-      // 'created_by' => $this->user->id,
+      // 必須項目"created_by"がない
     ];
     $response = $this->actingAs($this->user)->postJson(route('documentFolder.store'), $invalidData);
     $response->assertStatus(422)->assertJsonValidationErrors([
@@ -48,6 +50,9 @@ class DocumentFolderTest extends TestCase
     $this->assertDatabaseMissing('document_folders', [
       'name' => $invalidData['name'],
     ]);
+
+    $result = parent::$openApiValidator->validate('postDocumentFolder', 422, json_decode($response->getContent(), true));
+    $this->assertFalse($result->hasErrors(), $result);
   }
 
   /**
@@ -68,6 +73,9 @@ class DocumentFolderTest extends TestCase
     $this->assertDatabaseMissing('document_folders', [
       'name' => $willDenied['name'],
     ]);
+
+    $result = parent::$openApiValidator->validate('putDocumentFolderId', 403, json_decode($response->getContent(), true));
+    $this->assertFalse($result->hasErrors(), $result);
   }
 
   /**
@@ -89,6 +97,8 @@ class DocumentFolderTest extends TestCase
       'id' => $folder->id,
       'name' => $expects['name'],
     ]);
+    $result = parent::$openApiValidator->validate('putDocumentFolderId', 200, json_decode($response->getContent(), true));
+    $this->assertFalse($result->hasErrors(), $result);
   }
 
   /**
@@ -107,6 +117,8 @@ class DocumentFolderTest extends TestCase
       'id' => $folder->id,
       'deleted_at' => null,
     ]);
+    $result = parent::$openApiValidator->validate('deleteDocumentFolderId', 403, json_decode($response->getContent(), true));
+    $this->assertFalse($result->hasErrors(), $result);
   }
 
   /**
@@ -120,5 +132,7 @@ class DocumentFolderTest extends TestCase
     ]);
     $response = $this->actingAs($this->user)->deleteJson(route('documentFolder.destroy', $folder));
     $response->assertNoContent();
+    $result = parent::$openApiValidator->validate('deleteDocumentFolderId', 204, json_decode($response->getContent(), true));
+    $this->assertFalse($result->hasErrors(), $result);
   }
 }
