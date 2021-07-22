@@ -31,10 +31,11 @@ class UserAuthTest extends TestCase
    * @test
    * @group auth
    */
-  public function should_未認証なら空のJSONを返却する()
+  public function should_未認証なら空文字を返却する()
   {
     $response = $this->getJson(route('currentUser'));
-    $response->assertOk()->assertExactJson([]);
+    $response->assertOk();
+    $this->assertSame($response->getContent(), '');
     // APIの仕様とデータ形式が一致している
     $result = parent::$openApiValidator->validate('getCurrentUser', 200, json_decode($response->getContent(), true));
     $this->assertFalse($result->hasErrors(), $result);

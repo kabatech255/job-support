@@ -14,18 +14,20 @@ class ChatSeeder extends Seeder
    */
   public function run()
   {
+    DB::table('chat_message_images')->truncate();
+    DB::table('chat_messages')->truncate();
     DB::table('chat_rooms')->truncate();
     DB::table('chat_room_shares')->truncate();
-    $managerRole = '2';
+    $managerRole = '3';
     $managers = User::with(['department'])->where('role_id', $managerRole)->get();
-    $managers->each(function($manager) {
+    $managers->each(function ($manager) {
       // 部署のチャットルーム作成
       $room = factory(ChatRoom::class)->create([
         'created_by' => $manager->id,
         'name' => $manager->department->name . 'のルーム',
       ]);
       // 部署のチャットルームにメンバー追加
-      $manager->department->members->each(function($member) use ($manager, $room) {
+      $manager->department->members->each(function ($member) use ($manager, $room) {
         $room->members()->attach([$member->id => [
           'shared_by' => $manager->id,
           'is_editable' => 1,

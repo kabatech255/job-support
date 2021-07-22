@@ -23,6 +23,8 @@ class AuthServiceProvider extends ServiceProvider
     'App\Models\DocumentFolder' => 'App\Policies\DocumentFolderPolicy',
     'App\Models\DocumentFile' => 'App\Policies\DocumentFilePolicy',
     'App\Models\Task' => 'App\Policies\TaskPolicy',
+    'App\Models\Blog' => 'App\Policies\BlogPolicy',
+    'App\Models\BlogComment' => 'App\Policies\BlogCommentPolicy',
   ];
 
   /**

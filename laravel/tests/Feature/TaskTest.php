@@ -19,11 +19,19 @@ class TaskTest extends TestCase
   public function should_認証者のタスク一覧()
   {
     $response = $this->actingAs($this->user)->getJson(route('task.findByOwner'));
-    $response->assertOk();
-    $this->assertSame(
-      count($response->getOriginalContent()),
-      Task::where('owner_id', $this->user->id)->count()
-    );
+    $response->assertOk()->assertJsonStructure([
+      'data',
+      'first_page_url',
+      'from',
+      'last_page',
+      'last_page_url',
+      'next_page_url',
+      'path',
+      'per_page',
+      'prev_page_url',
+      'to',
+      'total',
+    ]);
 
     $result = parent::$openApiValidator->validate('getTask', 200, json_decode($response->getContent(), true));
     $this->assertFalse($result->hasErrors(), $result);
@@ -121,7 +129,7 @@ class TaskTest extends TestCase
     ]);
     $badUser = User::where('id', '!=', $this->user->id)->get()->first();
     $willDenied = [
-      'owner_id' =>$badUser->id,
+      'owner_id' => $badUser->id,
       'body' => $task->body . '_update',
       'time_limit' => Carbon::today()->format('Y/m/d H:i'),
     ];
@@ -178,5 +186,4 @@ class TaskTest extends TestCase
     $result = parent::$openApiValidator->validate('deleteTaskId', 403, json_decode($response->getContent(), true));
     $this->assertFalse($result->hasErrors(), $result);
   }
-
 }

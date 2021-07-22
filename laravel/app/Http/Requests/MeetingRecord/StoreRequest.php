@@ -5,6 +5,7 @@ namespace App\Http\Requests\MeetingRecord;
 use App\Models\MeetingPlace;
 use App\Models\Priority;
 use App\Models\Progress;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -32,7 +33,8 @@ class StoreRequest extends FormRequest
       'recorded_by' => 'required|integer|' . Rule::in(User::pluck('id')->toArray()),
       'place_id' => 'nullable|integer|' . Rule::in(MeetingPlace::pluck('id')->toArray()),
       'meeting_date' => 'required|date_format:Y/m/d H:i',
-//      'title' => 'required|string|max:80|regex:/^[ぁ-んァ-ヶー一-龠\s\w\$\(\)~\.=\+\-０-９、。（）「」\n\r]+$/u',
+      'role_id' => 'nullable|integer|' . Rule::in(Role::pluck('id')->toArray()),
+      //      'title' => 'required|string|max:80|regex:/^[ぁ-んァ-ヶー一-龠\s\w\$\(\)~\.=\+\-０-９、。（）「」\n\r]+$/u',
       'title' => 'required|string|max:80',
       'summary' => 'nullable|string',
       'members' => 'required|array',
@@ -47,7 +49,7 @@ class StoreRequest extends FormRequest
       'meeting_decisions.*.tasks.*.created_by' => 'required|integer|' . Rule::in(User::pluck('id')->toArray()),
       'meeting_decisions.*.tasks.*.priority_id' => 'nullable|integer|' . Rule::in(Priority::pluck('id')->toArray()),
       'meeting_decisions.*.tasks.*.progress_id' => 'nullable|integer|' . Rule::in(Progress::pluck('id')->toArray()),
-      'meeting_decisions.*.tasks.*.body' => 'required|string|max:140|regex:/^[ぁ-んァ-ヶー一-龠\s\w\$\(\)~\.=\+\-０-９、。（）「」\n\r]+$/u',
+      'meeting_decisions.*.tasks.*.body' => 'required|string|max:140|regex:/\A[ぁ-んァ-ヶー一-龠\s\w\$\(\)~\.=\+\-０-９、。（）「」\n\r]+\z/u',
       'meeting_decisions.*.tasks.*.time_limit' => 'required|date_format:Y/m/d H:i',
     ];
   }

@@ -26,17 +26,17 @@ class StoreRequest extends FormRequest
   public function rules()
   {
     return [
-      'scheduled_by' => 'required|integer|'.Rule::in(User::pluck('id')->toArray()),
-      'content' => 'required|string|max:140',
-      'start_date' => 'required|date_format:Y/m/d H:i',
-      'end_date' => 'required|date_format:Y/m/d H:i',
+      'scheduled_by' => 'required|integer|' . Rule::in(User::pluck('id')->toArray()),
+      'title' => 'required|string|max:140',
+      'start' => 'required|date_format:Y/m/d H:i',
+      'end' => 'required|date_format:Y/m/d H:i',
       'is_public' => 'nullable|boolean',
       'color' => 'nullable|string|max:50|regex:/^#[0-9a-fA-F]{3,6}$/u',
       'memo' => 'nullable|string',
       'sharedMembers' => 'nullable|array',
       'sharedMembers.*' => 'nullable|array',
       'sharedMembers.*.is_editable' => 'required|boolean',
-      'sharedMembers.*.shared_by' => 'required|integer|'.Rule::in(User::pluck('id')->toArray()),
+      'sharedMembers.*.shared_by' => 'required|integer|' . Rule::in(User::pluck('id')->toArray()),
     ];
   }
 
@@ -44,9 +44,9 @@ class StoreRequest extends FormRequest
   {
     return [
       'scheduled_by' => '予定作成者のID',
-      'content' => '内容',
-      'start_date' => '予定開始日',
-      'end_date' => '予定終了日',
+      'title' => '内容',
+      'start' => '予定開始日',
+      'end' => '予定終了日',
       'is_public' => '公開設定',
       'color' => 'カラー',
       'memo' => 'メモ',

@@ -27,4 +27,9 @@ class TaskRepository extends EloquentRepository implements TaskRepositoryInterfa
     $model = parent::save($params, $id);
     return $model->load($this->model()::RELATIONS_ARRAY);
   }
+
+  public function detach(array $ids)
+  {
+    return $this->model()->whereIn('id', $ids)->delete();
+  }
 }

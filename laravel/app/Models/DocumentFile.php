@@ -35,6 +35,10 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Query\Builder|DocumentFile withTrashed()
  * @method static \Illuminate\Database\Query\Builder|DocumentFile withoutTrashed()
  * @mixin \Eloquent
+ * @property string $is_public 公開設定
+ * @property string $original_name オリジナルファイル名
+ * @method static \Illuminate\Database\Eloquent\Builder|DocumentFile whereIsPublic($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|DocumentFile whereOriginalName($value)
  */
 class DocumentFile extends Model
 {

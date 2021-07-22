@@ -18,10 +18,6 @@ class UserSeeder extends Seeder
     $departmentList = Department::all()->map(function($department) {
       return [
         [
-          'role_id' => 2,
-          'department_code' => $department->department_code,
-        ],
-        [
           'role_id' => 3,
           'department_code' => $department->department_code,
         ],
@@ -30,11 +26,15 @@ class UserSeeder extends Seeder
           'department_code' => $department->department_code,
         ],
         [
-          'role_id' => 4,
+          'role_id' => 1,
           'department_code' => $department->department_code,
         ],
         [
-          'role_id' => 4,
+          'role_id' => 1,
+          'department_code' => $department->department_code,
+        ],
+        [
+          'role_id' => 1,
           'department_code' => $department->department_code,
         ],
       ];
@@ -42,7 +42,7 @@ class UserSeeder extends Seeder
     factory(User::class, 1)->create([
       'department_code' => 5,
       'user_code' => 111111,
-      'role_id' => 1,
+      'role_id' => 2,
       'login_id' => 'testman1',
       'family_name' => 'テスト',
       'given_name' => '太郎',

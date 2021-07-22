@@ -27,11 +27,12 @@ class UpdateRequest extends StoreRequest
    */
   public function rules()
   {
-    return array_merge([
+    return array_merge(parent::rules(), [
       'meeting_decisions.*.id' => 'nullable|integer|' . Rule::in(MeetingDecision::pluck('id')->toArray()),
-      'meeting_decisions.*.tasks.*.id' => 'nullable|integer|' . Rule::in(Task::pluck('id')->toArray()),
       'meeting_decisions.*.flag' => 'nullable|integer|' . Rule::in(ProcessFlag::values()),
+      'meeting_decisions.*.body' => 'nullable|required_unless:meeting_decisions.*.flag,' . ProcessFlag::value('delete') . '|string|max:140',
+      'meeting_decisions.*.tasks.*.id' => 'nullable|integer|' . Rule::in(Task::pluck('id')->toArray()),
       'meeting_decisions.*.tasks.*.flag' => 'nullable|integer|' . Rule::in(ProcessFlag::values()),
-    ],parent::rules());
+    ]);
   }
 }

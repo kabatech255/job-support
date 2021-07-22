@@ -24,6 +24,8 @@ use App\Models\Abstracts\CommonModel as Model;
  * @method static \Illuminate\Database\Eloquent\Builder|ChatRoomShare whereSharedWith($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ChatRoomShare whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property bool $is_editable 編集権限
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatRoomShare whereIsEditable($value)
  */
 class ChatRoomShare extends Model
 {

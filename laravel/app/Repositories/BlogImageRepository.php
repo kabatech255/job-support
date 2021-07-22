@@ -12,4 +12,16 @@ class BlogImageRepository extends EloquentRepository implements BlogImageReposit
   {
     $this->setModel($model);
   }
+
+  /**
+   * @param $id
+   * @return string
+   */
+  public function findPath($id): string
+  {
+    if ($id instanceof BlogImage) {
+      return $id->file_path;
+    }
+    return parent::find($id)->file_path;
+  }
 }

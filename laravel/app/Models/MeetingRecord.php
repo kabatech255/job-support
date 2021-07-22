@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Contracts\Models\RelationalDeleteInterface;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Abstracts\CommonModel as Model;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * App\Models\MeetingRecord
@@ -44,6 +45,9 @@ use App\Models\Abstracts\CommonModel as Model;
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\MeetingDecision[] $decisions
  * @property-read int|null $decisions_count
+ * @property int $role_id 権限ID
+ * @property-read \App\Models\Role $role
+ * @method static \Illuminate\Database\Eloquent\Builder|MeetingRecord whereRoleId($value)
  */
 class MeetingRecord extends Model implements RelationalDeleteInterface
 {
@@ -52,6 +56,7 @@ class MeetingRecord extends Model implements RelationalDeleteInterface
   const RELATIONS_ARRAY = [
     'recordedBy',
     'place',
+    'role',
     'decisions',
     'members',
   ];
@@ -81,12 +86,23 @@ class MeetingRecord extends Model implements RelationalDeleteInterface
     'meeting_date'
   ];
 
+  protected $appends = [
+    'is_editable'
+  ];
+
   /**
    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
    */
   public function recordedBy()
   {
     return $this->belongsTo(User::class, 'recorded_by', 'id');
+  }
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+   */
+  public function role()
+  {
+    return $this->belongsTo(Role::class, 'role_id', 'id');
   }
   /**
    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -120,4 +136,14 @@ class MeetingRecord extends Model implements RelationalDeleteInterface
     ];
   }
 
+  /**
+   * @return bool
+   */
+  public function getIsEditableAttribute(): bool
+  {
+    if (!Auth::check()) {
+      return false;
+    }
+    return $this->recorded_by === Auth::user()->id;
+  }
 }

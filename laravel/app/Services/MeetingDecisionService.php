@@ -35,8 +35,7 @@ class MeetingDecisionService extends Service
     Repository $repository,
     Query $query,
     TaskService $taskService
-  )
-  {
+  ) {
     $this->setRepository($repository);
     $this->setQuery($query);
     $this->taskService = $taskService;
@@ -89,7 +88,7 @@ class MeetingDecisionService extends Service
   {
     $deletedDecision = $this->repository()->delete($id);
     if (!!$deletedDecision->tasks->count()) {
-      $deletedDecision->tasks->each(function($task) {
+      $deletedDecision->tasks->each(function ($task) {
         $this->taskService->delete($task->id);
       });
     }
@@ -117,7 +116,7 @@ class MeetingDecisionService extends Service
    */
   public function saveTasksByDecision(array $params, MeetingDecision $meetingDecision): MeetingDecision
   {
-    foreach($params['tasks'] as $taskParams) {
+    foreach ($params['tasks'] as $taskParams) {
       $tasks[] = $this->saveTaskByDecision($taskParams, $meetingDecision);
     }
     $meetingDecision->load($this->query()->relation());
@@ -135,7 +134,7 @@ class MeetingDecisionService extends Service
       return $this->taskService->attach($taskParams, $meetingDecision);
     } elseif (empty($taskParams['flag'] ?? '')) {
       return $this->taskService->find($taskParams['id']);
-    } elseif($taskParams['flag'] === ProcessFlag::value('delete')) {
+    } elseif ($taskParams['flag'] === ProcessFlag::value('delete')) {
       return $this->taskService->delete($taskParams['id']);
     }
     return $this->taskService->attach($taskParams, $meetingDecision, $taskParams['id']);

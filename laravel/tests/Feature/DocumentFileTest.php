@@ -30,7 +30,7 @@ class DocumentFileTest extends TestCase
       ->shuffle()
       ->splice(0, random_int(1, 15))
       ->all();
-    foreach ($this->members as $member){
+    foreach ($this->members as $member) {
       // 編集権限があるメンバー
       $this->membersData[$member->id] = [
         'is_editable' => 1,
@@ -50,7 +50,7 @@ class DocumentFileTest extends TestCase
    */
   public function should_ドキュメントファイルの投稿()
   {
-    Storage::fake('public');
+    Storage::fake('s3');
     $expects = [
       'uploaded_by' => $this->members[0]['id'],
       'file' => UploadedFile::fake()->image('test.png'),
@@ -61,7 +61,7 @@ class DocumentFileTest extends TestCase
     $response->assertCreated()->assertJson([
       'id' => $new->id
     ]);
-    Storage::disk('public')->assertExists($new->file_path);
+    Storage::disk('s3')->assertExists($new->file_path);
 
     $result = parent::$openApiValidator->validate('postDocumentFile', 201, json_decode($response->getContent(), true));
     $this->assertFalse($result->hasErrors(), $result);
@@ -236,6 +236,7 @@ class DocumentFileTest extends TestCase
    */
   public function should_編集権限を持つメンバーによる削除()
   {
+    Storage::fake('s3');
     $file = factory(DocumentFile::class)->create([
       'uploaded_by' => $this->members[0],
     ]);

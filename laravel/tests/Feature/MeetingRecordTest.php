@@ -321,11 +321,23 @@ class MeetingRecordTest extends TestCase
     $meetingRecord = MeetingRecord::orderBy('id', 'desc')->first();
     $user = User::find($meetingRecord->recorded_by);
     $response = $this->actingAs($user)->deleteJson(route('meetingRecord.destroy', $meetingRecord->id));
-    $response->assertNoContent();
+    $response->assertOk()->assertJsonStructure([
+      'data',
+      'first_page_url',
+      'from',
+      'last_page',
+      'last_page_url',
+      'next_page_url',
+      'path',
+      'per_page',
+      'prev_page_url',
+      'to',
+      'total',
+    ]);
     $this->assertSoftDeleted('meeting_records', [
       'id' => $meetingRecord->id
     ]);
-    $result = parent::$openApiValidator->validate('deleteMeetingRecordId', 204, json_decode($response->getContent(), true));
+    $result = parent::$openApiValidator->validate('deleteMeetingRecordId', 200, json_decode($response->getContent(), true));
     $this->assertFalse($result->hasErrors(), $result);
   }
   /**
@@ -335,7 +347,7 @@ class MeetingRecordTest extends TestCase
   public function should_投稿者以外の削除リクエストにはForbiddenを返却する()
   {
     $meetingRecord = MeetingRecord::orderBy('id', 'desc')->first();
-    $exceptUser = User::where('id','!=', $meetingRecord->recorded_by)->first();
+    $exceptUser = User::where('id', '!=', $meetingRecord->recorded_by)->first();
     $response = $this->actingAs($exceptUser)->deleteJson(route('meetingRecord.destroy', $meetingRecord->id));
     $response->assertForbidden();
     $this->assertDatabaseHas('meeting_records', [
@@ -353,7 +365,7 @@ class MeetingRecordTest extends TestCase
    */
   private function decisionsPutData($decisions): array
   {
-    return $decisions->map(function($decision, $index) {
+    return $decisions->map(function ($decision, $index) {
       return [
         'id' => $decision->id,
         'flag' => $index > 0 ? ProcessFlag::value('delete') : ProcessFlag::value('update'),
@@ -390,7 +402,7 @@ class MeetingRecordTest extends TestCase
    */
   private function tasksPutData($tasks): array
   {
-    return $tasks->map(function($task, $i) {
+    return $tasks->map(function ($task, $i) {
       return [
         'id' => $task->id,
         'flag' => $i > 0 ? ProcessFlag::value('delete') : ProcessFlag::value('update'),

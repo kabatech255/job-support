@@ -18,7 +18,6 @@ class ChatMessageController extends Controller
   public function __construct(ChatMessageService $service)
   {
     $this->service = $service;
-//    $this->authorizeResource(ChatMessage::class, 'id');
   }
   /**
    * Display a listing of the resource.

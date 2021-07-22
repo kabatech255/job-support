@@ -44,6 +44,10 @@ class BlogComment extends Model
     'body',
   ];
 
+  const RELATIONS_ARRAY = [
+    'writtenBy',
+  ];
+
   /**
    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
    */
@@ -55,7 +59,7 @@ class BlogComment extends Model
   /**
    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
    */
-  public function user()
+  public function writtenBy()
   {
     return $this->belongsTo(User::class, 'written_by', 'id');
   }

@@ -8,6 +8,7 @@ use App\Models\MeetingDecision;
 use App\Services\MeetingDecisionService;
 use App\Services\Traits\WithRepositoryTrait;
 use App\Models\MeetingRecord;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class MeetingRecordService extends Service
 {
@@ -24,8 +25,7 @@ class MeetingRecordService extends Service
     Repository $repository,
     Query $query,
     MeetingDecisionService $meetingDecisionService
-  )
-  {
+  ) {
     $this->setRepository($repository);
     $this->setQuery($query);
     $this->meetingDecisionService = $meetingDecisionService;
@@ -39,14 +39,14 @@ class MeetingRecordService extends Service
    */
   public function paginate(array $params, ?int $perPage = null, ?array $relation = null)
   {
-    return $this->query()->paginate($params, $relation, $perPage);
+    return $this->query()->paginate($params, $perPage, $relation);
   }
 
   /**
-   * @param int $id
+   * @param $id
    * @return MeetingRecord
    */
-  public function find(int $id): MeetingRecord
+  public function find($id): MeetingRecord
   {
     return $this->repository()->find($id, [
       'members',
@@ -68,8 +68,8 @@ class MeetingRecordService extends Service
     $meetingRecord = $this->repository()->saveWithMembers($params);
     // 決議事項の保存
     if (isset($params['meeting_decisions'])) {
-      foreach($params['meeting_decisions'] as $meetingDecisionParams) {
-//        $meetingDecisions[] = $this->saveDecisionByRecord($meetingDecisionParams, $meetingRecord);
+      foreach ($params['meeting_decisions'] as $meetingDecisionParams) {
+        //        $meetingDecisions[] = $this->saveDecisionByRecord($meetingDecisionParams, $meetingRecord);
         $this->saveDecisionByRecord($meetingDecisionParams, $meetingRecord);
       }
     }
@@ -96,12 +96,15 @@ class MeetingRecordService extends Service
   }
 
   /**
-   * @param $id
-   * @return MeetingRecord
+   * @param array $queryParams
+   * @param array $params
+   * @param int $perPage
+   * @return LengthAwarePaginator
    */
-  public function delete($id): MeetingRecord
+  public function delete($id, $queryParams, int $perPage): LengthAwarePaginator
   {
-    return $this->repository()->delete($id);
+    $deleted = $this->repository()->delete($id);
+    return $this->paginate($queryParams, $perPage);
   }
 
   /**
@@ -117,11 +120,19 @@ class MeetingRecordService extends Service
   {
     if (isset($meetingDecisionParams['id']) && isset($meetingDecisionParams['flag'])) {
       return $this->meetingDecisionService->updateOrDelete($meetingDecisionParams, $meetingRecord, $meetingDecisionParams['id']);
-    } elseif(isset($meetingDecisionParams['id']) && isset($meetingDecisionParams['tasks'])) {
+    } elseif (isset($meetingDecisionParams['id']) && isset($meetingDecisionParams['tasks'])) {
       $meetingDecision = $this->meetingDecisionService->find($meetingDecisionParams['id']);
       return $this->meetingDecisionService->saveTasksByDecision($meetingDecisionParams, $meetingDecision);
     } else {
       return $this->meetingDecisionService->store($meetingDecisionParams, $meetingRecord);
     }
+  }
+
+  /**
+   * @return int[]
+   */
+  public function ids(): array
+  {
+    return $this->repository()->ids();
   }
 }

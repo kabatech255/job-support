@@ -46,11 +46,11 @@ abstract class EloquentQuery extends CommonAbstractQuery
 
   /**
    * @param array $params
-   * @param array|null $relation
    * @param int|null $perPage
+   * @param array|null $relation
    * @return LengthAwarePaginator
    */
-  public function paginate(array $params, ?array $relation = null, ?int $perPage = null): LengthAwarePaginator
+  public function paginate(array $params, ?int $perPage = null, ?array $relation = null): LengthAwarePaginator
   {
     return $this->search($params, $relation ?? $this->relation())->paginate($perPage ?? $this->perPage());
   }
@@ -73,17 +73,36 @@ abstract class EloquentQuery extends CommonAbstractQuery
   public function search(array $params, array $relation = []): Builder
   {
     $query = $this->builder()->with($relation);
-    foreach($params as $column => $val) {
+    foreach ($params as $column => $val) {
       if ($column === 'keyword') {
         $query = $this->searchByKeywords($query, $val);
       } elseif (count($this->splitColumn($column)) >= 2) {
         $query = $this->searchOtherLocation($query, [$column => $val]);
-      } elseif ( $this->isValidColumnName($column) ) {
-        $query->where($column, 'like', $this->liked($val));
+      } elseif ($this->isValidColumnName($column)) {
+        $query->where($column, '=', $val);
       }
+    }
+
+    if (isset($params['sort_key'])) {
+      $query = $this->order($params, $query);
+    } else {
+      // dd();
+      $query->latest();
     }
     return $query;
   }
+
+  /**
+   * @param array $params
+   * @param Builder $query
+   */
+  public function order(array $params, Builder $query): Builder
+  {
+    if ($this->isValidColumnName($params['sort_key'])) {
+      return $query->orderBy($params['sort_key'], $params['order_by'] ?? 'desc');
+    }
+  }
+
 
   /**
    * @param Builder $query
@@ -93,12 +112,12 @@ abstract class EloquentQuery extends CommonAbstractQuery
   protected function searchByKeywords(Builder $query, string $keyword)
   {
     $likeVal = $this->liked($keyword);
-    foreach($this->targetColumns as $columnName) {
+    foreach ($this->targetColumns as $columnName) {
       $query->orWhere($columnName, 'like', $likeVal);
     }
-    foreach($this->relationTargets as $relation => $relationColumns) {
-      foreach($relationColumns as $c) {
-        $query->orWhereHas($relation, function($q) use ($likeVal, $c){
+    foreach ($this->relationTargets as $relation => $relationColumns) {
+      foreach ($relationColumns as $c) {
+        $query->orWhereHas($relation, function ($q) use ($likeVal, $c) {
           $q->where($c, 'like', $likeVal);
         });
       }
@@ -132,7 +151,7 @@ abstract class EloquentQuery extends CommonAbstractQuery
     if ($filter === 'like') {
       $value = $this->liked($value);
     }
-    $query->whereHas($tableName, function($q) use ($tableName, $columnName, $value, $filter) {
+    $query->whereHas($tableName, function ($q) use ($tableName, $columnName, $value, $filter) {
       if ($this->includesInRelationColumns($tableName, $columnName)) {
         $q->where($columnName, $filter, $value);
       }

@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\DB;
 
 class TaskController extends Controller
 {
+  private $perPage = 10;
+
   /**
    * @var Service
    */
@@ -35,9 +37,9 @@ class TaskController extends Controller
   /**
    * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
    */
-  public function findByOwner()
+  public function findByOwner(Request $request)
   {
-    return response($this->service->findByOwner(Auth::user()->id), 200);
+    return response($this->service->findByOwner($request->query(), Auth::user()->id, $this->perPage), 200);
   }
 
   /**
@@ -57,7 +59,6 @@ class TaskController extends Controller
       throw $e;
     }
     return response($task, 201);
-
   }
 
   /**
@@ -100,5 +101,15 @@ class TaskController extends Controller
   public function destroy(Task $id)
   {
     return response($this->service->delete($id), 204);
+  }
+  /**
+   * Remove the specified resource from storage.
+   *
+   * @param Request $request
+   * @return \Illuminate\Http\Response
+   */
+  public function deleteAll(Request $request)
+  {
+    return response($this->service->deleteAll($request->query(), $request->input('ids'), $this->perPage), 200);
   }
 }

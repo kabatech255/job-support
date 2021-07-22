@@ -2,6 +2,7 @@
 
 namespace App\Services\Traits;
 
+use App\Services\FileUploadService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -10,45 +11,68 @@ trait FileSupportTrait
   /**
    * @var string
    */
-  private $disk;
-  private $dirName;
+  private $baseDir;
   private $fileName;
   private $originalFileName;
+  /**
+   * @var FileUploadService
+   */
+  private $fileUploadService;
 
-  public function setDisk(string $diskName)
+  public function __construct(FileUploadService $fileUploadService)
   {
-    $this->disk = $diskName;
+    $this->fileUploadService = $fileUploadService;
   }
 
-  public function setAttributes($dirName, $file, ?string $fileName = null)
+  private function setFileAttributes($dirName, $file, ?string $fileName = null)
   {
-    $this->dirName = $dirName;
+    $this->baseDir = $dirName;
+    $this->originalFileName = $file->getClientOriginalName() . '.' . $file->extension();
     $this->fileName = is_null($fileName) ? Str::random(16) : $fileName;
-    $this->fileName .= '.'.$file->extension();
-    $this->originalFileName = $file->getClientOriginalName().'.'.$file->extension();
+    $this->fileName .= '.' . $file->extension();
   }
 
-  public function getPath()
+  /**
+   * @return string
+   */
+  public function getPath(): string
   {
-    return $this->dirName . '/' . $this->fileName;
+    return $this->baseDir . '/' . $this->fileName;
   }
 
-  public function getOriginalFileName()
+  /**
+   * @return string
+   */
+  public function getOriginalFileName(): string
   {
     return $this->originalFileName;
   }
 
   /**
-   * @param string $parentPath
    * @param Model $model
    * @param string|null $uniqueKey
    * @return string
    */
-  private function getDirName(string $parentPath, Model $model, ?string $uniqueKey = null)
+  private function makeDirName(Model $model, ?string $uniqueKey = null)
   {
     if (is_null($uniqueKey)) {
       $uniqueKey = 'id';
     }
-    return "{$parentPath}/{$model->$uniqueKey}";
+    $baseDirName = Str::singular($model->getTable());
+    return "{$baseDirName}/{$model->$uniqueKey}";
+  }
+
+  /**
+   * @return array
+   */
+  protected function fileUpload(array $params, Model $model, $uniqueKey = 'id', ?string $oldPath = null): array
+  {
+    $this->setFileAttributes($this->makeDirName($model, $uniqueKey), $params['file']);
+    $params['original_name'] = $this->getOriginalFileName();
+    $params['file_path'] = $this->fileUploadService->upload($this->baseDir, $params['file'], $this->fileName);
+    if (!is_null($oldPath)) {
+      $this->fileUploadService->remove($oldPath);
+    }
+    return $params;
   }
 }

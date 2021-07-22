@@ -144,43 +144,12 @@ jobs:
             aws ecs describe-task-definition \
               --task-definition $ECS_BACK_TASK_NAME | jq '.taskDefinition | { containerDefinitions: .containerDefinitions }' > definition.json
       - run:
-          name: Update ECS Backend Task
-          command: |
-            aws ecs register-task-definition \
-              --execution-role-arn $EXECUTION_ROLE_ARN \
-              --family $ECS_BACK_TASK_NAME \
-              --cli-input-json file://definition.json
-      - run:
           name: Update ECS Backend Service
           command: |
             aws ecs update-service \
               --cluster $ECS_CLUSTER_NAME \
               --service $ECS_BACK_SERVICE_NAME \
               --task-definition $ECS_BACK_TASK_NAME
-      - run:
-          name: Push FrontApp Image
-          command: |
-            docker build -t $AWS_ECR_FRONT_APP_URL:latest -f docker/node/Dockerfile --build-arg TZ=$TZ --no-cache=true .
-            docker push $AWS_ECR_FRONT_APP_URL:latest
-      - run:
-          name: Describe ECS Front Task
-          command: |
-            aws ecs describe-task-definition \
-              --task-definition $ECS_FRONT_TASK_NAME | jq '.taskDefinition | { containerDefinitions: .containerDefinitions }' > definition.json
-      - run:
-          name: Update ECS Front Task
-          command: |
-            aws ecs register-task-definition \
-              --family $ECS_FRONT_TASK_NAME \
-              --execution-role-arn $EXECUTION_ROLE_ARN \
-              --cli-input-json file://definition.json
-      - run:
-          name: Update ECS Front Service
-          command: |
-            aws ecs update-service \
-              --cluster $ECS_CLUSTER_NAME \
-              --service $ECS_FRONT_SERVICE_NAME \
-              --task-definition $ECS_FRONT_TASK_NAME
       - notify_slack_fail
       - notify_slack_deploy
 
@@ -197,4 +166,6 @@ workflows:
             - test
           filters:
             branches:
-              only: main
+              only:
+                - main
+                - develop

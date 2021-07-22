@@ -30,7 +30,7 @@ class MeetingRecordPolicy
    */
   public function view(User $user, MeetingRecord $meetingRecord)
   {
-    //
+    return $meetingRecord->role->value <= $user->role->value;
   }
 
   /**

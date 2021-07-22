@@ -16,7 +16,7 @@ use App\Services\FileUploadService;
 class DocumentFileService extends Service
 {
   use WithRepositoryTrait,
-      FileSupportTrait;
+    FileSupportTrait;
 
   /**
    * @var DocumentFolderRepository
@@ -40,8 +40,7 @@ class DocumentFileService extends Service
     Query $query,
     DocumentFolderRepository $documentFolderRepository,
     FileUploadService $fileUploadService
-  )
-  {
+  ) {
     $this->setRepository($repository);
     $this->setQuery($query);
     $this->documentFolderRepository = $documentFolderRepository;
@@ -57,7 +56,7 @@ class DocumentFileService extends Service
   {
     $documentFolder = $this->documentFolderRepository->find($documentFolderId);
     $params = $this->addMe($params);
-    $params = $this->fileUpload($params, $documentFolder);
+    $params = $this->fileUpload($params, $documentFolder, 'random_name');
     return $this->repository()->attachWithMembers($params, $documentFolder);
   }
 
@@ -93,20 +92,6 @@ class DocumentFileService extends Service
     $documentFile = $this->repository()->delete($id);
     $this->fileDelete($documentFile->file_path);
     return $documentFile;
-  }
-
-  /**
-   * @param array $params
-   * @param Model $documentFolder
-   * @return array
-   */
-  public function fileUpload(array $params, Model $documentFolder): array
-  {
-    $this->setAttributes($this->getDirName('document', $documentFolder, 'random_name'), $params['file']);
-    $params['file_path'] = $this->getPath();
-    $params['original_name'] = $this->getOriginalFileName();
-    $this->fileUploadService->upload($this->dirName, $params['file'], $this->fileName);
-    return $params;
   }
 
   /**
