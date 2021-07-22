@@ -17,6 +17,7 @@ class CreateMeetingRecordsTable extends Migration
       $table->id();
       $table->unsignedBigInteger('recorded_by')->comment('議事録作成者');
       $table->unsignedBigInteger('place_id')->nullable()->comment('開催場所');
+      $table->unsignedBigInteger('role_id')->default(1)->comment('権限ID');
       $table->dateTime('meeting_date')->comment('開催日');
       $table->string('title')->comment('会議名');
       $table->text('summary')->nullable()->comment('ミーティング概要');

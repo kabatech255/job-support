@@ -165,10 +165,7 @@ paths:
             application/json:
               schema:
                 anyOf:
-                  - type: array
-                    items:
-                      $ref: '#/components/schemas/Task'
-                  - $ref: '#/components/schemas/EmptyItem'
+                  - $ref: '#/components/schemas/TaskPage'
         '401':
           description: Unauthorized
           content:
@@ -251,18 +248,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultError'
       summary: 認証者の会議議事録一覧
-  /task:
+  /blog:
     parameters: []
     post:
-      summary: タスクの新規投稿
-      operationId: postTask
+      summary: ブログの新規投稿
+      operationId: postBlog
       responses:
         '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Task'
+                $ref: '#/components/schemas/Blog'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
         '401':
           description: Unauthorized
           content:
@@ -275,18 +278,184 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InvalidError'
-      description: タスクの新規投稿
-      security:
-        - cookieAuth: []
+      description: ブログの新規投稿
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: '#/components/schemas/TaskForm'
+              $ref: '#/components/schemas/BlogForm'
+          text/plain:
+            schema:
+              type: object
+              properties: {}
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/BlogForm'
         description: ''
+      security:
+        - cookieAuth: []
       tags:
-        - task
-  '/task/{id}':
+        - blog
+    get:
+      summary: ブログ一覧ページ
+      operationId: getBlog
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogPage'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: 'tag:name'
+          description: タグ名で検索
+      description: ブログ一覧ページ
+      tags:
+        - blog
+  '/blog/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: ブログの詳細表示
+      operationId: getBlogId
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blog'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+      description: ブログの詳細表示
+      security:
+        - cookieAuth: []
+      tags:
+        - blog
+    put:
+      summary: ブログの更新
+      operationId: putBlogId
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blog'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidError'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BlogForm'
+      description: ブログの更新
+      tags:
+        - chat_room
+      security:
+        - cookieAuth: []
+    delete:
+      summary: ブログの削除
+      operationId: deleteBlogId
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+      description: ブログの削除
+      security:
+        - cookieAuth: []
+      tags:
+        - blog
+  '/blog/{id}/like':
     parameters:
       - schema:
           type: string
@@ -294,15 +463,117 @@ paths:
         in: path
         required: true
     put:
-      summary: タスクの更新
-      operationId: putTaskId
+      summary: ブログに対するいいね
+      operationId: putBlogIdLike
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Task'
+                $ref: '#/components/schemas/Blog'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+      description: ブログに対するいいね
+      tags:
+        - blog
+    delete:
+      summary: ブログに対するいいね解除
+      operationId: deleteBlogIdLike
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blog'
+      description: ブログに対するいいね解除
+      tags:
+        - blog
+  '/blog/{blog_id}/comment':
+    parameters:
+      - schema:
+          type: string
+        name: blog_id
+        in: path
+        required: true
+    post:
+      summary: ブログへのコメント投稿
+      operationId: postBlogIdComment
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogComment'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidError'
+      tags:
+        - blog
+      description: ブログへのコメント投稿
+      security:
+        - cookieAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlogCommentForm'
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+          multipart/form-data:
+            schema:
+              type: object
+              properties: {}
+          text/html:
+            schema:
+              type: object
+              properties: {}
+        description: ''
+  '/blog/{blog_id}/comment/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: blog_id
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    put:
+      summary: ブログコメントの更新
+      operationId: putBlogIdComment
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogComment'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
         '401':
           description: Unauthorized
           content:
@@ -321,22 +592,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InvalidError'
-      description: タスクの更新
-      security:
-        - cookieAuth: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TaskForm'
+              $ref: '#/components/schemas/BlogCommentForm'
+      description: ブログコメントの更新
+      security:
+        - cookieAuth: []
       tags:
-        - task
+        - blog
     delete:
-      summary: タスクの削除
-      operationId: deleteTaskId
+      summary: ブログコメントの削除
+      operationId: deleteBlogIdComment
       responses:
         '204':
           description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
         '401':
           description: Unauthorized
           content:
@@ -349,11 +626,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ForbiddenError'
-      description: タスクの削除
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+      description: ブログコメントの削除
       security:
         - cookieAuth: []
       tags:
-        - task
+        - blog
   /chat_room:
     parameters: []
     post:
@@ -893,6 +1179,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
         '422':
           description: Unprocessable Entity (WebDAV)
           content:
@@ -1126,6 +1418,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ForbiddenError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
         '422':
           description: Unprocessable Entity (WebDAV)
           content:
@@ -1402,6 +1700,12 @@ paths:
       summary: 会議議事録の削除
       operationId: deleteMeetingRecordId
       responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingPage'
         '204':
           description: DELETE
           content:
@@ -1649,6 +1953,109 @@ paths:
         - cookieAuth: []
       tags:
         - schedule
+  /task:
+    parameters: []
+    post:
+      summary: タスクの新規投稿
+      operationId: postTask
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidError'
+      description: タスクの新規投稿
+      security:
+        - cookieAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskForm'
+        description: ''
+      tags:
+        - task
+  '/task/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    put:
+      summary: タスクの更新
+      operationId: putTaskId
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidError'
+      description: タスクの更新
+      security:
+        - cookieAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskForm'
+      tags:
+        - task
+    delete:
+      summary: タスクの削除
+      operationId: deleteTaskId
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+      description: タスクの削除
+      security:
+        - cookieAuth: []
+      tags:
+        - task
   /user/current:
     get:
       tags:
@@ -1663,7 +2070,7 @@ paths:
             application/json:
               schema:
                 anyOf:
-                  - $ref: '#/components/schemas/EmptyItem'
+                  - nullable: true
                   - $ref: '#/components/schemas/User'
         default:
           description: Unexpected Error
@@ -1765,8 +2172,6 @@ components:
           format: int64
         written_by:
           $ref: '#/components/schemas/User'
-        role:
-          $ref: '#/components/schemas/Role'
         title:
           type: string
           description: タイトル
@@ -1777,23 +2182,234 @@ components:
           $ref: '#/components/schemas/DateFormat'
         updated_at:
           $ref: '#/components/schemas/DateFormat'
+        images:
+          anyOf:
+            - $ref: '#/components/schemas/EmptyItem'
+            - type: array
+              items:
+                $ref: '#/components/schemas/BlogImage'
+        likes:
+          anyOf:
+            - $ref: '#/components/schemas/EmptyItem'
+            - type: array
+              items:
+                $ref: '#/components/schemas/User'
+        comments:
+          anyOf:
+            - $ref: '#/components/schemas/EmptyItem'
+            - type: array
+              items:
+                $ref: '#/components/schemas/BlogComment'
+        tags:
+          anyOf:
+            - $ref: '#/components/schemas/EmptyItem'
+            - type: array
+              items:
+                $ref: '#/components/schemas/Tag'
       required:
         - id
         - written_by
-        - role
         - title
         - body
         - created_at
         - updated_at
-    ChatMessage:
-      title: ChatMessage
-      description: チャットメッセージ
+        - images
+        - likes
+        - comments
+        - tags
+    BlogComment:
+      title: BlogComment
+      description: ブログへのコメント
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        blog_id:
+          type: integer
+          format: int64
+        written_by:
+          $ref: '#/components/schemas/User'
+        body:
+          type: string
+        created_at:
+          $ref: '#/components/schemas/DateFormat'
+        updated_at:
+          $ref: '#/components/schemas/DateFormat'
       required:
         - id
+        - blog_id
         - written_by
         - body
         - created_at
         - updated_at
+    BlogCommentForm:
+      title: BlogCommentForm
+      description: Blogのコメントフォーム
+      type: object
+      properties:
+        written_by:
+          type: integer
+          format: int64
+          example: 1
+          minimum: 0
+        body:
+          type: string
+      required:
+        - written_by
+        - body
+    BlogForm:
+      title: BlogForm
+      description: Blogの投稿フォーム
+      type: object
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+        written_by:
+          type: integer
+          format: int64
+          example: 1
+          minimum: 0
+        images:
+          type: array
+          items:
+            type: object
+            nullable: true
+        file_paths:
+          type: array
+          description: 初投稿時はなくても良い
+          items:
+            type: string
+            nullable: true
+        tags:
+          type: array
+          items:
+            type: integer
+            nullable: true
+      required:
+        - title
+        - body
+    BlogImage:
+      title: BlogImage
+      description: ブログ画像
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        blog_id:
+          type: integer
+          format: int64
+        file_path:
+          type: string
+        created_at:
+          $ref: '#/components/schemas/DateFormat'
+        updated_at:
+          $ref: '#/components/schemas/DateFormat'
+      required:
+        - id
+        - blog_id
+        - file_path
+        - created_at
+        - updated_at
+    BlogPage:
+      title: BlogPage
+      description: ブログ一覧のページ（ページャつき）
+      type: object
+      x-examples:
+        example-1:
+          value:
+            data:
+              - id: 0
+                recorded_by:
+                  id: 0
+                  full_name: テスト 太郎
+                  given_name: 太郎
+                  family_name: テスト
+                  file_path: users/test1.jpg
+                  created_at: '2021-12-31 12:00:00'
+                  updated_at: '2021-12-31 12:00:00'
+                meeting_date: '2021-12-31 12:00:00'
+                place: string
+                title: 〇〇会議
+                summary: 〇〇会議の概要
+                members:
+                  - id: 0
+                    full_name: テスト 太郎
+                    given_name: 太郎
+                    family_name: テスト
+                    file_path: users/test1.jpg
+                    created_at: '2021-12-31 12:00:00'
+                    updated_at: '2021-12-31 12:00:00'
+                decisions: []
+                created_at: '2021-12-31 12:00:00'
+                updated_at: '2021-12-31 12:00:00'
+            first_page_url: string
+            from: 0
+            last_page: 0
+            last_page_url: string
+            next_page_url: string
+            path: string
+            per_page: 0
+            prev_page_url: string
+            to: 0
+            total: 0
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Blog'
+        first_page_url:
+          description: 1ページ目のURL
+          type: string
+        from:
+          description: 現在のitemの開始位置
+          type: integer
+          nullable: true
+        last_page:
+          description: 最大ページ数
+          type: integer
+        last_page_url:
+          description: 最終ページのURL
+          type: string
+        next_page_url:
+          description: 次ページのURL
+          type: string
+          nullable: true
+        path:
+          description: 前ページのURL
+          type: string
+        per_page:
+          description: 1ページあたりのアイテム数
+          type: integer
+        prev_page_url:
+          description: 前ページのURL
+          type: string
+          nullable: true
+        to:
+          description: 現在のitemの終了位置
+          type: integer
+          nullable: true
+        total:
+          description: item総数
+          type: integer
+      required:
+        - data
+        - first_page_url
+        - from
+        - last_page
+        - last_page_url
+        - next_page_url
+        - path
+        - per_page
+        - prev_page_url
+        - to
+        - total
+    ChatMessage:
+      title: ChatMessage
+      description: チャットメッセージ
       type: object
       properties:
         id:
@@ -1818,6 +2434,15 @@ components:
           $ref: '#/components/schemas/DateFormat'
         updated_at:
           $ref: '#/components/schemas/DateFormat'
+        mine:
+          type: boolean
+          nullable: true
+      required:
+        - id
+        - body
+        - written_by
+        - created_at
+        - updated_at
     ChatMessageForm:
       title: ChatMessageForm
       description: ChatMessageの投稿フォーム
@@ -1942,13 +2567,17 @@ components:
         example-1:
           value:
             id: 0
-            scheduled_by: 0
-            content: string
-            start_date: '2019-08-24T14:15:22Z'
-            end_date: '2019-08-24T14:15:22Z'
-            is_public: true
-            color: string
-            messages: []
+            uploaded_by:
+              id: 0
+              full_name: テスト 太郎
+              given_name: 太郎
+              family_name: テスト
+              file_path: users/test1.jpg
+              created_at: '2021-12-31 12:00:00'
+              updated_at: '2021-12-31 12:00:00'
+            file_path: string
+            created_at: '2021-12-31 12:00:00'
+            updated_at: '2021-12-31 12:00:00'
             shared_members:
               - id: 0
                 full_name: テスト 太郎
@@ -1957,8 +2586,6 @@ components:
                 file_path: users/test1.jpg
                 created_at: '2021-12-31 12:00:00'
                 updated_at: '2021-12-31 12:00:00'
-            created_at: '2021-12-31 12:00:00'
-            updated_at: '2021-12-31 12:00:00'
       properties:
         id:
           type: integer
@@ -2001,6 +2628,9 @@ components:
           format: int64
         sharedMembers:
           type: object
+        file_path:
+          type: string
+          description: 更新時のみ
       required:
         - uploaded_by
         - file
@@ -2012,21 +2642,21 @@ components:
         example-1:
           value:
             id: 0
-            scheduled_by: 0
-            content: string
-            start_date: '2019-08-24T14:15:22Z'
-            end_date: '2019-08-24T14:15:22Z'
-            is_public: true
-            color: string
-            messages: []
-            shared_members:
-              - id: 0
-                full_name: テスト 太郎
-                given_name: 太郎
-                family_name: テスト
-                file_path: users/test1.jpg
-                created_at: '2021-12-31 12:00:00'
-                updated_at: '2021-12-31 12:00:00'
+            created_by:
+              id: 0
+              full_name: テスト 太郎
+              given_name: 太郎
+              family_name: テスト
+              file_path: users/test1.jpg
+              created_at: '2021-12-31 12:00:00'
+              updated_at: '2021-12-31 12:00:00'
+            name: string
+            role:
+              id: 0
+              name: string
+              value: 0
+              created_at: '2021-12-31 12:00:00'
+              updated_at: '2021-12-31 12:00:00'
             created_at: '2021-12-31 12:00:00'
             updated_at: '2021-12-31 12:00:00'
       properties:
@@ -2114,6 +2744,34 @@ components:
           type: string
           format: password
           example: password
+    MeetingDecision:
+      title: MeetingDecision
+      description: ミーティング決定事項
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        decided_by:
+          $ref: '#/components/schemas/User'
+        written_by:
+          $ref: '#/components/schemas/User'
+        subject:
+          type: string
+        body:
+          type: string
+        tasks:
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/Task'
+              - $ref: '#/components/schemas/EmptyItem'
+      required:
+        - id
+        - decided_by
+        - written_by
+        - subject
+        - body
     MeetingDecisionForm:
       title: MeetingDecisionForm
       description: ミーティング決定事項フォーム
@@ -2151,72 +2809,6 @@ components:
           nullable: true
       required:
         - written_by
-        - body
-    MeetingRecordForm:
-      title: MeetingRecordForm
-      description: 会議議事録投稿フォーム
-      type: object
-      properties:
-        recorded_by:
-          type: integer
-          example: 1
-          format: int64
-          minimum: 0
-          exclusiveMinimum: true
-        place_id:
-          type: integer
-          format: int64
-          example: 1
-          nullable: true
-        meeting_date:
-          $ref: '#/components/schemas/DateFormat'
-        title:
-          type: string
-          example: 全体会議
-        summary:
-          type: string
-          example: これは全体の会議です。
-          nullable: true
-        meeting_decisions:
-          example: これは全体の会議です。
-          type: array
-          items:
-            $ref: '#/components/schemas/MeetingDecisionForm'
-        members:
-          type: array
-          items:
-            type: integer
-      required:
-        - recorded_by
-        - meeting_date
-        - title
-    MeetingDecision:
-      title: MeetingDecision
-      description: ミーティング決定事項
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        decided_by:
-          $ref: '#/components/schemas/User'
-        written_by:
-          $ref: '#/components/schemas/User'
-        subject:
-          type: string
-        body:
-          type: string
-        tasks:
-          type: array
-          items:
-            anyOf:
-              - $ref: '#/components/schemas/Task'
-              - $ref: '#/components/schemas/EmptyItem'
-      required:
-        - id
-        - decided_by
-        - written_by
-        - subject
         - body
     MeetingPage:
       title: MeetingPage
@@ -2341,6 +2933,44 @@ components:
         - decisions
         - created_at
         - updated_at
+    MeetingRecordForm:
+      title: MeetingRecordForm
+      description: 会議議事録投稿フォーム
+      type: object
+      properties:
+        recorded_by:
+          type: integer
+          example: 1
+          format: int64
+          minimum: 0
+          exclusiveMinimum: true
+        place_id:
+          type: integer
+          format: int64
+          example: 1
+          nullable: true
+        meeting_date:
+          $ref: '#/components/schemas/DateFormat'
+        title:
+          type: string
+          example: 全体会議
+        summary:
+          type: string
+          example: これは全体の会議です。
+          nullable: true
+        meeting_decisions:
+          example: これは全体の会議です。
+          type: array
+          items:
+            $ref: '#/components/schemas/MeetingDecisionForm'
+        members:
+          type: array
+          items:
+            type: integer
+      required:
+        - recorded_by
+        - meeting_date
+        - title
     MemberForm:
       title: MemberForm
       description: 共有相手用フォーム
@@ -2473,9 +3103,9 @@ components:
           value:
             id: 0
             scheduled_by: 0
-            content: string
-            start_date: '2019-08-24T14:15:22Z'
-            end_date: '2019-08-24T14:15:22Z'
+            title: string
+            start: '2019-08-24T14:15:22Z'
+            end: '2019-08-24T14:15:22Z'
             is_public: true
             color: string
             messages: []
@@ -2496,11 +3126,11 @@ components:
           minimum: 0
         scheduled_by:
           $ref: '#/components/schemas/User'
-        content:
+        title:
           type: string
-        start_date:
+        start:
           $ref: '#/components/schemas/DateFormat'
-        end_date:
+        end:
           $ref: '#/components/schemas/DateFormat'
         is_public:
           type: boolean
@@ -2523,9 +3153,9 @@ components:
       required:
         - id
         - scheduled_by
-        - content
-        - start_date
-        - end_date
+        - title
+        - start
+        - end
         - shared_members
         - created_at
         - updated_at
@@ -2539,13 +3169,13 @@ components:
           format: int64
           example: 1
           minimum: 0
-        content:
+        title:
           type: string
           format: int64
-        start_date:
+        start:
           type: string
           format: date-time
-        end_date:
+        end:
           type: string
           format: date-time
         is_public:
@@ -2565,12 +3195,42 @@ components:
           type: object
       required:
         - scheduled_by
-        - content
-        - start_date
-        - end_date
+        - title
+        - start
+        - end
         - is_public
         - color
         - memo
+      x-examples:
+        example-1:
+          value:
+            scheduled_by: 1
+            title: string
+            start: '2019-08-24T14:15:22Z'
+            end: '2019-08-24T14:15:22Z'
+            is_public: true
+            color: 'true'
+            memo: 'true'
+            sharedMembers: {}
+    Tag:
+      title: Tag
+      description: Tag
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        created_at:
+          $ref: '#/components/schemas/DateFormat'
+        updated_at:
+          $ref: '#/components/schemas/DateFormat'
+      required:
+        - id
+        - name
+        - created_at
+        - updated_at
     Task:
       title: Task
       description: Task
@@ -2613,7 +3273,7 @@ components:
         - updated_at
     TaskForm:
       title: TaskForm
-      description: TODOの投稿フォーム
+      description: Taskの投稿フォーム
       type: object
       properties:
         id:
@@ -2655,6 +3315,99 @@ components:
         - created_by
         - body
         - time_limit
+    TaskPage:
+      title: TaskPage
+      description: タスク一覧のページ（ページャつき）
+      type: object
+      x-examples:
+        example-1:
+          value:
+            data:
+              - id: 0
+                recorded_by:
+                  id: 0
+                  full_name: テスト 太郎
+                  given_name: 太郎
+                  family_name: テスト
+                  file_path: users/test1.jpg
+                  created_at: '2021-12-31 12:00:00'
+                  updated_at: '2021-12-31 12:00:00'
+                meeting_date: '2021-12-31 12:00:00'
+                place: string
+                title: 〇〇会議
+                summary: 〇〇会議の概要
+                members:
+                  - id: 0
+                    full_name: テスト 太郎
+                    given_name: 太郎
+                    family_name: テスト
+                    file_path: users/test1.jpg
+                    created_at: '2021-12-31 12:00:00'
+                    updated_at: '2021-12-31 12:00:00'
+                decisions: []
+                created_at: '2021-12-31 12:00:00'
+                updated_at: '2021-12-31 12:00:00'
+            first_page_url: string
+            from: 0
+            last_page: 0
+            last_page_url: string
+            next_page_url: string
+            path: string
+            per_page: 0
+            prev_page_url: string
+            to: 0
+            total: 0
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        first_page_url:
+          description: 1ページ目のURL
+          type: string
+        from:
+          description: 現在のitemの開始位置
+          type: integer
+          nullable: true
+        last_page:
+          description: 最大ページ数
+          type: integer
+        last_page_url:
+          description: 最終ページのURL
+          type: string
+        next_page_url:
+          description: 次ページのURL
+          type: string
+          nullable: true
+        path:
+          description: 前ページのURL
+          type: string
+        per_page:
+          description: 1ページあたりのアイテム数
+          type: integer
+        prev_page_url:
+          description: 前ページのURL
+          type: string
+          nullable: true
+        to:
+          description: 現在のitemの終了位置
+          type: integer
+          nullable: true
+        total:
+          description: item総数
+          type: integer
+      required:
+        - data
+        - first_page_url
+        - from
+        - last_page
+        - last_page_url
+        - next_page_url
+        - path
+        - per_page
+        - prev_page_url
+        - to
+        - total
     User:
       title: User
       description: ユーザーのデータ

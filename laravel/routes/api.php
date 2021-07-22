@@ -15,20 +15,34 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => 'api'], function () {
+  Route::get('/', function () {
+    return 'Hello';
+  });
   // 認証中の一般ユーザーを返却
   Route::get('/user/current', 'UserController@currentUser')->name('currentUser');
+  Route::get('/user/current/chat_rooms', 'UserController@withChatRooms')->name('withChatRooms');
+
+  Route::get('/meeting_place', 'MeetingPlaceController@index')->name('meetingPlace.index');
+  Route::get('/meeting_record/ids', 'MeetingRecordController@ids')->name('meetingRecord.ids');
+
   // 認証手続
-  Route::namespace('Auth')->group(function() {
+  Route::namespace('Auth')->group(function () {
     Route::post('/register', 'RegisterController@register')->name('register');
     Route::post('/login', 'LoginController@login')->name('login');
 
-    Route::middleware('auth')->group(function() {
+    Route::middleware('auth')->group(function () {
       Route::post('/logout', 'LoginController@logout')->name('logout');
     });
   });
 
   // 一般認証が必要なAPI
-  Route::middleware('auth')->group(function() {
+  Route::middleware('auth')->group(function () {
+    // ユーザ
+    Route::get('/user', 'UserController@index')->name('user.index');
+    // 優先順位
+    Route::get('/priority', 'PriorityController@index')->name('priority.index');
+    // 進捗状態
+    Route::get('/progress', 'ProgressController@index')->name('progress.index');
     // チャットルーム
     Route::get('/author/chat_room', 'ChatRoomController@findByOwner')->name('chatRoom.findByOwner');
     Route::post('/chat_room', 'ChatRoomController@store')->name('chatRoom.store');
@@ -63,13 +77,27 @@ Route::group(['middleware' => 'api'], function () {
     Route::get('/meeting_record/{id}', 'MeetingRecordController@show')->name('meetingRecord.show');
     Route::put('/meeting_record/{id}', 'MeetingRecordController@update')->name('meetingRecord.update');
     Route::delete('/meeting_record/{id}', 'MeetingRecordController@destroy')->name('meetingRecord.destroy');
-    // TODO: ブログ
-
-    // TODO: タスク
+    // ブログ
+    Route::get('/author/blog', 'BlogController@findByOwner')->name('blog.findByOwner');
+    Route::get('/blog', 'BlogController@index')->name('blog.index');
+    Route::post('/blog', 'BlogController@store')->name('blog.store');
+    Route::get('/blog/{id}', 'BlogController@show')->name('blog.show');
+    Route::put('/blog/{id}', 'BlogController@update')->name('blog.update');
+    Route::put('/blog/{id}/like', 'BlogController@like')->name('blog.like');
+    Route::delete('/blog/{id}/like', 'BlogController@unlike')->name('blog.unlike');
+    Route::delete('/blog/{id}', 'BlogController@destroy')->name('blog.destroy');
+    // ブログコメント
+    Route::post('/blog/{blog_id}/comment', 'BlogCommentController@store')->name('blogComment.store');
+    Route::put('/blog/{blog_id}/comment/{id}', 'BlogCommentController@update')->name('blogComment.update');
+    Route::delete('/blog/{blog_id}/comment/{id}', 'BlogCommentController@destroy')->name('blogComment.destroy');
+    // タスク
     Route::get('/task', 'TaskController@index')->name('task.index');
     Route::get('/author/task', 'TaskController@findByOwner')->name('task.findByOwner');
+    Route::delete('/author/task', 'TaskController@deleteAll')->name('task.deleteAll');
     Route::post('/task', 'TaskController@store')->name('task.store');
     Route::put('/task/{id}', 'TaskController@update')->name('task.update');
     Route::delete('/task/{id}', 'TaskController@destroy')->name('task.destroy');
+    // プロフィール
+    Route::put('/user/{id}/profile', 'UserController@update')->name('user.update');
   });
 });

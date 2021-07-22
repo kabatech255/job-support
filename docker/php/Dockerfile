@@ -20,4 +20,6 @@ RUN apk upgrade --update && apk add --no-cache \
   apk del tzdata && \
   rm -rf /var/cache/apk/*
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+  composer update && \
+  chmod -R a+rw storage/ bootstrap/cache

@@ -52,6 +52,14 @@ class Blog extends Model implements RelationalDeleteInterface
     'body',
   ];
 
+  const RELATIONS_ARRAY = [
+    'comments.writtenBy',
+    'tags',
+    'images',
+    'likes',
+    'writtenBy'
+  ];
+
   /**
    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
    */
@@ -65,7 +73,7 @@ class Blog extends Model implements RelationalDeleteInterface
    */
   public function tags()
   {
-    return $this->belongsToMany(BlogTag::class, 'blog_tags', 'blog_id', 'tag_id')->withTimestamps();
+    return $this->belongsToMany(Tag::class, 'blog_tags', 'blog_id', 'tag_id')->withTimestamps();
   }
 
   /**
@@ -73,7 +81,7 @@ class Blog extends Model implements RelationalDeleteInterface
    */
   public function likes()
   {
-    return $this->belongsToMany(User::class, 'likes', 'blog_id', 'liked_by')->withTimestamps();
+    return $this->belongsToMany(User::class, 'blog_likes', 'blog_id', 'liked_by')->withTimestamps();
   }
 
   /**
@@ -96,6 +104,7 @@ class Blog extends Model implements RelationalDeleteInterface
   {
     return [
       $this->images,
+      $this->comments,
     ];
   }
 }

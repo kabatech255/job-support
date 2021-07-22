@@ -24,6 +24,8 @@ use App\Models\Abstracts\CommonModel as Model;
  * @method static \Illuminate\Database\Eloquent\Builder|DocumentShare whereSharedWith($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DocumentShare whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property int $is_editable 編集権限
+ * @method static \Illuminate\Database\Eloquent\Builder|DocumentShare whereIsEditable($value)
  */
 class DocumentShare extends Model
 {

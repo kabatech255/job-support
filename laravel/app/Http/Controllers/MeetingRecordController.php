@@ -21,8 +21,6 @@ class MeetingRecordController extends Controller
     $this->service = $service;
   }
   /**
-   * Display a listing of the resource.
-   *
    * @return \Illuminate\Http\Response
    */
   public function index(Request $request)
@@ -41,7 +39,7 @@ class MeetingRecordController extends Controller
     try {
       $meetingRecord = $this->service->store($request->all());
       DB::commit();
-    } catch(\Exception $e) {
+    } catch (\Exception $e) {
       DB::rollBack();
       throw $e;
     }
@@ -49,12 +47,13 @@ class MeetingRecordController extends Controller
   }
 
   /**
-   * @param int $id
+   * @param MeetingRecord $id
    * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
    */
-  public function show(int $id)
+  public function show(MeetingRecord $id)
   {
-    return response($this->service->find($id));
+    $this->authorize('view', $id);
+    return response($this->service->find($id), 200);
   }
 
   /**
@@ -69,7 +68,7 @@ class MeetingRecordController extends Controller
     try {
       $meetingRecord = $this->service->update($request->all(), $id);
       DB::commit();
-    } catch(\Exception $e) {
+    } catch (\Exception $e) {
       DB::rollBack();
       throw $e;
     }
@@ -83,6 +82,14 @@ class MeetingRecordController extends Controller
    */
   public function destroy(DeleteRequest $request, MeetingRecord $id)
   {
-    return response($this->service->delete($id), 204);
+    return response($this->service->delete($id, $request->query(), $this->perPage), 200);
+  }
+
+  /**
+   * @return \Illuminate\Http\Response
+   */
+  public function ids()
+  {
+    return response($this->service->ids(), 200);
   }
 }

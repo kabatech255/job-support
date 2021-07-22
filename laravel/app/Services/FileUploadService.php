@@ -7,12 +7,23 @@ use Illuminate\Support\Facades\Storage;
 
 class FileUploadService extends Service
 {
+  private $disk = 's3';
 
   /**
    * UserService constructor.
    */
   public function __construct()
   {
+  }
+
+  protected function setDisk(string $disk)
+  {
+    $this->disk = $disk;
+  }
+
+  public function disk()
+  {
+    return $this->disk;
   }
 
   /**
@@ -23,7 +34,7 @@ class FileUploadService extends Service
    */
   public function upload(string $dirName, $file, string $fileName)
   {
-    return Storage::disk('public')->putFileAs($dirName, $file, $fileName);
+    return Storage::disk($this->disk())->putFileAs($dirName, $file, $fileName);
   }
 
   /**
@@ -32,6 +43,6 @@ class FileUploadService extends Service
    */
   public function remove(string $path)
   {
-    return Storage::disk('public')->delete($path);
+    return Storage::disk($this->disk())->delete($path);
   }
 }

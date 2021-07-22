@@ -30,8 +30,7 @@ class ScheduleService extends Service
     Repository $repository,
     Query $query,
     UserRepository $userRepository
-  )
-  {
+  ) {
     $this->setRepository($repository);
     $this->setQuery($query);
     $this->userRepository = $userRepository;
@@ -49,7 +48,7 @@ class ScheduleService extends Service
   public function findByOwner($ownerId): array
   {
     $owner = $this->userRepository->find($ownerId);
-    $schedules = $owner->schedules->load(['sharedMembers', 'scheduledBy']);
+    $schedules = $owner->sharedSchedules->load(['sharedMembers', 'scheduledBy']);
     return $schedules->all();
   }
 
@@ -104,6 +103,4 @@ class ScheduleService extends Service
     ];
     return $params;
   }
-
-
 }

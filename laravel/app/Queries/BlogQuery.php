@@ -11,7 +11,17 @@ class BlogQuery extends EloquentQuery implements BlogQueryInterface
   public function __construct(Blog $model)
   {
     $this->setBuilder($model);
-    $this->setColumns([]);
-    $this->setRelationTargets([]);
+    $this->setColumns(['title', 'body']);
+    $this->setRelationTargets([
+      'tags' => [
+        'name'
+      ],
+      'comments' => [
+        'body',
+      ],
+      'writtenBy' => [
+        'name',
+      ],
+    ]);
   }
 }

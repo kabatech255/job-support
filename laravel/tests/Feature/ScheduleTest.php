@@ -28,7 +28,7 @@ class ScheduleTest extends TestCase
       ->shuffle()
       ->splice(0, random_int(1, 15))
       ->all();
-    foreach ($this->members as $member){
+    foreach ($this->members as $member) {
       // 編集権限があるメンバー
       $this->membersData[$member->id] = [
         'is_editable' => 1,
@@ -55,7 +55,7 @@ class ScheduleTest extends TestCase
       ->splice(0, random_int(1, 15))
       ->pluck('id')
       ->toArray();
-    foreach($memberIds as $id) {
+    foreach ($memberIds as $id) {
       $members[$id] = [
         'is_editable' => 1,
         'shared_by' => $this->user->id,
@@ -63,9 +63,9 @@ class ScheduleTest extends TestCase
     }
     $expects = [
       'scheduled_by' => $this->user->id,
-      'content' => 'This is a schedule',
-      'start_date' => Carbon::today()->format('Y/m/d H:i'),
-      'end_date' => Carbon::today()->addHour()->format('Y/m/d H:i'),
+      'title' => 'This is a schedule',
+      'start' => Carbon::today()->format('Y/m/d H:i'),
+      'end' => Carbon::today()->addHour()->format('Y/m/d H:i'),
       'color' => '#ac1539',
       'sharedMembers' => $members,
     ];
@@ -91,9 +91,9 @@ class ScheduleTest extends TestCase
     $this->schedule->sharedMembers()->sync($this->membersData);
     $willDenied = [
       'scheduled_by' => $this->user->id,
-      'content' => $this->schedule . '_update',
-      'start_date' => Carbon::today()->format('Y/m/d H:i'),
-      'end_date' => Carbon::today()->addHour()->format('Y/m/d H:i'),
+      'title' => $this->schedule . '_update',
+      'start' => Carbon::today()->format('Y/m/d H:i'),
+      'end' => Carbon::today()->addHour()->format('Y/m/d H:i'),
       'color' => '#ac1539',
     ];
     // 編集権限のない共有者
@@ -101,7 +101,7 @@ class ScheduleTest extends TestCase
     $response->assertForbidden();
     $this->assertDatabaseMissing('schedules', [
       'id' => $this->schedule->id,
-      'content' => $willDenied['content'],
+      'title' => $willDenied['title'],
     ]);
     // そもそも共有されていないユーザ
     $badUser = User::whereNotIn('id', array_keys($this->membersData))->get()->first();
@@ -109,12 +109,11 @@ class ScheduleTest extends TestCase
     $response->assertForbidden();
     $this->assertDatabaseMissing('schedules', [
       'id' => $this->schedule->id,
-      'content' => $willDenied['content'],
+      'title' => $willDenied['title'],
     ]);
 
     $result = parent::$openApiValidator->validate('putScheduleId', 403, json_decode($response->getContent(), true));
     $this->assertFalse($result->hasErrors(), $result);
-
   }
 
   /**
@@ -129,18 +128,18 @@ class ScheduleTest extends TestCase
     array_pop($updatedMembersData);
     $expects = [
       'scheduled_by' => $this->schedule->scheduled_by,
-      'content' => $this->schedule->content . '_update',
-      'start_date' => Carbon::today()->format('Y/m/d H:i'),
-      'end_date' => Carbon::today()->addHour()->format('Y/m/d H:i'),
+      'title' => $this->schedule->title . '_update',
+      'start' => Carbon::today()->format('Y/m/d H:i'),
+      'end' => Carbon::today()->addHour()->format('Y/m/d H:i'),
       'sharedMembers' => $updatedMembersData,
     ];
     $response = $this->actingAs($this->members[0])->putJson(route('schedule.update', $this->schedule), $expects);
     $response->assertOk()->assertJson([
-      'content' => $expects['content']
+      'title' => $expects['title']
     ]);
     $this->assertDatabaseHas('schedules', [
       'id' => $this->schedule->id,
-      'content' => $expects['content'],
+      'title' => $expects['title'],
     ])->assertDatabaseCount('schedule_shares', $count - 1);
 
     $result = parent::$openApiValidator->validate('putScheduleId', 200, json_decode($response->getContent(), true));

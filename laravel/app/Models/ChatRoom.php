@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Contracts\Models\RelationalDeleteInterface;
 use App\Models\Abstracts\CommonModel as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * App\Models\ChatRoom
@@ -31,6 +32,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|ChatRoom whereUpdatedAt($value)
  * @mixin \Eloquent
  * @property-read int|null $members_count
+ * @method static \Illuminate\Database\Query\Builder|ChatRoom onlyTrashed()
+ * @method static \Illuminate\Database\Query\Builder|ChatRoom withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|ChatRoom withoutTrashed()
  */
 class ChatRoom extends Model implements RelationalDeleteInterface
 {
@@ -41,6 +45,11 @@ class ChatRoom extends Model implements RelationalDeleteInterface
     'created_by',
     'name',
   ];
+
+  protected $appends = [
+    'can_edit',
+  ];
+
   const RELATIONS_ARRAY = [
     'members',
     'messages.writtenBy',
@@ -70,6 +79,19 @@ class ChatRoom extends Model implements RelationalDeleteInterface
   public function messages()
   {
     return $this->hasMany(ChatMessage::class, 'chat_room_id', 'id');
+  }
+
+  /**
+   * @return bool
+   */
+  public function getCanEditAttribute(): bool
+  {
+    if (!Auth::check()) {
+      return false;
+    }
+    return $this->members->contains(function ($member) {
+      return $member->id === Auth::user()->id && $member->option->is_editable;
+    });
   }
 
   public function getDeleteRelations(): array

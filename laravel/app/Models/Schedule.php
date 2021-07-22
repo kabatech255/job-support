@@ -5,15 +5,16 @@ namespace App\Models;
 use App\Contracts\Models\ModelInterface;
 use App\Models\Abstracts\CommonModel as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * App\Models\Schedule
  *
  * @property int $id
  * @property int $scheduled_by 予定作成者
- * @property string $content 予定の内容
- * @property int $start_date 開始日時
- * @property int $end_date 終了日時
+ * @property string $title 予定の内容
+ * @property int $start 開始日時
+ * @property int $end 終了日時
  * @property bool $is_public 公開設定
  * @property string|null $color カラー
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -39,6 +40,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|Schedule withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Schedule withoutTrashed()
  * @mixin \Eloquent
+ * @property string|null $memo メモ
+ * @method static \Illuminate\Database\Eloquent\Builder|Schedule whereMemo($value)
  */
 class Schedule extends Model implements ModelInterface
 {
@@ -47,9 +50,9 @@ class Schedule extends Model implements ModelInterface
   protected $table = 'schedules';
   protected $fillable = [
     'scheduled_by',
-    'content',
-    'start_date',
-    'end_date',
+    'title',
+    'start',
+    'end',
     'is_public',
     'color',
     'memo',
@@ -57,18 +60,22 @@ class Schedule extends Model implements ModelInterface
 
   protected $casts = [
     'is_public' => 'boolean',
-    'start_date' => 'datetime',
-    'end_date' => 'datetime',
+    'start' => 'datetime',
+    'end' => 'datetime',
   ];
 
   protected $dates = [
-    'start_date',
-    'end_date',
+    'start',
+    'end',
   ];
 
   const RELATIONS_ARRAY = [
     'sharedMembers',
     'scheduledBy',
+  ];
+
+  protected $appends = [
+    'can_edit',
   ];
 
   /**
@@ -87,5 +94,18 @@ class Schedule extends Model implements ModelInterface
       ->as('option')
       ->withTimestamps()
       ->withPivot('is_editable', 'shared_by');
+  }
+
+  /**
+   * @return bool
+   */
+  public function getCanEditAttribute(): bool
+  {
+    return $this->sharedMembers->contains(function ($member) {
+      if (Auth::guest()) {
+        return false;
+      }
+      return Auth::user()->id === $member->id && $member->option->is_editable;
+    });
   }
 }

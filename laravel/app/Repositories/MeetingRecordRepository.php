@@ -14,4 +14,12 @@ class MeetingRecordRepository extends EloquentRepository implements MeetingRecor
   {
     $this->setModel($model);
   }
+
+  /**
+   * @return int[]
+   */
+  public function ids(): array
+  {
+    return $this->model()->pluck('id')->toArray();
+  }
 }

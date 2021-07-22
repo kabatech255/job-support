@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Abstracts\CommonModel as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Contracts\Models\ModelInterface;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * App\Models\ChatMessage
@@ -34,6 +35,9 @@ use App\Contracts\Models\ModelInterface;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ChatMessageImage[] $images
  * @property-read int|null $images_count
  * @property-read \App\Models\User|null $to
+ * @method static \Illuminate\Database\Query\Builder|ChatMessage onlyTrashed()
+ * @method static \Illuminate\Database\Query\Builder|ChatMessage withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|ChatMessage withoutTrashed()
  */
 class ChatMessage extends Model implements ModelInterface
 {
@@ -46,6 +50,10 @@ class ChatMessage extends Model implements ModelInterface
     'written_by',
     'mentioned_to',
     'body',
+  ];
+
+  protected $appends = [
+    'mine',
   ];
 
   const RELATIONS_ARRAY = [
@@ -85,4 +93,11 @@ class ChatMessage extends Model implements ModelInterface
     return $this->hasMany(ChatMessageImage::class, 'chat_message_id', 'id');
   }
 
+  /**
+   * @ bool
+   */
+  public function getMineAttribute(): bool
+  {
+    return !Auth::check() ? false : Auth::user()->id === $this->written_by;
+  }
 }

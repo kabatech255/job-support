@@ -78,6 +78,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereFamilyNameKana($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereGivenName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereGivenNameKana($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Blog[] $blogs
+ * @property-read int|null $blogs_count
+ * @property-read \App\Models\Role $role
  */
 class User extends Authenticatable
 {
@@ -148,9 +151,9 @@ class User extends Authenticatable
   /**
    * @return \Illuminate\Database\Eloquent\Relations\HasMany
    */
-  public function ownTasks()
+  public function blogs()
   {
-    return $this->hasMany(Task::class, 'login_id', 'id');
+    return $this->hasMany(Blog::class, 'written_by', 'id');
   }
 
   /**

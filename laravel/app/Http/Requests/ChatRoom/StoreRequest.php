@@ -27,11 +27,11 @@ class StoreRequest extends FormRequest
   {
     return [
       'name' => 'nullable|string|max:50',
-      'created_by' => 'nullable|integer|'.Rule::in(User::pluck('id')->toArray()),
+      'created_by' => 'nullable|integer|' . Rule::in(User::pluck('id')->toArray()),
       'members' => 'nullable|array',
       'members.*' => 'nullable|array',
       'members.*.is_editable' => 'required|boolean',
-      'members.*.shared_by' => 'required|integer|'.Rule::in(User::pluck('id')->toArray()),
+      'members.*.shared_by' => 'required|integer|' . Rule::in(User::pluck('id')->toArray()),
     ];
   }
 }

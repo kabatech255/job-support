@@ -12,7 +12,7 @@ class ScheduleQuery extends EloquentQuery implements ScheduleQueryInterface
   public function __construct(Schedule $model)
   {
     $this->setBuilder($model);
-    $this->setColumns(['scheduled_by', 'content', 'start_date', 'end_date', 'color']);
+    $this->setColumns(['scheduled_by', 'title', 'start', 'end', 'color']);
     $this->setRelationTargets([
       'sharedMembers' => [
         'family_name',
@@ -27,10 +27,8 @@ class ScheduleQuery extends EloquentQuery implements ScheduleQueryInterface
     $query = parent::search($params, $relation);
     $tomorrow = Carbon::tomorrow()->format('Y-m-d H:i:s');
     $today = Carbon::today()->format('Y-m-d H:i:s');
-    $query->where('start_date', '<', $tomorrow)
-    ->where('end_date', '>=', $today);
+    $query->where('start', '<', $tomorrow)
+      ->where('end', '>=', $today);
     return $query->get()->all();
   }
-
-
 }

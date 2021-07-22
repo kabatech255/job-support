@@ -35,6 +35,8 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Query\Builder|DocumentFolder withTrashed()
  * @method static \Illuminate\Database\Query\Builder|DocumentFolder withoutTrashed()
  * @mixin \Eloquent
+ * @property string $random_name ランダムフォルダ名
+ * @method static \Illuminate\Database\Eloquent\Builder|DocumentFolder whereRandomName($value)
  */
 class DocumentFolder extends Model
 {
@@ -57,7 +59,7 @@ class DocumentFolder extends Model
   public function __construct(array $attributes = [])
   {
     parent::__construct($attributes);
-    if (! Arr::get($this->attributes, 'public_name')) {
+    if (! Arr::get($this->attributes, 'random_name')) {
       $this->setRandomName();
     }
   }

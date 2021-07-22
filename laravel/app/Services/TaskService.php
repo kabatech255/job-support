@@ -8,6 +8,8 @@ use App\Models\MeetingDecision;
 use App\Models\Task as Task;
 use App\Services\Traits\WithRepositoryTrait;
 use App\Contracts\Queries\TaskQueryInterface as Query;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
 
 class TaskService extends Service
 {
@@ -23,8 +25,7 @@ class TaskService extends Service
   public function __construct(
     Repository $repository,
     Query $query
-  )
-  {
+  ) {
     $this->setRepository($repository);
     $this->setQuery($query);
   }
@@ -41,11 +42,12 @@ class TaskService extends Service
 
   /**
    * @param int $ownerId
-   * @return Task[]
+   * @return LengthAwarePaginator
    */
-  public function findByOwner(int $ownerId): array
+  public function findByOwner(array $params, int $ownerId, $perPage): LengthAwarePaginator
   {
-    return $this->repository()->findBy('owner_id', $ownerId, $this->query()->relation());
+    $params['owner_id'] = $ownerId;
+    return $this->query()->paginate($params, $perPage);
   }
 
   /**
@@ -85,6 +87,18 @@ class TaskService extends Service
   public function delete($id): Task
   {
     return $this->repository()->delete($id);
+  }
+
+  /**
+   * @param array $queryParams
+   * @param array $params
+   * @param int $perPage
+   * @return LengthAwarePaginator
+   */
+  public function deleteAll(array $queryParams, array $params, int $perPage): LengthAwarePaginator
+  {
+    $tasks = $this->repository()->detach($params);
+    return $this->findByOwner($queryParams, Auth::user()->id, $perPage);
   }
 
   /**
