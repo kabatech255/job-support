@@ -96,10 +96,10 @@ class UpdateRequest extends FormRequest
   public function messages()
   {
     return  [
-      'current_password.password' => ':attributeが一致しません',
+      'current_password.password' => ':attributeが一致しませんでした',
       'current_password.required_if' => ':attributeを指定して下さい',
       'password.required_if' => ':attributeを指定して下さい',
-      'file.mimes' => ':attributeの形式が正しくありませんでした。',
+      'file.mimes' => ':attributeの形式が正しくありませんでした',
     ];
   }
 }

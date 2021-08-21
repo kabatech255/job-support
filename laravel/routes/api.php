@@ -29,6 +29,9 @@ Route::group(['middleware' => 'api'], function () {
   Route::namespace('Auth')->group(function () {
     Route::post('/register', 'RegisterController@register')->name('register');
     Route::post('/login', 'LoginController@login')->name('login');
+    Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+    // Route::get('/password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
+    Route::post('/password/reset', 'ResetPasswordController@reset')->name('password.update');
 
     Route::middleware('auth')->group(function () {
       Route::post('/logout', 'LoginController@logout')->name('logout');
