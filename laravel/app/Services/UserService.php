@@ -44,8 +44,9 @@ class UserService extends Service
       $params = $this->fileUpload($params, $user, 'id', $this->repository()->findPath($id));
     }
     // $params['delete_flag']が'0'の場合スルーしたいため、isset(...)を使わない
-    if (!empty($params['delete_flag'] ?? '')) {
+    if (!empty($params['delete_flag'] ?? '') && !!$this->repository()->findPath($id)) {
       $this->fileUploadService->remove($this->repository()->findPath($id));
+      $params['file_path'] = null;
     }
     return $this->repository()->updateProfile($params, $id);
   }
