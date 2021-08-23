@@ -54,6 +54,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::delete('/chat_room/{id}', 'ChatRoomController@destroy')->name('chatRoom.destroy');
     // チャットメッセージ
     Route::post('/chat_room/{chat_room_id}/message', 'ChatMessageController@store')->name('chatMessage.store');
+    Route::post('/chat_room/{chat_room_id}/read', 'ChatMessageReadController@store')->name('chatMessageRead.store');
     Route::put('/chat_room/{chat_room_id}/message/{id}', 'ChatMessageController@update')->name('chatMessage.update');
     Route::delete('/chat_room/{chat_room_id}/message/{id}', 'ChatMessageController@destroy')->name('chatMessage.destroy');
     // ドキュメントフォルダ
@@ -101,6 +102,8 @@ Route::group(['middleware' => 'api'], function () {
     Route::put('/task/{id}', 'TaskController@update')->name('task.update');
     Route::delete('/task/{id}', 'TaskController@destroy')->name('task.destroy');
     // プロフィール
-    Route::put('/user/{id}/profile', 'UserController@update')->name('user.update');
+    Route::put('/user/{id}/profile', 'UserController@updateProfile')->name('user.update');
+    // 設定
+    Route::put('/user/{id}/setting', 'Userontroller@updateSetting')->name('user.setting');
   });
 });

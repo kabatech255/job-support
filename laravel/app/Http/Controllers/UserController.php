@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\UserService;
-use App\Http\Requests\User\UpdateRequest;
+use App\Http\Requests\User\ProfileRequest;
+use App\Http\Requests\User\SettingRequest;
 use App\Models\User;
 
 class UserController extends Controller
@@ -25,16 +26,35 @@ class UserController extends Controller
   /**
    * Update the specified resource in storage.
    *
-   * @param UpdateRequest $request
+   * @param ProfileRequest $request
    * @param User $id
    * @return \Illuminate\Http\Response
    */
-  public function update(UpdateRequest $request, User $id)
+  public function updateProfile(ProfileRequest $request, User $id)
   {
-    // return response($request->all());
     \DB::beginTransaction();
     try {
-      $user = $this->service->update($request->all(), $id);
+      $user = $this->service->updateProfile($request->all(), $id);
+      \DB::commit();
+    } catch (\Exception $e) {
+      \DB::rollback();
+      throw $e;
+    }
+    return response($user, 200);
+  }
+
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param SettingRequest $request
+   * @param User $id
+   * @return \Illuminate\Http\Response
+   */
+  public function updateSetting(SettingRequest $request, User $id)
+  {
+    \DB::beginTransaction();
+    try {
+      $user = $this->service->updateSetting($request->all(), $id);
       \DB::commit();
     } catch (\Exception $e) {
       \DB::rollback();

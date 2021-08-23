@@ -9,6 +9,7 @@ use App\Services\MeetingDecisionService;
 use App\Services\Traits\WithRepositoryTrait;
 use App\Models\MeetingRecord;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Carbon;
 
 class MeetingRecordService extends Service
 {
@@ -35,11 +36,36 @@ class MeetingRecordService extends Service
    * @param array $params
    * @param array|null $relation
    * @param int|null $perPage
-   * @return mixed
+   * @return array
    */
   public function paginate(array $params, ?int $perPage = null, ?array $relation = null)
   {
-    return $this->query()->paginate($params, $perPage, $relation);
+    $paginator = $this->query()->paginate($params, $perPage, $relation);
+    if ($paginator) {
+      $yearMonthAddedArr = json_decode(json_encode($paginator), true);
+      $yearMonthAddedArr['year_month'] = $this->yearMonth();
+    }
+    return $yearMonthAddedArr;
+  }
+
+  private function yearMonth()
+  {
+    $diff = $this->diffMonth();
+    $yearMonth = [];
+    for ($i = 0; $i < $diff; $i++) {
+      $c = Carbon::parse("-{$i} month");
+      $yearMonth[] = [
+        'value' => $c->format('Y/m'),
+        'label' => $c->format('Y年n月'),
+      ];
+    }
+    return $yearMonth;
+  }
+
+  private function diffMonth()
+  {
+    $latest = Carbon::parse($this->query()->oldestMeetingDate());
+    return $latest->diffInMonths(Carbon::now());
   }
 
   /**
@@ -99,9 +125,9 @@ class MeetingRecordService extends Service
    * @param array $queryParams
    * @param array $params
    * @param int $perPage
-   * @return LengthAwarePaginator
+   * @return array
    */
-  public function delete($id, $queryParams, int $perPage): LengthAwarePaginator
+  public function delete($id, $queryParams, int $perPage): array
   {
     $deleted = $this->repository()->delete($id);
     return $this->paginate($queryParams, $perPage);
