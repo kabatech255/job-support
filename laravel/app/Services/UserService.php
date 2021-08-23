@@ -77,7 +77,15 @@ class UserService extends Service
     $user = Auth::user();
     if (!!$user) {
       $withChatRoom = $this->repository()->find($user->id);
-      $withChatRoom->load(['chatRooms.members']);
+      $withChatRoom->load(['chatRooms.members', 'chatRooms.lastReads']);
+      $withChatRoom->chatRooms->each(function ($chatRoom) {
+        $index = $chatRoom->lastReads->search(function ($lastRead) {
+          return $lastRead->member_id === Auth::user()->id;
+        }, true);
+        if ($index !== false) {
+          $chatRoom->lastReads->splice($index, 1);
+        }
+      });
       return $withChatRoom;
     }
     return $user;

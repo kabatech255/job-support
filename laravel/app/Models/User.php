@@ -193,6 +193,14 @@ class User extends Authenticatable
   }
 
   /**
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+   */
+  public function chatMessageReads()
+  {
+    return $this->belongsToMany(ChatMessage::class, 'chat_message_reads', 'member_id', 'chat_message_id')->withTimestamps();
+  }
+
+  /**
    * 共有されたスケジュール
    * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
    */

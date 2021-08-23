@@ -44,6 +44,20 @@ class MeetingRecordQuery extends EloquentQuery implements MeetingRecordQueryInte
     if (isset($params['count'])) {
       $query = $this->queryByMemberCount($query, $params['count']);
     }
+    if (isset($params['meeting_date'])) {
+      $query = $this->queryByMeetingDate($query, $params['meeting_date']);
+    }
+    return $query;
+  }
+
+  /**
+   * @param Builder $query
+   * @param string $param
+   * @return Builder
+   */
+  public function queryByMeetingDate($query, string $date): Builder
+  {
+    $query->where('meeting_date', 'like', $this->liked($date));
     return $query;
   }
 

@@ -12,7 +12,7 @@ class RepositoryMakeCommand extends Command
    *
    * @var string
    */
-//  protected $signature = 'command:name';
+  //  protected $signature = 'command:name';
   protected $name = 'make:repository';
   /**
    * The console command description.
@@ -25,7 +25,7 @@ class RepositoryMakeCommand extends Command
   public function handle()
   {
     Artisan::call('make:repositoryInterface', ['name' => $this->getNameInput() . 'Interface']);
-    $this->info($this->getNameInput().' Interface created successfully.');
+    $this->info($this->getNameInput() . ' Interface created successfully.');
     parent::handle();
   }
 
@@ -46,7 +46,7 @@ class RepositoryMakeCommand extends Command
    */
   protected function getStub()
   {
-    return __DIR__.'/stubs/repository.stub';
+    return __DIR__ . '/stubs/repository.stub';
   }
 
   /**
