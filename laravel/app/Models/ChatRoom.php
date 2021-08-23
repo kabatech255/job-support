@@ -48,12 +48,16 @@ class ChatRoom extends Model implements RelationalDeleteInterface
 
   protected $appends = [
     'can_edit',
+    'unread_count',
   ];
 
   const RELATIONS_ARRAY = [
+    'lastReads',
     'members',
     'messages.writtenBy',
     'messages.to',
+    'messages.images',
+    'messages.chatMessageReads',
   ];
 
   /**
@@ -71,6 +75,14 @@ class ChatRoom extends Model implements RelationalDeleteInterface
   {
     return $this->belongsToMany(User::class, 'chat_room_shares', 'chat_room_id', 'shared_with')
       ->as('option')->withTimestamps()->withPivot('shared_by', 'is_editable');
+  }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function lastReads()
+  {
+    return $this->hasMany(LastRead::class, 'chat_room_id', 'id');
   }
 
   /**
@@ -99,5 +111,12 @@ class ChatRoom extends Model implements RelationalDeleteInterface
     return [
       $this->messages
     ];
+  }
+
+  public function getUnreadCountAttribute()
+  {
+    return $this->messages->filter(function ($chatMessage) {
+      return $chatMessage->unread;
+    })->count();
   }
 }

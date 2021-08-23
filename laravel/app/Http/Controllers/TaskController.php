@@ -62,17 +62,6 @@ class TaskController extends Controller
   }
 
   /**
-   * Display the specified resource.
-   *
-   * @param Task $id
-   * @return \Illuminate\Http\Response
-   */
-  public function show($id)
-  {
-    //
-  }
-
-  /**
    * Update the specified resource in storage.
    *
    * @param UpdateRequest $request

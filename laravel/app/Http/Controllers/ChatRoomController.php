@@ -30,15 +30,6 @@ class ChatRoomController extends Controller
   {
     return response($this->service->findByOwner());
   }
-  /**
-   * Display a listing of the resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
-  public function index()
-  {
-    //
-  }
 
   /**
    * @param StoreRequest $request
@@ -93,6 +84,14 @@ class ChatRoomController extends Controller
    */
   public function destroy(ChatRoom $id)
   {
-    return response($this->service->delete($id), 204);
+    \DB::beginTransaction();
+    try {
+      $result = $this->service->delete($id);
+      \DB::commit();
+    } catch (\Exception $e) {
+      \DB::rollback();
+      throw $e;
+    }
+    return response($result, 204);
   }
 }

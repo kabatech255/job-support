@@ -43,13 +43,26 @@ class ScheduleService extends Service
 
   /**
    * @param $ownerId
-   * @return Schedule[]
+   * @return array
    */
   public function findByOwner($ownerId): array
   {
     $owner = $this->userRepository->find($ownerId);
     $schedules = $owner->sharedSchedules->load(['sharedMembers', 'scheduledBy']);
-    return $schedules->all();
+    return $schedules->map(function ($schedule) {
+      if (!$schedule->is_show) {
+        return [
+          'id' => $schedule->id,
+          'title' => Schedule::PRIVATE_TITLE,
+          'is_public' => $schedule->is_public,
+          'start' => $schedule->start,
+          'end' => $schedule->end,
+          'is_show' => $schedule->is_show,
+          'color' => Schedule::PRIVATE_COLOR,
+        ];
+      }
+      return $schedule;
+    })->all();
   }
 
   /**
