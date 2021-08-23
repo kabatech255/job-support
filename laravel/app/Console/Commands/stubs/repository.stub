@@ -1,0 +1,15 @@
+<?php
+
+namespace DummyNamespace;
+
+use App\Contracts\Repositories\DummyClassInterface;
+use App\Models\DummyModel;
+use App\Repositories\Abstracts\EloquentRepository;
+
+class DummyClass extends EloquentRepository implements DummyClassInterface
+{
+  public function __construct(DummyModel $model)
+  {
+    $this->setModel($model);
+  }
+}

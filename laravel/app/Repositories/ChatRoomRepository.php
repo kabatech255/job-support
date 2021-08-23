@@ -27,7 +27,17 @@ class ChatRoomRepository extends EloquentRepository implements ChatRoomRepositor
       $params['created_by'] = Auth::user()->id;
     }
     $chatRoom = parent::saveWithMembers($params, $method, $id);
-    $chatRoom->load(['members', 'messages']);
+    $chatRoom->load(ChatRoom::RELATIONS_ARRAY);
     return $chatRoom;
+  }
+
+  public function findLastMessageId($chatRoomId): array
+  {
+    $chatRoom = $this->find($chatRoomId);
+    $targetRead = $chatRoom->lastReads->where('member_id', Auth::user()->id)->first();
+    if ($targetRead) {
+      return [$chatRoom, $targetRead->last_message_id];
+    }
+    return  [$chatRoom, 0];
   }
 }
