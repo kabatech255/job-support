@@ -12,4 +12,16 @@ class ChatMessageImageRepository extends EloquentRepository implements ChatMessa
   {
     $this->setModel($model);
   }
+
+  /**
+   * @param $id
+   * @return string | null
+   */
+  public function findPath($id): ?string
+  {
+    if ($id instanceof ChatMessageImage) {
+      return $id->file_path;
+    }
+    return parent::find($id)->file_path;
+  }
 }

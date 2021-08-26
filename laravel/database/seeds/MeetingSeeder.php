@@ -22,8 +22,7 @@ class MeetingSeeder extends Seeder
     DB::table('meeting_decisions')->truncate();
     DB::table('meeting_members')->truncate();
     DB::table('meeting_records')->truncate();
-    $testUser = DB::table('users')->first();
-    for($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 100; $i++) {
       $members = User::all()->pluck('id')->shuffle()->splice(0, random_int(2, 15))->all();
       $writtenBy = array_random($members);
       // 議事録の追加
@@ -39,14 +38,13 @@ class MeetingSeeder extends Seeder
         'written_by' => $writtenBy,
       ]);
       // 議事録からのTaskの追加
-      $meetingDecisions->each(function($meetingDecision) {
-        factory(Task::class, 1)->create([
-          'meeting_decision_id' => $meetingDecision->id,
-          'owner_id' => array_random(User::all()->pluck('id')->toArray()),
-          'created_by' => $meetingDecision->written_by,
-        ]);
-      });
-//      $random = array_random([0,0,1]);
+      // $meetingDecisions->each(function ($meetingDecision) {
+      //   factory(Task::class, 1)->create([
+      //     'meeting_decision_id' => $meetingDecision->id,
+      //     'owner_id' => array_random(User::all()->pluck('id')->toArray()),
+      //     'created_by' => $meetingDecision->written_by,
+      //   ]);
+      // });
     }
   }
 }

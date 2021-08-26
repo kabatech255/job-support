@@ -79,7 +79,7 @@ abstract class EloquentQuery extends CommonAbstractQuery
       } elseif (count($this->splitColumn($column)) >= 2) {
         $query = $this->searchOtherLocation($query, [$column => $val]);
       } elseif ($this->isValidColumnName($column)) {
-        $query->where($column, '=', $val);
+        $query->where($column, 'like', $this->liked($val));
       }
     }
 
@@ -112,16 +112,18 @@ abstract class EloquentQuery extends CommonAbstractQuery
   protected function searchByKeywords(Builder $query, string $keyword)
   {
     $likeVal = $this->liked($keyword);
-    foreach ($this->targetColumns as $columnName) {
-      $query->orWhere($columnName, 'like', $likeVal);
-    }
-    foreach ($this->relationTargets as $relation => $relationColumns) {
-      foreach ($relationColumns as $c) {
-        $query->orWhereHas($relation, function ($q) use ($likeVal, $c) {
-          $q->where($c, 'like', $likeVal);
-        });
+    $query->where(function ($query) use ($likeVal) {
+      foreach ($this->targetColumns as $columnName) {
+        $query->orWhere($columnName, 'like', $likeVal);
       }
-    }
+      foreach ($this->relationTargets as $relation => $relationColumns) {
+        foreach ($relationColumns as $c) {
+          $query->orWhereHas($relation, function ($q) use ($likeVal, $c) {
+            $q->where($c, 'like', $likeVal);
+          });
+        }
+      }
+    });
     return $query;
   }
 

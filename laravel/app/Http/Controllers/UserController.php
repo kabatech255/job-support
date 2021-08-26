@@ -31,7 +31,6 @@ class UserController extends Controller
    */
   public function update(UpdateRequest $request, User $id)
   {
-    // return response($request->all());
     \DB::beginTransaction();
     try {
       $user = $this->service->update($request->all(), $id);

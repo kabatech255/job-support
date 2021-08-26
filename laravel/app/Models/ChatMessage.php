@@ -6,6 +6,7 @@ use App\Models\Abstracts\CommonModel as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Contracts\Models\ModelInterface;
 use Illuminate\Support\Facades\Auth;
+use App\Contracts\Models\RelationalDeleteInterface;
 
 /**
  * App\Models\ChatMessage
@@ -39,7 +40,7 @@ use Illuminate\Support\Facades\Auth;
  * @method static \Illuminate\Database\Query\Builder|ChatMessage withTrashed()
  * @method static \Illuminate\Database\Query\Builder|ChatMessage withoutTrashed()
  */
-class ChatMessage extends Model implements ModelInterface
+class ChatMessage extends Model implements RelationalDeleteInterface
 {
   use SoftDeletes;
 
@@ -53,7 +54,7 @@ class ChatMessage extends Model implements ModelInterface
   ];
 
   protected $appends = [
-    'mine',
+    'unread',
   ];
 
   const RELATIONS_ARRAY = [
@@ -94,10 +95,43 @@ class ChatMessage extends Model implements ModelInterface
   }
 
   /**
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+   */
+  public function chatMessageReads()
+  {
+    return $this->belongsToMany(User::class, 'chat_message_reads', 'chat_message_id', 'member_id')->withTimestamps();
+  }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function reactions()
+  {
+    return $this->hasMany(Reaction::class, 'chat_message_id', 'id');
+  }
+
+  /**
    * @ bool
    */
   public function getMineAttribute(): bool
   {
     return !Auth::check() ? false : Auth::user()->id === $this->written_by;
+  }
+
+  public function getDeleteRelations(): array
+  {
+    return [
+      $this->images,
+    ];
+  }
+
+  /**
+   * @return bool
+   */
+  public function getUnreadAttribute(): bool
+  {
+    return !($this->mine || $this->chatMessageReads->contains(function ($member) {
+      return $member->id === Auth::user()->id;
+    }));
   }
 }

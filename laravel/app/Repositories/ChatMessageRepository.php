@@ -26,7 +26,7 @@ class ChatMessageRepository extends EloquentRepository implements ChatMessageRep
   {
     $params['written_by'] = Auth::user()->id;
     $chatMessage = parent::attach($params, $parent, $method, $id);
-    $chatMessage->load(['writtenBy', 'to']);
+    // $chatMessage->load(['writtenBy', 'to', 'chatMessageReads', 'images']);
     return $chatMessage;
   }
 }
