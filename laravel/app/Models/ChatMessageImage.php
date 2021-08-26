@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\Abstracts\CommonModel as Model;
+use App\Contracts\Models\ModelInterface;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * App\Models\ChatMessageImage
@@ -25,8 +27,10 @@ use App\Models\Abstracts\CommonModel as Model;
  * @method static \Illuminate\Database\Eloquent\Builder|ChatMessageImage whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class ChatMessageImage extends Model
+class ChatMessageImage extends Model implements ModelInterface
 {
+  use SoftDeletes;
+
   protected $table = 'chat_message_images';
 
   protected $fillable = [

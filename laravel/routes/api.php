@@ -54,6 +54,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::delete('/chat_room/{id}', 'ChatRoomController@destroy')->name('chatRoom.destroy');
     // チャットメッセージ
     Route::post('/chat_room/{chat_room_id}/message', 'ChatMessageController@store')->name('chatMessage.store');
+    Route::post('/chat_room/{chat_room_id}/read', 'ChatMessageReadController@store')->name('chatMessageRead.store');
     Route::put('/chat_room/{chat_room_id}/message/{id}', 'ChatMessageController@update')->name('chatMessage.update');
     Route::delete('/chat_room/{chat_room_id}/message/{id}', 'ChatMessageController@destroy')->name('chatMessage.destroy');
     // ドキュメントフォルダ

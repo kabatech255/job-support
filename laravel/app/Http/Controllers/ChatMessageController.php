@@ -10,6 +10,7 @@ use App\Http\Requests\ChatMessage\StoreRequest;
 use App\Http\Requests\ChatMessage\UpdateRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Events\MessageSent;
 
 class ChatMessageController extends Controller
 {
@@ -18,25 +19,6 @@ class ChatMessageController extends Controller
   public function __construct(ChatMessageService $service)
   {
     $this->service = $service;
-  }
-  /**
-   * Display a listing of the resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
-  public function index()
-  {
-    //
-  }
-
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
-  public function create()
-  {
-    //
   }
 
   /**
@@ -55,6 +37,8 @@ class ChatMessageController extends Controller
       DB::rollBack();
       throw $e;
     }
+    // event((new MessageSent($chatMessage, Auth::user())));
+    broadcast(new MessageSent($chatMessage, Auth::user()))->toOthers();
     return response($chatMessage, 201);
   }
 

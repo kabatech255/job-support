@@ -30,13 +30,13 @@ class StoreRequest extends FormRequest
   public function rules()
   {
     return [
-      'written_by' => 'nullable|integer|'.Rule::in(User::pluck('id')->toArray()),
+      'written_by' => 'nullable|integer|' . Rule::in(User::pluck('id')->toArray()),
       'title' => 'required|string|max:140',
       'body' => 'required|string',
       'images' => 'nullable|array',
-      'images.*.file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:'.self::MAX_FILE_SIZE,
+      'images.*.file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:' . self::MAX_FILE_SIZE,
       'tags' => 'nullable|array',
-      'tags.*' => 'required|integer|'.Rule::in(Tag::pluck('id')->toArray()),
+      'tags.*' => 'required|integer|' . Rule::in(Tag::pluck('id')->toArray()),
     ];
   }
 
@@ -54,7 +54,7 @@ class StoreRequest extends FormRequest
   public function messages()
   {
     return [
-      'images.*.file.max' => '画像サイズは'.self::MULTIPLE_NUM.'MB以下のものを指定してください',
+      'images.*.file.max' => '画像サイズは' . self::MULTIPLE_NUM . 'MB以下のものを指定してください',
       'tags.*.in' => 'タグの指定が不正な形式です',
     ];
   }
