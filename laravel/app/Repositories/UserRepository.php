@@ -4,6 +4,8 @@ namespace App\Repositories;
 
 use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
+
 use App\Repositories\Abstracts\EloquentRepository;
 
 class UserRepository extends EloquentRepository implements UserRepositoryInterface
@@ -11,11 +13,6 @@ class UserRepository extends EloquentRepository implements UserRepositoryInterfa
   public function __construct(User $model)
   {
     $this->setModel($model);
-  }
-
-  protected function mbTrim($pString)
-  {
-    return preg_replace('/( |　)+/', '', $pString);
   }
 
   /**
@@ -31,18 +28,10 @@ class UserRepository extends EloquentRepository implements UserRepositoryInterfa
   /**
    * @param array $params
    * @param $id
-   * @return User
+   * @return Model
    */
-  public function updateProfile(array $params, $id): User
+  public function update(array $params, $id): Model
   {
-    if (isset($params['family_name_kana'])) {
-      // mode = "KV"
-      $params['family_name_kana'] = mb_convert_kana($this->mbTrim($params['family_name_kana']));
-    }
-    if (isset($params['given_name_kana'])) {
-      // mode = "KV"
-      $params['given_name_kana'] = mb_convert_kana($this->mbTrim($params['given_name_kana']), 'CKSV');
-    }
     // $params['change_password']が'0'でもunsetしたいため、!isset(...)を使わない
     if (empty($params['change_password'] ?? '')) {
       unset($params['password']);

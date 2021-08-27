@@ -75,4 +75,9 @@ class MeetingRecordQuery extends EloquentQuery implements MeetingRecordQueryInte
     }
     return $query;
   }
+
+  public function oldestMeetingDate()
+  {
+    return $this->builder()->orderBy('meeting_date')->first()->meeting_date;
+  }
 }

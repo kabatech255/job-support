@@ -102,6 +102,8 @@ Route::group(['middleware' => 'api'], function () {
     Route::put('/task/{id}', 'TaskController@update')->name('task.update');
     Route::delete('/task/{id}', 'TaskController@destroy')->name('task.destroy');
     // プロフィール
-    Route::put('/user/{id}/profile', 'UserController@update')->name('user.update');
+    Route::put('/user/{id}/profile', 'UserController@updateProfile')->name('user.update');
+    // 設定
+    Route::put('/user/{id}/setting', 'Userontroller@updateSetting')->name('user.setting');
   });
 });

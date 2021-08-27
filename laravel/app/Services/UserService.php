@@ -9,10 +9,12 @@ use Illuminate\Support\Collection;
 use App\Models\User;
 use App\Services\FileUploadService;
 use App\Services\Traits\FileSupportTrait;
+use App\Services\Traits\StrSupportTrait;
 
 class UserService extends Service
 {
   use WithRepositoryTrait,
+    StrSupportTrait,
     FileSupportTrait;
 
   /**
@@ -37,7 +39,7 @@ class UserService extends Service
    * @param $id
    * @return User
    */
-  public function update(array $params, $id): User
+  public function updateProfile(array $params, $id): User
   {
     if (isset($params['file'])) {
       $user = $this->repository()->find($id);
@@ -48,7 +50,25 @@ class UserService extends Service
       $this->fileUploadService->remove($this->repository()->findPath($id));
       $params['file_path'] = null;
     }
-    return $this->repository()->updateProfile($params, $id);
+    if (isset($params['family_name_kana'])) {
+      // mode = "KV"
+      $params['family_name_kana'] = mb_convert_kana($this->mbTrim($params['family_name_kana']));
+    }
+    if (isset($params['given_name_kana'])) {
+      // mode = "KV"
+      $params['given_name_kana'] = mb_convert_kana($this->mbTrim($params['given_name_kana']));
+    }
+    return $this->repository()->update($params, $id);
+  }
+
+  /**
+   * @param array $params
+   * @param $id
+   * @return User
+   */
+  public function updateSetting(array $params, $id): User
+  {
+    return $this->repository()->update($params, $id);
   }
 
   /**

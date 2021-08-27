@@ -51,7 +51,7 @@ class ChatMessageService extends Service
     if (isset($params['files'])) {
       $this->uploadImages($params['files'], $newMessage);
     }
-    $newMessage->load(['writtenBy', 'to', 'chatMessageReads', 'images']);
+    $newMessage->load(ChatMessage::RELATIONS_ARRAY);
     return $newMessage;
   }
 
@@ -73,7 +73,7 @@ class ChatMessageService extends Service
         $this->chatMessageImageRepository->delete($deleteId);
       }
     }
-    $updateMessage->load(['writtenBy', 'to', 'chatMessageReads', 'images']);
+    $updateMessage->load(ChatMessage::RELATIONS_ARRAY);
     return $this->repository()->attach($params, $updateMessage, $this->attachMethod, $id);
   }
 
@@ -83,12 +83,13 @@ class ChatMessageService extends Service
    */
   public function delete($id): ChatMessage
   {
-    $chatMessage = $this->repository()->find($id);
+    $chatMessage = $this->repository()->find($id, ChatMessage::RELATIONS_ARRAY);
     $chatMessage->images->each(function ($image) {
       $this->fileUploadService->remove($this->chatMessageImageRepository->findPath($image->id));
       $this->chatMessageImageRepository->delete($image->id);
     });
-    return $this->repository()->delete($id);
+    $this->repository()->delete($id);
+    return $chatMessage;
   }
 
   private function uploadImages($files, $chatMessage)
