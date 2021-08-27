@@ -46,6 +46,8 @@ use Illuminate\Support\Facades\Auth;
 class Schedule extends Model implements ModelInterface
 {
   use SoftDeletes;
+  const PRIVATE_COLOR = '#cccccc';
+  const PRIVATE_TITLE = '非公開予定';
 
   protected $table = 'schedules';
   protected $fillable = [
@@ -76,6 +78,7 @@ class Schedule extends Model implements ModelInterface
 
   protected $appends = [
     'can_edit',
+    'is_show',
   ];
 
   /**
@@ -106,6 +109,16 @@ class Schedule extends Model implements ModelInterface
         return false;
       }
       return Auth::user()->id === $member->id && $member->option->is_editable;
+    });
+  }
+
+  public function getIsShowAttribute()
+  {
+    if (!Auth::check()) {
+      return false;
+    }
+    return $this->is_public || $this->sharedMembers->contains(function ($member) {
+      return $member->id === Auth::user()->id;
     });
   }
 }

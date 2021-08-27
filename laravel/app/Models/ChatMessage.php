@@ -60,6 +60,8 @@ class ChatMessage extends Model implements RelationalDeleteInterface
   const RELATIONS_ARRAY = [
     'writtenBy',
     'to',
+    'chatMessageReads',
+    'images'
   ];
 
   /**

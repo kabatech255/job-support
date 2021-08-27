@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageDelete;
 use App\Models\ChatMessage;
 use App\Models\ChatRoom;
 use App\Services\ChatMessageService;
@@ -38,7 +39,7 @@ class ChatMessageController extends Controller
       throw $e;
     }
     // event((new MessageSent($chatMessage, Auth::user())));
-    broadcast(new MessageSent($chatMessage, Auth::user()))->toOthers();
+    broadcast(new MessageSent($chatMessage, 'store'))->toOthers();
     return response($chatMessage, 201);
   }
 
@@ -59,6 +60,7 @@ class ChatMessageController extends Controller
       DB::rollBack();
       throw $e;
     }
+    broadcast(new MessageSent($chatMessage, 'update'))->toOthers();
     return response($chatMessage, 200);
   }
 
@@ -71,6 +73,15 @@ class ChatMessageController extends Controller
   public function destroy(ChatRoom $chat_room_id, ChatMessage $id)
   {
     $this->authorize('delete', $id);
-    return response($this->service->delete($id), 204);
+    \DB::beginTransaction();
+    try {
+      $result = $this->service->delete($id);
+      \DB::commit();
+    } catch (\Exception $e) {
+      \DB::rollback();
+      throw $e;
+    }
+    broadcast(new MessageDelete($result))->toOthers();
+    return response('', 204);
   }
 }
