@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
     $this->call(TaskSeeder::class);
     $this->call(ScheduleSeeder::class);
     $this->call(ChatSeeder::class);
+    $this->call(ActionTypeSeeder::class);
 
     $this->setFKCheckOn();
     Model::reguard();

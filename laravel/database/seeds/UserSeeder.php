@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
   public function run()
   {
     DB::table('users')->truncate();
-    $departmentList = Department::all()->map(function($department) {
+    $departmentList = Department::all()->map(function ($department) {
       return [
         [
           'role_id' => 3,
@@ -50,10 +50,10 @@ class UserSeeder extends Seeder
       'given_name_kana' => 'タロウ',
       'email' => 'test@example.com',
     ]);
-    $departmentList->each(function($department){
-      collect($department)->each(function($member) {
+    $departmentList->each(function ($department) {
+      collect($department)->each(function ($member) {
         factory(User::class, 1)->create($member);
       });
-    });
+    })->all();
   }
 }

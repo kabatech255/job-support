@@ -6,28 +6,26 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Auth\Notifications\ResetPassword;
+use App\Models\Schedule;
 
-class MailResetPasswordNotification extends ResetPassword implements ShouldQueue
+class ScheduleSharedNotification extends Notification implements ShouldQueue
 {
   use Queueable;
-
-  /** @var string */
-  public $token;
+  public $schedule;
+  public $subjectPrefix;
   /**
    * Create a new notification instance.
    *
    * @return void
    */
-  public function __construct($token)
+  public function __construct(Schedule $schedule)
   {
-    $this->token = $token;
-    $this->queue = 'authentication';
+    $this->schedule = $schedule;
+    $this->queue = 'schedule_shared';
+    $this->subjectPrefix = config('app.name');
   }
 
   /**
-   * Get the notification's delivery channels.
-   *
    * @param  mixed  $notifiable
    * @return array
    */
@@ -44,12 +42,11 @@ class MailResetPasswordNotification extends ResetPassword implements ShouldQueue
    */
   public function toMail($notifiable)
   {
-    $appUrl = config('app.front_url', 'http://localhost:3000');
     return (new MailMessage)
-      ->subject('【' . config('app.name') . '】パスワード再設定のご案内')
-      ->view('mail.forgot_password', [
-        'resetUrl' => $appUrl . "/password/reset/{$this->token}?email=" . base64_encode($notifiable->getEmailForPasswordReset()),
-        'forgotPasswordUrl' => $appUrl . '/password/forgot_password',
+      ->subject("【{$this->subjectPrefix}】新しい予定が共有されました")
+      ->markdown('mail.schedule.shared', [
+        'schedule' => $this->schedule,
+        'detailUrl' => config('app.front_url', 'http://localhost:3000') . '/mypage/schedule',
       ]);
   }
 

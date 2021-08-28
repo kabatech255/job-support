@@ -4,12 +4,16 @@ namespace App\Services;
 
 use App\Contracts\Repositories\MeetingRecordRepositoryInterface as Repository;
 use App\Contracts\Queries\MeetingRecordQueryInterface as Query;
+use App\Models\ActionType;
 use App\Models\MeetingDecision;
 use App\Services\MeetingDecisionService;
 use App\Services\Traits\WithRepositoryTrait;
 use App\Models\MeetingRecord;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\MeetingRecordJoinedNotification;
+use App\Services\Traits\NotifySupport;
 
 class MeetingRecordService extends Service
 {
@@ -50,7 +54,7 @@ class MeetingRecordService extends Service
 
   private function yearMonth()
   {
-    $diff = $this->diffMonth();
+    $diff = $this->diffBetweenMonth();
     $yearMonth = [];
     for ($i = 0; $i < $diff; $i++) {
       $c = Carbon::parse("-{$i} month");
@@ -62,7 +66,7 @@ class MeetingRecordService extends Service
     return $yearMonth;
   }
 
-  private function diffMonth()
+  private function diffBetweenMonth()
   {
     $latest = Carbon::parse($this->query()->oldestMeetingDate());
     return $latest->diffInMonths(Carbon::now());
@@ -99,7 +103,10 @@ class MeetingRecordService extends Service
         $this->saveDecisionByRecord($meetingDecisionParams, $meetingRecord);
       }
     }
-    $meetingRecord->load(['decisions', 'place', 'members', 'recordedBy']);
+    $meetingRecord->load(MeetingRecord::RELATIONS_ARRAY);
+    Notification::send($meetingRecord->members->filter(function ($member) use ($meetingRecord) {
+      return NotifySupport::shouldSend($member, $meetingRecord->recorded_by, ActionType::MEETING_RECORD_JOINED_KEY);
+    }), new MeetingRecordJoinedNotification($meetingRecord));
     return $meetingRecord;
   }
 

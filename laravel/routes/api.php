@@ -104,6 +104,7 @@ Route::group(['middleware' => 'api'], function () {
     // プロフィール
     Route::put('/user/{id}/profile', 'UserController@updateProfile')->name('user.update');
     // 設定
-    Route::put('/user/{id}/setting', 'Userontroller@updateSetting')->name('user.setting');
+    Route::put('/user/{id}/setting', 'UserController@updateSetting')->name('user.setting');
+    Route::get('/user/{id}/notify_validation', 'UserController@notifyValidationByUser')->name('user.notifyValidationByUser');
   });
 });
