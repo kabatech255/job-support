@@ -10,15 +10,24 @@ use App\Models\User;
 use App\Services\Traits\WithRepositoryTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use App\Notifications\ScheduleSharedNotification;
+use Illuminate\Support\Facades\Notification;
+use App\Contracts\Repositories\ActionTypeRepositoryInterface as ActionTypeRepository;
+use App\Models\ActionType;
+use App\Models\NotifyValidation;
+use App\Services\Traits\NotifySupport;
 
 class ScheduleService extends Service
 {
   use WithRepositoryTrait;
-
   /**
    * @var UserRepository
    */
   private $userRepository;
+  /**
+   * @var ActionTypeRepository
+   */
+  private $actionTypeRepository;
 
   /**
    * UserService constructor.
@@ -29,11 +38,13 @@ class ScheduleService extends Service
   public function __construct(
     Repository $repository,
     Query $query,
-    UserRepository $userRepository
+    UserRepository $userRepository,
+    ActionTypeRepository $actionTypeRepository
   ) {
     $this->setRepository($repository);
     $this->setQuery($query);
     $this->userRepository = $userRepository;
+    $this->actionTypeRepository = $actionTypeRepository;
   }
 
   public function index(array $params, ?array $relation = null)
@@ -72,7 +83,13 @@ class ScheduleService extends Service
   public function store(array $params): Schedule
   {
     $params = $this->addMe($params);
-    return $this->repository()->saveWithMembers($params, 'sharedMembers');
+    $newSchedule = $this->repository()->saveWithMembers($params, 'sharedMembers');
+
+    Notification::send($newSchedule->sharedMembers->filter(function ($member) use ($newSchedule) {
+      return NotifySupport::shouldSend($member, $newSchedule->scheduled_by, ActionType::SCHEDULE_SHARED_KEY);
+    }), new ScheduleSharedNotification($newSchedule));
+
+    return $newSchedule;
   }
 
   /**

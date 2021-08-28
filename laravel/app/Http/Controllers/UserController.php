@@ -7,15 +7,20 @@ use App\Services\UserService;
 use App\Http\Requests\User\ProfileRequest;
 use App\Http\Requests\User\SettingRequest;
 use App\Models\User;
+use App\Services\NotifyValidationService;
 
 class UserController extends Controller
 {
 
   private $service;
+  private $notifyValidationService;
 
-  public function __construct(UserService $service)
-  {
+  public function __construct(
+    UserService $service,
+    NotifyValidationService $notifyValidationService
+  ) {
     $this->service = $service;
+    $this->notifyValidationService = $notifyValidationService;
   }
 
   public function index()
@@ -79,5 +84,10 @@ class UserController extends Controller
   {
     $currentUser = $this->service->withChatRooms();
     return !!$currentUser ? response($currentUser) : response('');
+  }
+
+  public function notifyValidationByUser(User $id)
+  {
+    return response($this->service->notifyStatus($id));
   }
 }

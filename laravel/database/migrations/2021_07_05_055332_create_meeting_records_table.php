@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\Schema;
 class CreateMeetingRecordsTable extends Migration
 {
   /**
-   * Run the migrations.
-   *
    * @return void
    */
   public function up()
@@ -41,13 +39,11 @@ class CreateMeetingRecordsTable extends Migration
   }
 
   /**
-   * Reverse the migrations.
-   *
    * @return void
    */
   public function down()
   {
-    Schema::table('meeting_records', function(Blueprint $table){
+    Schema::table('meeting_records', function (Blueprint $table) {
       $table->dropForeign('meeting_records_place_id_foreign');
       $table->dropForeign('meeting_records_deleted_by_foreign');
       $table->dropForeign('meeting_records_updated_by_foreign');

@@ -2,10 +2,6 @@
 
 namespace App\Services\Traits;
 
-use App\Services\FileUploadService;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
-
 trait StrSupportTrait
 {
   /**

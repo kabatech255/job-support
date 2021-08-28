@@ -34,9 +34,8 @@ class MessageSent implements ShouldBroadcast
   // {
   //   return 'message.sent';
   // }
+
   /**
-   * Get the channels the event should broadcast on.
-   *
    * @return \Illuminate\Broadcasting\Channel|array
    */
   public function broadcastOn()

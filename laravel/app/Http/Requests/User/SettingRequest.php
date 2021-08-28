@@ -28,6 +28,12 @@ class SettingRequest extends FormRequest
   public function rules()
   {
     return [
+      'notify_validations' => [
+        'array',
+      ],
+      'notify_validations.*' => [
+        'boolean',
+      ],
       'change_password' => [
         'nullable',
         'boolean',
@@ -50,6 +56,9 @@ class SettingRequest extends FormRequest
   public function attributes()
   {
     return [
+      'message_sent' => 'メッセージが送信されたときの通知フラグ',
+      'meeting_record_joined' => '議事録追加の通知フラグ',
+      'schedule_shared' => 'スケジュールが共有されたときの通知フラグ',
       'change_password' => 'パスワードの変更',
       'current_password' => '現在のパスワード',
       'password' => '新しいパスワード',

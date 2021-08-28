@@ -130,8 +130,11 @@ class ChatMessage extends Model implements RelationalDeleteInterface
   /**
    * @return bool
    */
-  public function getUnreadAttribute(): bool
+  public function getUnreadAttribute()
   {
+    if (!Auth::check()) {
+      return false;
+    }
     return !($this->mine || $this->chatMessageReads->contains(function ($member) {
       return $member->id === Auth::user()->id;
     }));

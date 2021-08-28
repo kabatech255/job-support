@@ -6,23 +6,24 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Auth\Notifications\ResetPassword;
+use App\Models\ChatMessage;
 
-class MailResetPasswordNotification extends ResetPassword implements ShouldQueue
+class MessageSentNotification extends Notification implements ShouldQueue
 {
   use Queueable;
+  public $chatMessage;
+  public $subjectPrefix;
 
-  /** @var string */
-  public $token;
   /**
    * Create a new notification instance.
    *
    * @return void
    */
-  public function __construct($token)
+  public function __construct(ChatMessage $chatMessage)
   {
-    $this->token = $token;
-    $this->queue = 'authentication';
+    $this->chatMessage = $chatMessage;
+    $this->queue = 'message_sent';
+    $this->subjectPrefix = config('app.name');
   }
 
   /**
@@ -44,12 +45,12 @@ class MailResetPasswordNotification extends ResetPassword implements ShouldQueue
    */
   public function toMail($notifiable)
   {
-    $appUrl = config('app.front_url', 'http://localhost:3000');
     return (new MailMessage)
-      ->subject('【' . config('app.name') . '】パスワード再設定のご案内')
-      ->view('mail.forgot_password', [
-        'resetUrl' => $appUrl . "/password/reset/{$this->token}?email=" . base64_encode($notifiable->getEmailForPasswordReset()),
-        'forgotPasswordUrl' => $appUrl . '/password/forgot_password',
+      ->subject("【{$this->subjectPrefix}】新着メッセージが届きました")
+      ->markdown('mail.chat_message.sent', [
+        'chatMessage' => $this->chatMessage,
+        'notifiable' => $notifiable,
+        'detailUrl' => config('app.front_url', 'http://localhost:3000') . '/mypage/chat/' . $this->chatMessage->chatRoom->id,
       ]);
   }
 

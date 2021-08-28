@@ -5,12 +5,15 @@ namespace App\Services;
 use App\Contracts\Queries\ChatMessageQueryInterface as Query;
 use App\Contracts\Repositories\ChatMessageRepositoryInterface as Repository;
 use App\Contracts\Repositories\ChatMessageImageRepositoryInterface as ChatMessageImageRepository;
+use App\Models\ActionType;
 use App\Models\ChatMessage;
 use App\Models\ChatRoom;
 use App\Services\Traits\WithRepositoryTrait;
-use Illuminate\Support\Facades\Auth;
 use App\Services\FileUploadService;
 use App\Services\Traits\FileSupportTrait;
+use App\Notifications\MessageSentNotification;
+use Illuminate\Support\Facades\Notification;
+use App\Services\Traits\NotifySupport;
 
 class ChatMessageService extends Service
 {
@@ -52,6 +55,10 @@ class ChatMessageService extends Service
       $this->uploadImages($params['files'], $newMessage);
     }
     $newMessage->load(ChatMessage::RELATIONS_ARRAY);
+    Notification::send($newMessage->chatRoom->members->filter(function ($member) use ($newMessage) {
+      return NotifySupport::shouldSend($member, $newMessage->written_by, ActionType::MESSAGE_SENT_KEY);
+    }), new MessageSentNotification($newMessage));
+
     return $newMessage;
   }
 

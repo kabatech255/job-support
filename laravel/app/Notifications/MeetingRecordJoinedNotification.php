@@ -6,23 +6,24 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Auth\Notifications\ResetPassword;
+use App\Models\MeetingRecord;
 
-class MailResetPasswordNotification extends ResetPassword implements ShouldQueue
+class MeetingRecordJoinedNotification extends Notification implements ShouldQueue
 {
   use Queueable;
+  public $meetingRecord;
+  public $subjectPrefix;
 
-  /** @var string */
-  public $token;
   /**
    * Create a new notification instance.
    *
    * @return void
    */
-  public function __construct($token)
+  public function __construct(MeetingRecord $meetingRecord)
   {
-    $this->token = $token;
-    $this->queue = 'authentication';
+    $this->meetingRecord = $meetingRecord;
+    $this->queue = 'meeting_record_joined';
+    $this->subjectPrefix = config('app.name');
   }
 
   /**
@@ -44,12 +45,12 @@ class MailResetPasswordNotification extends ResetPassword implements ShouldQueue
    */
   public function toMail($notifiable)
   {
-    $appUrl = config('app.front_url', 'http://localhost:3000');
     return (new MailMessage)
-      ->subject('【' . config('app.name') . '】パスワード再設定のご案内')
-      ->view('mail.forgot_password', [
-        'resetUrl' => $appUrl . "/password/reset/{$this->token}?email=" . base64_encode($notifiable->getEmailForPasswordReset()),
-        'forgotPasswordUrl' => $appUrl . '/password/forgot_password',
+      ->subject("【{$this->subjectPrefix}】議事録が追加されました")
+      ->markdown('mail.meeting_record.joined', [
+        'meetingRecord' => $this->meetingRecord,
+        'notifiable' => $notifiable,
+        'detailUrl' => config('app.front_url', 'http://localhost:3000') . '/mypage/meeting_record/' . $this->meetingRecord->id,
       ]);
   }
 
