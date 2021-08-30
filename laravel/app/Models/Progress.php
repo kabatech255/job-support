@@ -35,6 +35,9 @@ class Progress extends Model
     'value',
   ];
 
+  const COMPLETE_VALUE = 128;
+  const EXCEPT_VALUE = self::COMPLETE_VALUE;
+
   /**
    * @return \Illuminate\Database\Eloquent\Relations\HasMany
    */

@@ -9,6 +9,7 @@ use App\Http\Requests\MeetingRecord\StoreRequest;
 use App\Http\Requests\MeetingRecord\UpdateRequest;
 use App\Services\MeetingRecordService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class MeetingRecordController extends Controller
 {
@@ -83,6 +84,11 @@ class MeetingRecordController extends Controller
   public function destroy(DeleteRequest $request, MeetingRecord $id)
   {
     return response($this->service->delete($id, $request->query(), $this->perPage), 200);
+  }
+
+  public function recently()
+  {
+    return response($this->service->findByUser());
   }
 
   /**

@@ -101,4 +101,9 @@ class TaskController extends Controller
   {
     return response($this->service->deleteAll($request->query(), $request->input('ids'), $this->perPage), 200);
   }
+
+  public function busyTaskByAuthor()
+  {
+    return response($this->service->findBusyByOwner(), 200);
+  }
 }

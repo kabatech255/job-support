@@ -6,10 +6,13 @@ use App\Contracts\Repositories\TaskRepositoryInterface as Repository;
 use App\Enums\ProcessFlag;
 use App\Models\MeetingDecision;
 use App\Models\Task as Task;
+use App\Models\User;
 use App\Services\Traits\WithRepositoryTrait;
 use App\Contracts\Queries\TaskQueryInterface as Query;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
+use App\Contracts\Repositories\UserRepositoryInterface as UserRepository;
 
 class TaskService extends Service
 {
@@ -18,16 +21,24 @@ class TaskService extends Service
   private $attachMethod = 'tasks';
 
   /**
-   * UserService constructor.
+   * @var UserRepository
+   */
+  private $userRepository;
+
+  /**
+   * UserRepository constructor.
    * @param Repository $repository
    * @param Query $query
+   * @param UserRepository $userRepository
    */
   public function __construct(
     Repository $repository,
-    Query $query
+    Query $query,
+    UserRepository $userRepository
   ) {
     $this->setRepository($repository);
     $this->setQuery($query);
+    $this->userRepository = $userRepository;
   }
 
   /**
@@ -110,5 +121,42 @@ class TaskService extends Service
   public function attach($params, $meetingDecision, $id = null): Task
   {
     return $this->repository()->attach($params, $meetingDecision, $this->attachMethod, $id);
+  }
+
+  /**
+   * @param $target
+   * @return array
+   */
+  public function findBusyByOwner($target = null): array
+  {
+    if ($target === null) {
+      $target = Auth::user()->id;
+    }
+    $user = $this->userRepository->find($target);
+    return $this->filterBusy($user->load(['tasks.progress'])->tasks);
+  }
+
+  /**
+   * @param Collection $tasks
+   * @return array
+   */
+  public function filterBusy(Collection $tasks): array
+  {
+    $filtered = $tasks->filter(function ($task) {
+      return $task->is_busy;
+    });
+    if (!!$filtered->count()) {
+      $grouped = $filtered->sortBy('time_limit')->groupBy('status')->toArray();
+      return collect(['over', 'warning'])->combine([$grouped['over'] ?? [], $grouped['warning'] ?? []])->all();
+    }
+    return $this->emptyBusyData();
+  }
+
+  /**
+   * @return array
+   */
+  private function emptyBusyData(): array
+  {
+    return collect(['over', 'warning'])->combine([[], []])->all();
   }
 }

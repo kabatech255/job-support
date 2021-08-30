@@ -6,6 +6,7 @@ use App\Contracts\Queries\MeetingRecordQueryInterface;
 use App\Queries\Abstracts\EloquentQuery;
 use App\Models\MeetingRecord;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class MeetingRecordQuery extends EloquentQuery implements MeetingRecordQueryInterface
 {
@@ -25,7 +26,7 @@ class MeetingRecordQuery extends EloquentQuery implements MeetingRecordQueryInte
         'family_name_kana',
       ],
       'members' => [
-        'user_code',
+        'id',
         'given_name',
         'family_name',
         'given_name_kana',
@@ -41,6 +42,11 @@ class MeetingRecordQuery extends EloquentQuery implements MeetingRecordQueryInte
   public function search(array $params, array $relation = []): Builder
   {
     $query = parent::search($params, $relation);
+    if (!empty($params['only_me'] ?? '') && Auth::check()) {
+      $query = $query->whereHas('members', function ($q) {
+        $q->where('member_id', Auth::user()->id);
+      });
+    }
     if (isset($params['count'])) {
       $query = $this->queryByMemberCount($query, $params['count']);
     }

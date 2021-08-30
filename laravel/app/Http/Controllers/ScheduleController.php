@@ -9,6 +9,7 @@ use App\Http\Requests\Schedule\StoreRequest;
 use App\Http\Requests\Schedule\UpdateRequest;
 use App\Services\ScheduleService;
 use App\Models\Schedule;
+use Illuminate\Support\Facades\Auth;
 
 class ScheduleController extends Controller
 {
@@ -31,6 +32,19 @@ class ScheduleController extends Controller
   public function index(Request $request)
   {
     return response($this->service->index($request->query()), 200);
+  }
+
+  /**
+   * Display a listing of the resource.
+   * @return \Illuminate\Http\Response
+   */
+  public function dailyByAuthor()
+  {
+    return response($this->service->index([
+      'sharedMembers:shared_with' => Auth::user()->id,
+      'sort_key' => 'start',
+      'order_by' => 'asc',
+    ]));
   }
 
   /**

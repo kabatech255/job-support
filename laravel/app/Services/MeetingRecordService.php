@@ -4,12 +4,13 @@ namespace App\Services;
 
 use App\Contracts\Repositories\MeetingRecordRepositoryInterface as Repository;
 use App\Contracts\Queries\MeetingRecordQueryInterface as Query;
+use App\Contracts\Repositories\UserRepositoryInterface as UserRepository;
 use App\Models\ActionType;
 use App\Models\MeetingDecision;
 use App\Services\MeetingDecisionService;
 use App\Services\Traits\WithRepositoryTrait;
 use App\Models\MeetingRecord;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\MeetingRecordJoinedNotification;
@@ -20,20 +21,24 @@ class MeetingRecordService extends Service
   use WithRepositoryTrait;
 
   protected $meetingDecisionService;
+  protected $userRepository;
   /**
    * UserService constructor.
    * @param Repository $repository
    * @param Query $query
-   * @param MeetingDecisionService $meetingDecisionService,
+   * @param MeetingDecisionService $meetingDecisionService
+   * @param UserRepository $userRepository
    */
   public function __construct(
     Repository $repository,
     Query $query,
-    MeetingDecisionService $meetingDecisionService
+    MeetingDecisionService $meetingDecisionService,
+    UserRepository $userRepository
   ) {
     $this->setRepository($repository);
     $this->setQuery($query);
     $this->meetingDecisionService = $meetingDecisionService;
+    $this->userRepository = $userRepository;
   }
 
   /**
@@ -48,11 +53,15 @@ class MeetingRecordService extends Service
     if ($paginator) {
       $yearMonthAddedArr = json_decode(json_encode($paginator), true);
       $yearMonthAddedArr['year_month'] = $this->yearMonth();
+      $yearMonthAddedArr['query_params'] = $params;
     }
     return $yearMonthAddedArr;
   }
 
-  private function yearMonth()
+  /**
+   * @return array
+   */
+  private function yearMonth(): array
   {
     $diff = $this->diffBetweenMonth();
     $yearMonth = [];
@@ -66,6 +75,9 @@ class MeetingRecordService extends Service
     return $yearMonth;
   }
 
+  /**
+   * @return int
+   */
   private function diffBetweenMonth()
   {
     $latest = Carbon::parse($this->query()->oldestMeetingDate());
@@ -104,6 +116,7 @@ class MeetingRecordService extends Service
       }
     }
     $meetingRecord->load(MeetingRecord::RELATIONS_ARRAY);
+    // TODO: 本番環境でのワーカ要準備
     Notification::send($meetingRecord->members->filter(function ($member) use ($meetingRecord) {
       return NotifySupport::shouldSend($member, $meetingRecord->recorded_by, ActionType::MEETING_RECORD_JOINED_KEY);
     }), new MeetingRecordJoinedNotification($meetingRecord));
@@ -159,6 +172,19 @@ class MeetingRecordService extends Service
     } else {
       return $this->meetingDecisionService->store($meetingDecisionParams, $meetingRecord);
     }
+  }
+
+  /**
+   * @param $id
+   * @return MeetingRecord[]
+   */
+  public function findByUser($id = null): array
+  {
+    if ($id === null) {
+      $id = Auth::user()->id;
+    }
+    $user = $this->userRepository->find($id, ['joinedMeetings.recordedBy', 'joinedMeetings.place']);
+    return $user->joinedMeetings->sortByDesc('id')->splice(0, 5)->all();
   }
 
   /**

@@ -55,9 +55,10 @@ class ChatMessageService extends Service
       $this->uploadImages($params['files'], $newMessage);
     }
     $newMessage->load(ChatMessage::RELATIONS_ARRAY);
-    Notification::send($newMessage->chatRoom->members->filter(function ($member) use ($newMessage) {
-      return NotifySupport::shouldSend($member, $newMessage->written_by, ActionType::MESSAGE_SENT_KEY);
-    }), new MessageSentNotification($newMessage));
+    // TODO: 本番環境でのワーカ要準備
+    // Notification::send($newMessage->chatRoom->members->filter(function ($member) use ($newMessage) {
+    //   return NotifySupport::shouldSend($member, $newMessage->written_by, ActionType::MESSAGE_SENT_KEY);
+    // }), new MessageSentNotification($newMessage));
 
     return $newMessage;
   }

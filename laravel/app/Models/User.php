@@ -187,7 +187,7 @@ class User extends Authenticatable
    * 参加したミーティング
    * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
    */
-  public function meetings()
+  public function joinedMeetings()
   {
     return $this->belongsToMany(MeetingRecord::class, 'meeting_members', 'member_id', 'meeting_record_id')->withTimestamps();
   }

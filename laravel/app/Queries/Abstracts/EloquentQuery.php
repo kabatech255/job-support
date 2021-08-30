@@ -87,7 +87,7 @@ abstract class EloquentQuery extends CommonAbstractQuery
       $query = $this->order($params, $query);
     } else {
       // dd();
-      $query->latest();
+      $query->orderBy('id', 'desc');
     }
     return $query;
   }

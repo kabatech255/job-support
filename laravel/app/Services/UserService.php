@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\Traits\WithRepositoryTrait;
 use Illuminate\Support\Collection;
 use App\Models\User;
+use App\Services\ScheduleService;
+use App\Services\MeetingRecordService;
+use App\Services\TaskService;
 use App\Services\FileUploadService;
 use App\Services\Traits\FileSupportTrait;
 use App\Services\Traits\StrSupportTrait;
@@ -23,23 +26,34 @@ class UserService extends Service
    */
   private $notifyValidationRepository;
 
-  /**
-   * @var FileUploadService
-   */
   private $fileUploadService;
+  private $meetingRecordService;
+  private $scheduleService;
+  private $taskService;
 
   /**
    * UserService constructor.
    * @param UserRepository $repository
+   * @param NotifyValidationRepository $notifyValidationRepository
+   * @param FileUploadService $fileUploadService
+   * @param MeetingRecordService $meetingRecordService
+   * @param ScheduleService $scheduleService
+   * @param TaskService $taskService
    */
   public function __construct(
     UserRepository $repository,
     NotifyValidationRepository $notifyValidationRepository,
-    FileUploadService $fileUploadService
+    FileUploadService $fileUploadService,
+    MeetingRecordService $meetingRecordService,
+    ScheduleService $scheduleService,
+    TaskService $taskService
   ) {
     $this->setRepository($repository);
     $this->notifyValidationRepository = $notifyValidationRepository;
     $this->fileUploadService = $fileUploadService;
+    $this->meetingRecordService = $meetingRecordService;
+    $this->scheduleService = $scheduleService;
+    $this->taskService = $taskService;
   }
 
   /**
@@ -104,7 +118,17 @@ class UserService extends Service
   public function currentUser()
   {
     // 未認証の場合はnullが返ってくる
-    return Auth::user();
+    $author = Auth::user();
+    // if ($author instanceof User) {
+    // $author->setAttribute('recent_meeting_records', $this->meetingRecordService->findByUser($author->id));
+    // $author->setAttribute('daily_schedule', $this->scheduleService->index([
+    //   'sharedMembers:shared_with' => $author->id,
+    //   'sort_key' => 'start',
+    //   'order_by' => 'asc',
+    // ]));
+    // $author->setAttribute('busy_tasks', $this->taskService->findBusy($author->tasks));
+    // }
+    return $author;
   }
 
   /**
