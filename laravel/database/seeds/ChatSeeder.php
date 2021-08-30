@@ -14,6 +14,8 @@ class ChatSeeder extends Seeder
    */
   public function run()
   {
+    DB::table('last_reads')->truncate();
+    DB::table('chat_message_reads')->truncate();
     DB::table('chat_message_images')->truncate();
     DB::table('chat_messages')->truncate();
     DB::table('chat_rooms')->truncate();

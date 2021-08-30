@@ -16,7 +16,7 @@ class TaskSeeder extends Seeder
   {
     // MeetingSeederでtruncateするのでここでは不要
     $testUser = DB::table('users')->first();
-    factory(Task::class, 10)->create([
+    factory(Task::class, 100)->create([
       'owner_id' => $testUser->id,
       'created_by' => $testUser->id,
     ]);

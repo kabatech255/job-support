@@ -54,9 +54,11 @@ Route::group(['middleware' => 'api'], function () {
     Route::delete('/chat_room/{id}', 'ChatRoomController@destroy')->name('chatRoom.destroy');
     // チャットメッセージ
     Route::post('/chat_room/{chat_room_id}/message', 'ChatMessageController@store')->name('chatMessage.store');
-    Route::post('/chat_room/{chat_room_id}/read', 'ChatMessageReadController@store')->name('chatMessageRead.store');
     Route::put('/chat_room/{chat_room_id}/message/{id}', 'ChatMessageController@update')->name('chatMessage.update');
     Route::delete('/chat_room/{chat_room_id}/message/{id}', 'ChatMessageController@destroy')->name('chatMessage.destroy');
+    // 既読
+    Route::post('/chat_room/{chat_room_id}/read', 'ChatMessageReadController@store')->name('chatMessageRead.store');
+    Route::get('/author/chat_message/unread/recently', 'ChatMessageReadController@unreadRecently')->name('chatMessageRead.unreadRecently');
     // ドキュメントフォルダ
     Route::get('/document_folder', 'DocumentFolderController@index')->name('documentFolder.index');
     Route::post('/document_folder', 'DocumentFolderController@store')->name('documentFolder.store');
@@ -75,12 +77,14 @@ Route::group(['middleware' => 'api'], function () {
     Route::put('/schedule/{id}', 'ScheduleController@update')->name('schedule.update');
     Route::get('/schedule/{id}', 'ScheduleController@show')->name('schedule.show');
     Route::delete('/schedule/{id}', 'ScheduleController@destroy')->name('schedule.destroy');
+    Route::get('/author/schedule/daily', 'ScheduleController@dailyByAuthor')->name('schedule.dailyByAuthor');
     // 会議議事録
-    Route::get('/author/meeting_record', 'MeetingRecordController@index')->name('meetingRecord.index');
+    Route::get('/meeting_record', 'MeetingRecordController@index')->name('meetingRecord.index');
     Route::post('/meeting_record', 'MeetingRecordController@store')->name('meetingRecord.store');
     Route::get('/meeting_record/{id}', 'MeetingRecordController@show')->name('meetingRecord.show');
     Route::put('/meeting_record/{id}', 'MeetingRecordController@update')->name('meetingRecord.update');
     Route::delete('/meeting_record/{id}', 'MeetingRecordController@destroy')->name('meetingRecord.destroy');
+    Route::get('/author/meeting_record/recently', 'MeetingRecordController@recently')->name('meetingRecord.recently');
     // ブログ
     Route::get('/author/blog', 'BlogController@findByOwner')->name('blog.findByOwner');
     Route::get('/blog', 'BlogController@index')->name('blog.index');
@@ -101,6 +105,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::post('/task', 'TaskController@store')->name('task.store');
     Route::put('/task/{id}', 'TaskController@update')->name('task.update');
     Route::delete('/task/{id}', 'TaskController@destroy')->name('task.destroy');
+    Route::get('/author/task/busy', 'TaskController@busyTaskByAuthor')->name('task.busyTaskByAuthor');
     // プロフィール
     Route::put('/user/{id}/profile', 'UserController@updateProfile')->name('user.update');
     // 設定

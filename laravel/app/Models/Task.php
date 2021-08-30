@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Contracts\Models\ModelInterface;
 use App\Models\Abstracts\CommonModel as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Task
@@ -72,6 +73,14 @@ class Task extends Model implements ModelInterface
     'createdBy', 'owner', 'priority', 'progress',
   ];
 
+  const TOO_OVER_DAY = 7;
+  const WARNING_LIMIT_DAY = 3;
+  /**
+   * ちょうど"WARNING_LIMIT_DAY"日後に迫っているタスクをリマインドに含める -> 1
+   * 含めない -> 0
+   */
+  const INCLUDES_JUST_DATE = 1;
+
   /**
    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
    */
@@ -109,5 +118,65 @@ class Task extends Model implements ModelInterface
   public function progress()
   {
     return $this->belongsTo(Progress::class, 'progress_id', 'id');
+  }
+
+  /**
+   * @return boolean
+   */
+  public function getIsWarningAttribute(): bool
+  {
+    $future = Carbon::today()->addDays(self::WARNING_LIMIT_DAY + self::INCLUDES_JUST_DATE);
+    $timeLimit = Carbon::parse($this->time_limit);
+    return $timeLimit->lt($future) && !$this->is_over;
+  }
+
+  /**
+   * @return boolean
+   */
+  public function getIsOverAttribute(): bool
+  {
+    $timeLimit = Carbon::parse($this->time_limit);
+    // Carbon::lt() = $timeLimitの日付が今日(Carbon::today())より前か判定する
+    return $timeLimit->lt(Carbon::today());
+  }
+
+  /**
+   * @return boolean
+   */
+  public function getTooOverAttribute(): bool
+  {
+    $timeLimit = Carbon::parse($this->time_limit);
+    return $this->is_over && $timeLimit->diffInDays(Carbon::today()) >= self::TOO_OVER_DAY;
+  }
+
+  /**
+   * @return boolean
+   * 状態が「完了」以上 or 期日が7日以上経過している
+   */
+  public function getIsExceptAttribute(): bool
+  {
+    return $this->progress->value >= Progress::EXCEPT_VALUE || $this->too_over;
+  }
+
+  /**
+   * @return boolean
+   */
+  public function getIsBusyAttribute(): bool
+  {
+    return !$this->is_except && ($this->is_warning || $this->is_over);
+  }
+
+  /**
+   * @return string
+   */
+  public function getStatusAttribute(): string
+  {
+    if ($this->is_over) {
+      return 'over';
+    }
+    if ($this->is_warning) {
+      return 'warning';
+    }
+    return 'safe';
   }
 }

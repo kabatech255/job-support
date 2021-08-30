@@ -121,7 +121,7 @@ class UserAuthTest extends TestCase
   public function should_認証中にログインAPIにアクセスするとリダイレクトコードを返却する()
   {
     $expectData = [
-      'user_code' => 123457,
+      'user_code' => 9999999,
       'role_id' => 1,
       'family_name' => 'expectuser',
       'given_name' => 'expectuser',

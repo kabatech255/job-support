@@ -36,4 +36,12 @@ class ChatMessageReadController extends Controller
     broadcast(new MessageRead(Auth::user(), $chatRoom->id))->toOthers();
     return response($chatRoom, 201);
   }
+
+  /**
+   * @return \Illuminate\Http\Response|\Illuminate\Contracts\Routing\ResponseFactory
+   */
+  public function unreadRecently()
+  {
+    return response($this->service->unreadByUser());
+  }
 }
