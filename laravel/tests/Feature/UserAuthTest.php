@@ -53,6 +53,7 @@ class UserAuthTest extends TestCase
       'family_name' => 'expectuser',
       'given_name' => 'expectuser',
       'email' => 'expect@example.com',
+      'email_verified_at' => now(),
       'login_id' => 'expectuser',
       'password' => \Hash::make($this->naked),
     ];

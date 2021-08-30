@@ -54,11 +54,11 @@ class MeetingRecord extends Model implements RelationalDeleteInterface
   use SoftDeletes;
 
   const RELATIONS_ARRAY = [
-    'recordedBy',
-    'place',
     'role',
     'decisions',
+    'place',
     'members',
+    'recordedBy',
   ];
 
   protected $table = 'meeting_records';
