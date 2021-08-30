@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Contracts\Repositories\UserRepositoryInterface as UserRepository;
+use App\Contracts\Repositories\NotifyValidationRepositoryInterface as NotifyValidationRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Traits\WithRepositoryTrait;
 use Illuminate\Support\Collection;
@@ -18,6 +19,11 @@ class UserService extends Service
     FileSupportTrait;
 
   /**
+   * @var NotifyValidationRepository
+   */
+  private $notifyValidationRepository;
+
+  /**
    * @var FileUploadService
    */
   private $fileUploadService;
@@ -28,9 +34,11 @@ class UserService extends Service
    */
   public function __construct(
     UserRepository $repository,
+    NotifyValidationRepository $notifyValidationRepository,
     FileUploadService $fileUploadService
   ) {
     $this->setRepository($repository);
+    $this->notifyValidationRepository = $notifyValidationRepository;
     $this->fileUploadService = $fileUploadService;
   }
 
@@ -45,7 +53,7 @@ class UserService extends Service
       $user = $this->repository()->find($id);
       $params = $this->fileUpload($params, $user, 'id', $this->repository()->findPath($id));
     }
-    // $params['delete_flag']が'0'の場合スルーしたいため、isset(...)を使わない
+    // $params['delete_flag']が"'0'"の場合スルーしたいため、isset(...)を使わない
     if (!empty($params['delete_flag'] ?? '') && !!$this->repository()->findPath($id)) {
       $this->fileUploadService->remove($this->repository()->findPath($id));
       $params['file_path'] = null;
@@ -68,6 +76,17 @@ class UserService extends Service
    */
   public function updateSetting(array $params, $id): User
   {
+    if (isset($params['notify_validation'])) {
+      $user = $this->repository()->find($id);
+      $notifyValidations = [];
+      foreach ($params['notify_validation'] as $key => $val) {
+        $validationParam = [
+          'action_type_id' => (int)$key,
+          'is_valid' => (int)$val,
+        ];
+        $notifyValidations[] = $this->notifyValidationRepository->attachByUser($validationParam, $user, $key);
+      }
+    }
     return $this->repository()->update($params, $id);
   }
 
@@ -109,5 +128,18 @@ class UserService extends Service
       return $withChatRoom;
     }
     return $user;
+  }
+
+  public function notifyStatus($id)
+  {
+    $user = $this->repository()->find($id);
+    return $user->notifyValidations->map(function ($notifyValidation) {
+      return [
+        'id' => $notifyValidation->actionType->id,
+        'key' => $notifyValidation->actionType->key,
+        'name' => $notifyValidation->actionType->name,
+        'is_valid' => $notifyValidation->is_valid,
+      ];
+    })->all();
   }
 }

@@ -212,6 +212,26 @@ class User extends Authenticatable
   }
 
   /**
+   * 通知アクティビティ
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+   */
+  public function activities()
+  {
+    return $this->belongsToMany(ActionType::class, 'activities', 'user_id', 'action_type_id')
+      ->as('option')
+      ->withTimestamps()
+      ->withPivot('is_read');
+  }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function notifyValidations()
+  {
+    return $this->hasMany(NotifyValidation::class, 'user_id', 'id');
+  }
+
+  /**
    * @return \Illuminate\Database\Eloquent\Relations\HasMany
    */
   public function tasks()
