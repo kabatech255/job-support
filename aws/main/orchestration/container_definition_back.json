@@ -1,0 +1,188 @@
+[
+  {
+    "name": "web",
+    "portMappings": [
+      {
+        "hostPort": 0,
+        "protocol": "tcp",
+        "containerPort": 80
+      }
+    ],
+
+    "image": "015211996394.dkr.ecr.ap-northeast-1.amazonaws.com/${ecr_image_prefix}/web:latest",
+    "cpu": 8,
+    "memoryReservation": 128,
+    "essential": true,
+    "links": ["app:app"],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "secretOptions": null,
+      "options": {
+        "awslogs-group": "${log_groups.0}",
+        "awslogs-region": "ap-northeast-1",
+        "awslogs-stream-prefix": "${log_groups.0}"
+      }
+    }
+  },
+  {
+    "name": "app",
+    "image": "015211996394.dkr.ecr.ap-northeast-1.amazonaws.com/${ecr_image_prefix}/app:latest",
+    "cpu": 8,
+    "memoryReservation": 256,
+    "essential": true,
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "secretOptions": null,
+      "options": {
+        "awslogs-group": "${log_groups.1}",
+        "awslogs-region": "ap-northeast-1",
+        "awslogs-stream-prefix": "${log_groups.1}"
+      }
+    },
+    "secrets": [
+      {
+        "valueFrom": "APP_FRONT_URL",
+        "name": "APP_FRONT_URL"
+      },
+      {
+        "valueFrom": "APP_TEST_ID",
+        "name": "APP_TEST_ID"
+      },
+      {
+        "valueFrom": "APP_TEST_PASS",
+        "name": "APP_TEST_PASS"
+      },
+      {
+        "valueFrom": "AMAZON_ACCESS_KEY_ID",
+        "name": "AWS_ACCESS_KEY_ID"
+      },
+      {
+        "valueFrom": "AMAZON_BUCKET",
+        "name": "AWS_BUCKET"
+      },
+      {
+        "valueFrom": "AMAZON_DEFAULT_REGION",
+        "name": "AWS_DEFAULT_REGION"
+      },
+      {
+        "valueFrom": "AMAZON_SECRET_ACCESS_KEY",
+        "name": "AWS_SECRET_ACCESS_KEY"
+      },
+      {
+        "valueFrom": "AMAZON_URL",
+        "name": "AWS_URL"
+      },
+      {
+        "valueFrom": "BROADCAST_DRIVER",
+        "name": "BROADCAST_DRIVER"
+      },
+      {
+        "valueFrom": "CORS_ALLOWED_ORIGIN",
+        "name": "CORS_ALLOWED_ORIGIN"
+      },
+      {
+        "valueFrom": "DB_CONNECTION",
+        "name": "DB_CONNECTION"
+      },
+      {
+        "valueFrom": "DB_DATABASE",
+        "name": "DB_DATABASE"
+      },
+      {
+        "valueFrom": "DB_HOST",
+        "name": "DB_HOST"
+      },
+      {
+        "valueFrom": "DB_PASSWORD",
+        "name": "DB_PASSWORD"
+      },
+      {
+        "valueFrom": "DB_PORT",
+        "name": "DB_PORT"
+      },
+      {
+        "valueFrom": "DB_USERNAME",
+        "name": "DB_USERNAME"
+      },
+      {
+        "valueFrom": "LOG_CHANNEL",
+        "name": "LOG_CHANNEL"
+      },
+      {
+        "valueFrom": "MAIL_ENCRYPTION",
+        "name": "MAIL_ENCRYPTION"
+      },
+      {
+        "valueFrom": "MAIL_PASSWORD",
+        "name": "MAIL_PASSWORD"
+      },
+      {
+        "valueFrom": "MAIL_USERNAME",
+        "name": "MAIL_USERNAME"
+      },
+      {
+        "valueFrom": "PUSHER_APP_CLUSTER",
+        "name": "PUSHER_APP_CLUSTER"
+      },
+      {
+        "valueFrom": "PUSHER_APP_ID",
+        "name": "PUSHER_APP_ID"
+      },
+      {
+        "valueFrom": "PUSHER_APP_KEY",
+        "name": "PUSHER_APP_KEY"
+      },
+      {
+        "valueFrom": "PUSHER_APP_SECRET",
+        "name": "PUSHER_APP_SECRET"
+      }
+    ]
+  },
+  {
+    "name": "supervisor",
+    "image": "015211996394.dkr.ecr.ap-northeast-1.amazonaws.com/${ecr_image_prefix}/supervisor:latest",
+    "cpu": 4,
+    "memoryReservation": 128,
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "secretOptions": null,
+      "options": {
+        "awslogs-group": "${log_groups.2}",
+        "awslogs-region": "ap-northeast-1",
+        "awslogs-stream-prefix": "${log_groups.2}"
+      }
+    },
+    "secrets": [
+      {
+        "valueFrom": "APP_FRONT_URL",
+        "name": "APP_FRONT_URL"
+      },
+      {
+        "valueFrom": "DB_CONNECTION",
+        "name": "DB_CONNECTION"
+      },
+      {
+        "valueFrom": "DB_DATABASE",
+        "name": "DB_DATABASE"
+      },
+      {
+        "valueFrom": "DB_HOST",
+        "name": "DB_HOST"
+      },
+      {
+        "valueFrom": "DB_PASSWORD",
+        "name": "DB_PASSWORD"
+      },
+      {
+        "valueFrom": "DB_PORT",
+        "name": "DB_PORT"
+      },
+      {
+        "valueFrom": "DB_USERNAME",
+        "name": "DB_USERNAME"
+      }
+    ],
+    "essential": true,
+    "links": ["app:app"]
+  }
+]

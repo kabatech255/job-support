@@ -22,7 +22,7 @@ class MailResetPasswordNotification extends ResetPassword implements ShouldQueue
   public function __construct($token)
   {
     $this->token = $token;
-    $this->queue = 'authentication';
+    $this->queue = 'reset_password';
   }
 
   /**

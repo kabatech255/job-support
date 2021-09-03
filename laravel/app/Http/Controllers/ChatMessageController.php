@@ -38,8 +38,6 @@ class ChatMessageController extends Controller
       DB::rollBack();
       throw $e;
     }
-    // event((new MessageSent($chatMessage, Auth::user())));
-    broadcast(new MessageSent($chatMessage, 'store'))->toOthers();
     return response($chatMessage, 201);
   }
 

@@ -16,13 +16,20 @@ class MessageSentNotification extends Notification implements ShouldQueue
 
   /**
    * Create a new notification instance.
-   *
+   * @param  array  $chatMessage
+   * [
+   *   'sent_user' => $chatMessage->writtenBy->full_name,
+   *   'chat_room_id' => $chatMessage->chatRoom->id,
+   *   'chat_room_name' => $chatMessage->chatRoom->name,
+   *   'created_at' => $chatMessage->created_at,
+   *   'message_body' => Str::limit($chatMessage->body, 20, '（...）'),
+   * ]
    * @return void
    */
-  public function __construct(ChatMessage $chatMessage)
+  public function __construct(array $chatMessage)
   {
     $this->chatMessage = $chatMessage;
-    $this->queue = 'message_sent';
+    // $this->queue = 'message_sent';
     $this->subjectPrefix = config('app.name');
   }
 
@@ -50,7 +57,7 @@ class MessageSentNotification extends Notification implements ShouldQueue
       ->markdown('mail.chat_message.sent', [
         'chatMessage' => $this->chatMessage,
         'notifiable' => $notifiable,
-        'detailUrl' => config('app.front_url', 'http://localhost:3000') . '/mypage/chat/' . $this->chatMessage->chatRoom->id,
+        'detailUrl' => config('app.front_url', 'http://localhost:3000') . '/mypage/chat/' . $this->chatMessage['chat_room_id'],
       ]);
   }
 

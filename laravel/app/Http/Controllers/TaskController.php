@@ -39,7 +39,7 @@ class TaskController extends Controller
    */
   public function findByOwner(Request $request)
   {
-    return response($this->service->findByOwner($request->query(), Auth::user()->id, $this->perPage), 200);
+    return response($this->service->findByOwner($request->query(), $this->perPage), 200);
   }
 
   /**
