@@ -46,6 +46,16 @@ abstract class EloquentQuery extends CommonAbstractQuery
 
   /**
    * @param array $params
+   * @param array|null $relation
+   * @return array
+   */
+  public function all(array $params, ?array $relation = null)
+  {
+    return $this->search($params, $relation ?? $this->relation())->get()->all();
+  }
+
+  /**
+   * @param array $params
    * @param int|null $perPage
    * @param array|null $relation
    * @return LengthAwarePaginator
@@ -53,16 +63,6 @@ abstract class EloquentQuery extends CommonAbstractQuery
   public function paginate(array $params, ?int $perPage = null, ?array $relation = null): LengthAwarePaginator
   {
     return $this->search($params, $relation ?? $this->relation())->paginate($perPage ?? $this->perPage());
-  }
-
-  /**
-   * @param array $params
-   * @param array|null $relation
-   * @return array
-   */
-  public function all(array $params, ?array $relation = null)
-  {
-    return $this->search($params, $relation ?? $this->relation())->get()->all();
   }
 
   /**
@@ -86,7 +86,6 @@ abstract class EloquentQuery extends CommonAbstractQuery
     if (isset($params['sort_key'])) {
       $query = $this->order($params, $query);
     } else {
-      // dd();
       $query->orderBy('id', 'desc');
     }
     return $query;
@@ -102,7 +101,6 @@ abstract class EloquentQuery extends CommonAbstractQuery
       return $query->orderBy($params['sort_key'], $params['order_by'] ?? 'desc');
     }
   }
-
 
   /**
    * @param Builder $query

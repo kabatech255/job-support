@@ -53,12 +53,20 @@ class TaskService extends Service
 
   /**
    * @param int $ownerId
-   * @return LengthAwarePaginator
+   * @return array
    */
-  public function findByOwner(array $params, int $ownerId, $perPage): LengthAwarePaginator
+  public function findByOwner(array $params, $perPage, $ownerId = null): array
   {
-    $params['owner_id'] = $ownerId;
-    return $this->query()->paginate($params, $perPage);
+    if (!$ownerId) {
+      $params['owner_id'] = !$ownerId ? Auth::user()->id : $ownerId;
+    }
+    $pager = $this->query()->paginate($params, $perPage);
+    if (!!$pager) {
+      $data = json_decode(json_encode($pager), true);
+      $data['query_params'] = $params;
+      return $data;
+    }
+    return json_decode(json_encode($pager), true);
   }
 
   /**
@@ -70,7 +78,6 @@ class TaskService extends Service
   {
     return $this->repository()->find($id, $loads);
   }
-
 
   /**
    * @param array $params
@@ -109,7 +116,7 @@ class TaskService extends Service
   public function deleteAll(array $queryParams, array $params, int $perPage): LengthAwarePaginator
   {
     $tasks = $this->repository()->detach($params);
-    return $this->findByOwner($queryParams, Auth::user()->id, $perPage);
+    return $this->findByOwner($queryParams, $perPage);
   }
 
   /**

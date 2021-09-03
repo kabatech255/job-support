@@ -54,8 +54,9 @@ class MeetingRecordService extends Service
       $yearMonthAddedArr = json_decode(json_encode($paginator), true);
       $yearMonthAddedArr['year_month'] = $this->yearMonth();
       $yearMonthAddedArr['query_params'] = $params;
+      return $yearMonthAddedArr;
     }
-    return $yearMonthAddedArr;
+    return json_decode(json_encode($paginator), true);
   }
 
   /**
@@ -116,10 +117,11 @@ class MeetingRecordService extends Service
       }
     }
     $meetingRecord->load(MeetingRecord::RELATIONS_ARRAY);
-    // TODO: 本番環境でのワーカ要準備
+
     Notification::send($meetingRecord->members->filter(function ($member) use ($meetingRecord) {
       return NotifySupport::shouldSend($member, $meetingRecord->recorded_by, ActionType::MEETING_RECORD_JOINED_KEY);
     }), new MeetingRecordJoinedNotification($meetingRecord));
+
     return $meetingRecord;
   }
 

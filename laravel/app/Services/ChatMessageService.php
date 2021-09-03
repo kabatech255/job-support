@@ -14,6 +14,8 @@ use App\Services\Traits\FileSupportTrait;
 use App\Notifications\MessageSentNotification;
 use Illuminate\Support\Facades\Notification;
 use App\Services\Traits\NotifySupport;
+use App\Events\MessageSent;
+use Illuminate\Support\Str;
 
 class ChatMessageService extends Service
 {
@@ -55,10 +57,11 @@ class ChatMessageService extends Service
       $this->uploadImages($params['files'], $newMessage);
     }
     $newMessage->load(ChatMessage::RELATIONS_ARRAY);
-    // TODO: 本番環境でのワーカ要準備
-    // Notification::send($newMessage->chatRoom->members->filter(function ($member) use ($newMessage) {
-    //   return NotifySupport::shouldSend($member, $newMessage->written_by, ActionType::MESSAGE_SENT_KEY);
-    // }), new MessageSentNotification($newMessage));
+
+    broadcast(new MessageSent($newMessage, 'store'))->toOthers();
+    Notification::send($newMessage->chatRoom->members->filter(function ($member) use ($newMessage) {
+      return NotifySupport::shouldSend($member, $newMessage->written_by, ActionType::MESSAGE_SENT_KEY);
+    }), new MessageSentNotification($this->messageArr($newMessage)));
 
     return $newMessage;
   }
@@ -106,5 +109,20 @@ class ChatMessageService extends Service
       $params['images'] = $this->fileUpload(['file' => $image], $chatMessage);
       $this->chatMessageImageRepository->attach($params['images'], $chatMessage, 'images');
     }
+  }
+
+  /**
+   * @param ChatMessage $chatMessage
+   * @return array
+   */
+  private function messageArr(ChatMessage $chatMessage): array
+  {
+    return [
+      'sent_user' => $chatMessage->writtenBy->full_name,
+      'chat_room_id' => $chatMessage->chatRoom->id,
+      'chat_room_name' => $chatMessage->chatRoom->name,
+      'created_at' => $chatMessage->created_at,
+      'message_body' => Str::limit($chatMessage->body, 20, '（...）'),
+    ];
   }
 }

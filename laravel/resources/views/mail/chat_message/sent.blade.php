@@ -1,16 +1,16 @@
 @component('mail::message')
 {{ config('app.name') }}をご利用いただきありがとうございます。<br />
-{{ $chatMessage->writtenBy->full_name }}さんから新着メッセージが届きました。<br />
+{{ $chatMessage['sent_user'] }}さんから新着メッセージが届きました。<br />
 
 # メッセージ概要
 
 @component('mail::panel')
 <dt>[ルーム名]</dt>
-<dd>{{ $chatMessage->chatRoom->name }}</dd>
+<dd>{{ $chatMessage['chat_room_name'] }}</dd>
 <dt>[送信日時]</dt>
-<dd>{{ $chatMessage->created_at->format('n月j日 G:i') }}</dd>
+<dd>{{ $chatMessage['created_at']->format('n月j日 G:i') }}</dd>
 <dt>[メッセージ]</dt>
-<dd>{{ Str::limit($chatMessage->body, 20, '（...）') }}</dd>
+<dd>{{ $chatMessage['message_body'] }}</dd>
 @endcomponent
 
 @component('mail::button', ['url' => $detailUrl, 'color' => 'green'])

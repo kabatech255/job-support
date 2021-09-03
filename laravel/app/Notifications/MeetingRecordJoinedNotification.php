@@ -22,7 +22,7 @@ class MeetingRecordJoinedNotification extends Notification implements ShouldQueu
   public function __construct(MeetingRecord $meetingRecord)
   {
     $this->meetingRecord = $meetingRecord;
-    $this->queue = 'meeting_record_joined';
+    // $this->queue = 'meeting_record_joined';
     $this->subjectPrefix = config('app.name');
   }
 

@@ -11,9 +11,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\User;
 use App\Models\ChatMessage;
-use App\Models\ChatRoom;
 
 class MessageSent implements ShouldBroadcastNow
 {

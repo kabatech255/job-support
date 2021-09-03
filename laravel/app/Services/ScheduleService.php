@@ -85,7 +85,6 @@ class ScheduleService extends Service
     $params = $this->addMe($params);
     $newSchedule = $this->repository()->saveWithMembers($params, 'sharedMembers');
 
-    // TODO: 本番環境でのワーカ要準備
     Notification::send($newSchedule->sharedMembers->filter(function ($member) use ($newSchedule) {
       return NotifySupport::shouldSend($member, $newSchedule->scheduled_by, ActionType::SCHEDULE_SHARED_KEY);
     }), new ScheduleSharedNotification($newSchedule));

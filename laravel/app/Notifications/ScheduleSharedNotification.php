@@ -21,7 +21,7 @@ class ScheduleSharedNotification extends Notification implements ShouldQueue
   public function __construct(Schedule $schedule)
   {
     $this->schedule = $schedule;
-    $this->queue = 'schedule_shared';
+    // $this->queue = 'schedule_shared';
     $this->subjectPrefix = config('app.name');
   }
 

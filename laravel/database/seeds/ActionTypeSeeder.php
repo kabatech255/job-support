@@ -42,7 +42,8 @@ class ActionTypeSeeder extends Seeder
     $users->each(function ($user) use ($actionTypeIds) {
       foreach ($actionTypeIds as $actionTypeId) {
         $user->notifyValidations()->create([
-          'action_type_id' => (int)$actionTypeId
+          'action_type_id' => (int)$actionTypeId,
+          'is_valid' => $actionTypeId == 3 ? 0 : 1,
         ]);
       }
     });
