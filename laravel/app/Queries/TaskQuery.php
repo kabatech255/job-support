@@ -46,7 +46,7 @@ class TaskQuery extends EloquentQuery implements TaskQueryInterface
       $statuses = explode(',', $param);
       foreach ($statuses as $status) {
         if ($status === 'warning') {
-          $today = Carbon::today();
+          $today = Carbon::now();
           $warning = Carbon::today()->addDays(Task::WARNING_LIMIT_DAY + Task::INCLUDES_JUST_DATE)->format('Y-m-d H:i:s');
           $query->orWhereBetween('time_limit', [$today, $warning]);
         }

@@ -4,8 +4,8 @@ namespace App\Services;
 
 use App\Contracts\Queries\BlogQueryInterface as Query;
 use App\Contracts\Repositories\BlogRepositoryInterface as Repository;
-use App\Services\Traits\FileSupportTrait;
-use App\Services\Traits\WithRepositoryTrait;
+use App\Services\Supports\FileSupportTrait;
+use App\Services\Supports\WithRepositoryTrait;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Blog;

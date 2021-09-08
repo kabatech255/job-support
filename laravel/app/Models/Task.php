@@ -46,6 +46,12 @@ use Illuminate\Support\Carbon;
  * @mixin \Eloquent
  * @property-read \App\Models\MeetingDecision|null $meetingDecision
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereMeetingDecisionId($value)
+ * @property-read bool $is_busy
+ * @property-read bool $is_except
+ * @property-read bool $is_over
+ * @property-read bool $is_warning
+ * @property-read string $status
+ * @property-read bool $too_over
  */
 class Task extends Model implements ModelInterface
 {
@@ -137,7 +143,7 @@ class Task extends Model implements ModelInterface
   {
     $timeLimit = Carbon::parse($this->time_limit);
     // Carbon::lt() = $timeLimitの日付が今日(Carbon::today())より前か判定する
-    return $timeLimit->lt(Carbon::today());
+    return $timeLimit->lt(Carbon::now());
   }
 
   /**

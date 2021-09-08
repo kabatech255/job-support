@@ -29,8 +29,9 @@ Route::group(['middleware' => 'api'], function () {
   Route::namespace('Auth')->group(function () {
     Route::post('/register', 'RegisterController@register')->name('register');
     Route::post('/login', 'LoginController@login')->name('login');
+    Route::post('/testlogin', 'LoginController@testLogin')->middleware('rewriteuser')->name('testlogin');
+    // パスワードリセット
     Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-    // Route::get('/password/reset/{token}', 'ResetPasswordController@showResetForm')->name('password.reset');
     Route::post('/password/reset', 'ResetPasswordController@reset')->name('password.update');
 
     Route::middleware('auth')->group(function () {
@@ -111,5 +112,9 @@ Route::group(['middleware' => 'api'], function () {
     // 設定
     Route::put('/user/{id}/setting', 'UserController@updateSetting')->name('user.setting');
     Route::get('/user/{id}/notify_validation', 'UserController@notifyValidationByUser')->name('user.notifyValidationByUser');
+    // アクティビティ
+    Route::put('/activity/{id}', 'ActivityController@update')->name('activity.update');
+    Route::put('/user/{id}/activity/read', 'ActivityController@read')->name('activity.read');
+    Route::get('/user/{id}/activity', 'ActivityController@findByUser')->name('activity.findByUser');
   });
 });

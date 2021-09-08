@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Contracts\Queries\ReactionQueryInterface as Query;
 use App\Contracts\Repositories\ReactionRepositoryInterface as Repository;
-use App\Services\Traits\WithRepositoryTrait;
+use App\Services\Supports\WithRepositoryTrait;
 use Illuminate\Support\Facades\Auth;
 
 class ReactionService extends Service
@@ -19,8 +19,7 @@ class ReactionService extends Service
   public function __construct(
     Repository $repository,
     Query $query
-  )
-  {
+  ) {
     $this->setRepository($repository);
     $this->setQuery($query);
     // else repository...

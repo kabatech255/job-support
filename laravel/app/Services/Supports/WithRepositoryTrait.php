@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Traits;
+namespace App\Services\Supports;
 
 use App\Contracts\Repositories\RepositoryInterface as Repository;
 use App\Contracts\Queries\QueryInterface as Query;

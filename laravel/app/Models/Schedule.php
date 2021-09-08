@@ -42,6 +42,11 @@ use Illuminate\Support\Facades\Auth;
  * @mixin \Eloquent
  * @property string|null $memo メモ
  * @method static \Illuminate\Database\Eloquent\Builder|Schedule whereMemo($value)
+ * @property-read bool $can_edit
+ * @property-read mixed $is_show
+ * @method static \Illuminate\Database\Eloquent\Builder|Schedule whereEnd($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Schedule whereStart($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Schedule whereTitle($value)
  */
 class Schedule extends Model implements ModelInterface
 {

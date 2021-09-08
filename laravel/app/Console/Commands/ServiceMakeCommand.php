@@ -39,7 +39,7 @@ class ServiceMakeCommand extends Command
    */
   protected function getStub()
   {
-    return __DIR__.'/stubs/repository_using_service.stub';
+    return __DIR__ . '/stubs/repository_using_service.stub';
   }
 
   /**
@@ -58,7 +58,7 @@ class ServiceMakeCommand extends Command
     $replace = [
       'DummyContractRepository' => $contractRepositoryName,
       'DummyContractQuery' => $contractQueryName,
-      'DummyTraitNamespace' => $this->getDefaultNamespace(trim($this->rootNamespace(), '\\')) . '\Traits',
+      'DummySupportNamespace' => $this->getDefaultNamespace(trim($this->rootNamespace(), '\\')) . '\Supports',
     ];
 
     return str_replace(

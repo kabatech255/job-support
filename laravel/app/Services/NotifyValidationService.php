@@ -4,8 +4,7 @@ namespace App\Services;
 
 use App\Contracts\Queries\NotifyValidationQueryInterface as Query;
 use App\Contracts\Repositories\NotifyValidationRepositoryInterface as Repository;
-use App\Services\Traits\WithRepositoryTrait;
-use Illuminate\Support\Facades\Auth;
+use App\Services\Supports\WithRepositoryTrait;
 
 class NotifyValidationService extends Service
 {
@@ -19,10 +18,13 @@ class NotifyValidationService extends Service
   public function __construct(
     Repository $repository,
     Query $query
-  )
-  {
+  ) {
     $this->setRepository($repository);
     $this->setQuery($query);
     // else repository...
+  }
+
+  public function store(array $params)
+  {
   }
 }

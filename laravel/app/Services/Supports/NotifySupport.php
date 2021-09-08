@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Traits;
+namespace App\Services\Supports;
 
 use App\Models\User;
 

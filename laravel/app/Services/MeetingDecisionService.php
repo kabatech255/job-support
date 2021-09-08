@@ -8,7 +8,7 @@ use App\Enums\ProcessFlag;
 use App\Models\MeetingDecision;
 use App\Models\MeetingRecord;
 use App\Models\Task;
-use App\Services\Traits\WithRepositoryTrait;
+use App\Services\Supports\WithRepositoryTrait;
 
 class MeetingDecisionService extends Service
 {

@@ -16,7 +16,9 @@ class CreateActionTypesTable extends Migration
     Schema::create('action_types', function (Blueprint $table) {
       $table->id();
       $table->string('key')->comment('アクションキー');
-      $table->string('name')->comment('アクション名');
+      $table->string('label_name')->comment('アクション名');
+      $table->text('template_message')->comment('テンプレートメッセージ');
+      $table->string('link')->comment('リンク');
       $table->timestamps();
       $table->softDeletes();
     });

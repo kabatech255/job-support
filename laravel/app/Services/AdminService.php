@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Contracts\Repositories\AdminRepositoryInterface as Repository;
-use App\Services\Traits\WithRepositoryTrait;
+use App\Services\Supports\WithRepositoryTrait;
 use Illuminate\Support\Facades\Auth;
 
 class AdminService extends Service

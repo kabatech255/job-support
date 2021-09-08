@@ -1,9 +1,9 @@
 variable "domain_name" {
   type = string
-  default = "kensa-system.net"
+  default = "job-support.site"
 }
 
 variable "pj_prefix" {
   type = string
-  default = "kensa_system"
+  default = "job_support"
 }

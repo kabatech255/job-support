@@ -16,15 +16,17 @@ class AuthServiceProvider extends ServiceProvider
    * @var array
    */
   protected $policies = [
-    'App\Models\MeetingRecord' => 'App\Policies\MeetingRecordPolicy',
-    'App\Models\ChatRoom' => 'App\Policies\ChatRoomPolicy',
-    'App\Models\ChatMessage' => 'App\Policies\ChatMessagePolicy',
-    'App\Models\Schedule' => 'App\Policies\SchedulePolicy',
-    'App\Models\DocumentFolder' => 'App\Policies\DocumentFolderPolicy',
-    'App\Models\DocumentFile' => 'App\Policies\DocumentFilePolicy',
-    'App\Models\Task' => 'App\Policies\TaskPolicy',
+    'App\Models\Activity' => 'App\Policies\ActivityPolicy',
     'App\Models\Blog' => 'App\Policies\BlogPolicy',
     'App\Models\BlogComment' => 'App\Policies\BlogCommentPolicy',
+    'App\Models\ChatMessage' => 'App\Policies\ChatMessagePolicy',
+    'App\Models\ChatRoom' => 'App\Policies\ChatRoomPolicy',
+    'App\Models\DocumentFolder' => 'App\Policies\DocumentFolderPolicy',
+    'App\Models\DocumentFile' => 'App\Policies\DocumentFilePolicy',
+    'App\Models\MeetingRecord' => 'App\Policies\MeetingRecordPolicy',
+    'App\Models\Schedule' => 'App\Policies\SchedulePolicy',
+    'App\Models\Task' => 'App\Policies\TaskPolicy',
+    'App\Models\User' => 'App\Policies\UserPolicy',
   ];
 
   /**

@@ -39,6 +39,12 @@ use App\Contracts\Models\RelationalDeleteInterface;
  * @method static \Illuminate\Database\Query\Builder|ChatMessage onlyTrashed()
  * @method static \Illuminate\Database\Query\Builder|ChatMessage withTrashed()
  * @method static \Illuminate\Database\Query\Builder|ChatMessage withoutTrashed()
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $chatMessageReads
+ * @property-read int|null $chat_message_reads_count
+ * @property-read bool $mine
+ * @property-read bool $unread
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reaction[] $reactions
+ * @property-read int|null $reactions_count
  */
 class ChatMessage extends Model implements RelationalDeleteInterface
 {
@@ -113,7 +119,7 @@ class ChatMessage extends Model implements RelationalDeleteInterface
   }
 
   /**
-   * @ bool
+   * @return bool
    */
   public function getMineAttribute(): bool
   {

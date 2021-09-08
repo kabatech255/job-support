@@ -41,6 +41,10 @@
     },
     "secrets": [
       {
+        "valueFrom": "APP_NAME",
+        "name": "APP_NAME"
+      },
+      {
         "valueFrom": "APP_FRONT_URL",
         "name": "APP_FRONT_URL"
       },
@@ -51,6 +55,10 @@
       {
         "valueFrom": "APP_TEST_PASS",
         "name": "APP_TEST_PASS"
+      },
+      {
+        "valueFrom": "APP_TEST_MAIL",
+        "name": "APP_TEST_MAIL"
       },
       {
         "valueFrom": "AMAZON_ACCESS_KEY_ID",
@@ -109,6 +117,18 @@
         "name": "LOG_CHANNEL"
       },
       {
+        "valueFrom": "MAIL_MAILER",
+        "name": "MAIL_MAILER"
+      },
+      {
+        "valueFrom": "MAIL_HOST",
+        "name": "MAIL_HOST"
+      },
+      {
+        "valueFrom": "MAIL_PORT",
+        "name": "MAIL_PORT"
+      },
+      {
         "valueFrom": "MAIL_ENCRYPTION",
         "name": "MAIL_ENCRYPTION"
       },
@@ -119,6 +139,26 @@
       {
         "valueFrom": "MAIL_USERNAME",
         "name": "MAIL_USERNAME"
+      },
+      {
+        "valueFrom": "MAIL_FROM_ADDRESS",
+        "name": "MAIL_FROM_ADDRESS"
+      },
+      {
+        "valueFrom": "MAIL_FROM_NAME",
+        "name": "MAIL_FROM_NAME"
+      },
+      {
+        "valueFrom": "SES_ACCESS_KEY",
+        "name": "SES_ACCESS_KEY"
+      },
+      {
+        "valueFrom": "SES_SECRET_ACCESS_KEY",
+        "name": "SES_SECRET_ACCESS_KEY"
+      },
+      {
+        "valueFrom": "SES_DEFAULT_REGION",
+        "name": "SES_DEFAULT_REGION"
       },
       {
         "valueFrom": "PUSHER_APP_CLUSTER",
@@ -154,8 +194,52 @@
     },
     "secrets": [
       {
+        "valueFrom": "APP_NAME",
+        "name": "APP_NAME"
+      },
+      {
         "valueFrom": "APP_FRONT_URL",
         "name": "APP_FRONT_URL"
+      },
+      {
+        "valueFrom": "APP_TEST_ID",
+        "name": "APP_TEST_ID"
+      },
+      {
+        "valueFrom": "APP_TEST_PASS",
+        "name": "APP_TEST_PASS"
+      },
+      {
+        "valueFrom": "APP_TEST_MAIL",
+        "name": "APP_TEST_MAIL"
+      },
+      {
+        "valueFrom": "AMAZON_ACCESS_KEY_ID",
+        "name": "AWS_ACCESS_KEY_ID"
+      },
+      {
+        "valueFrom": "AMAZON_BUCKET",
+        "name": "AWS_BUCKET"
+      },
+      {
+        "valueFrom": "AMAZON_DEFAULT_REGION",
+        "name": "AWS_DEFAULT_REGION"
+      },
+      {
+        "valueFrom": "AMAZON_SECRET_ACCESS_KEY",
+        "name": "AWS_SECRET_ACCESS_KEY"
+      },
+      {
+        "valueFrom": "AMAZON_URL",
+        "name": "AWS_URL"
+      },
+      {
+        "valueFrom": "BROADCAST_DRIVER",
+        "name": "BROADCAST_DRIVER"
+      },
+      {
+        "valueFrom": "CORS_ALLOWED_ORIGIN",
+        "name": "CORS_ALLOWED_ORIGIN"
       },
       {
         "valueFrom": "DB_CONNECTION",
@@ -180,6 +264,70 @@
       {
         "valueFrom": "DB_USERNAME",
         "name": "DB_USERNAME"
+      },
+      {
+        "valueFrom": "LOG_CHANNEL",
+        "name": "LOG_CHANNEL"
+      },
+      {
+        "valueFrom": "MAIL_MAILER",
+        "name": "MAIL_MAILER"
+      },
+      {
+        "valueFrom": "MAIL_HOST",
+        "name": "MAIL_HOST"
+      },
+      {
+        "valueFrom": "MAIL_PORT",
+        "name": "MAIL_PORT"
+      },
+      {
+        "valueFrom": "MAIL_ENCRYPTION",
+        "name": "MAIL_ENCRYPTION"
+      },
+      {
+        "valueFrom": "MAIL_PASSWORD",
+        "name": "MAIL_PASSWORD"
+      },
+      {
+        "valueFrom": "MAIL_USERNAME",
+        "name": "MAIL_USERNAME"
+      },
+      {
+        "valueFrom": "MAIL_FROM_ADDRESS",
+        "name": "MAIL_FROM_ADDRESS"
+      },
+      {
+        "valueFrom": "MAIL_FROM_NAME",
+        "name": "MAIL_FROM_NAME"
+      },
+      {
+        "valueFrom": "SES_ACCESS_KEY",
+        "name": "SES_ACCESS_KEY"
+      },
+      {
+        "valueFrom": "SES_SECRET_ACCESS_KEY",
+        "name": "SES_SECRET_ACCESS_KEY"
+      },
+      {
+        "valueFrom": "SES_DEFAULT_REGION",
+        "name": "SES_DEFAULT_REGION"
+      },
+      {
+        "valueFrom": "PUSHER_APP_CLUSTER",
+        "name": "PUSHER_APP_CLUSTER"
+      },
+      {
+        "valueFrom": "PUSHER_APP_ID",
+        "name": "PUSHER_APP_ID"
+      },
+      {
+        "valueFrom": "PUSHER_APP_KEY",
+        "name": "PUSHER_APP_KEY"
+      },
+      {
+        "valueFrom": "PUSHER_APP_SECRET",
+        "name": "PUSHER_APP_SECRET"
       }
     ],
     "essential": true,

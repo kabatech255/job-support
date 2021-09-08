@@ -5,15 +5,15 @@ namespace App\Services;
 use App\Contracts\Repositories\UserRepositoryInterface as UserRepository;
 use App\Contracts\Repositories\NotifyValidationRepositoryInterface as NotifyValidationRepository;
 use Illuminate\Support\Facades\Auth;
-use App\Services\Traits\WithRepositoryTrait;
+use App\Services\Supports\WithRepositoryTrait;
 use Illuminate\Support\Collection;
 use App\Models\User;
 use App\Services\ScheduleService;
 use App\Services\MeetingRecordService;
 use App\Services\TaskService;
 use App\Services\FileUploadService;
-use App\Services\Traits\FileSupportTrait;
-use App\Services\Traits\StrSupportTrait;
+use App\Services\Supports\FileSupportTrait;
+use App\Services\Supports\StrSupportTrait;
 
 class UserService extends Service
 {
@@ -141,6 +141,7 @@ class UserService extends Service
     if (!!$user) {
       $withChatRoom = $this->repository()->find($user->id);
       $withChatRoom->load(['chatRooms.members', 'chatRooms.lastReads']);
+      // ルームごとの既読情報を認証者のレコードだけ抜き出す
       $withChatRoom->chatRooms->each(function ($chatRoom) {
         $index = $chatRoom->lastReads->search(function ($lastRead) {
           return $lastRead->member_id === Auth::user()->id;
@@ -161,7 +162,7 @@ class UserService extends Service
       return [
         'id' => $notifyValidation->actionType->id,
         'key' => $notifyValidation->actionType->key,
-        'name' => $notifyValidation->actionType->name,
+        'label_name' => $notifyValidation->actionType->label_name,
         'is_valid' => $notifyValidation->is_valid,
       ];
     })->all();

@@ -12,4 +12,17 @@ class ActionTypeRepository extends EloquentRepository implements ActionTypeRepos
   {
     $this->setModel($model);
   }
+
+  /**
+   * Undocumented function
+   *
+   * @param string $columnName
+   * @param $val
+   * @return int
+   */
+  public function findIdBy($val, string $columnName = 'key'): int
+  {
+    $model = $this->findBy($columnName, $val);
+    return $model[0]->id;
+  }
 }

@@ -32,12 +32,6 @@ services:
     environment:
       - TZ=${TZ}
       - DB_HOST=${DB_HOST}
-      - MAIL_MAILER=${MAIL_MAILER}
-      - MAIL_HOST=${MAIL_HOST}
-      - MAIL_PORT=${MAIL_PORT}
-      - MAIL_USERNAME=${MAIL_USERNAME}
-      - MAIL_PASSWORD=${MAIL_PASSWORD}
-      - MAIL_ENCRYPTION=${MAIL_ENCRYPTION}
 
   db_master:
     image: mysql:5.7
@@ -70,3 +64,4 @@ services:
       - db_master
     depends_on:
       - app
+      - db_master
