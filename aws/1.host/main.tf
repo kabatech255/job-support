@@ -1,6 +1,6 @@
 variable "domain_name" {
   type = string
-  default = "kensa-system.net"
+  default = "job-support.site"
 }
 
 resource "aws_route53_zone" "default" {

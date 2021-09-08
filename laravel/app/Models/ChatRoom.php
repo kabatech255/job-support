@@ -6,6 +6,7 @@ use App\Contracts\Models\RelationalDeleteInterface;
 use App\Models\Abstracts\CommonModel as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\ChatRoom
@@ -35,6 +36,10 @@ use Illuminate\Support\Facades\Auth;
  * @method static \Illuminate\Database\Query\Builder|ChatRoom onlyTrashed()
  * @method static \Illuminate\Database\Query\Builder|ChatRoom withTrashed()
  * @method static \Illuminate\Database\Query\Builder|ChatRoom withoutTrashed()
+ * @property-read bool $can_edit
+ * @property-read mixed $unread_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\LastRead[] $lastReads
+ * @property-read int|null $last_reads_count
  */
 class ChatRoom extends Model implements RelationalDeleteInterface
 {
@@ -49,6 +54,7 @@ class ChatRoom extends Model implements RelationalDeleteInterface
   protected $appends = [
     'can_edit',
     'unread_count',
+    'latest_message_date',
   ];
 
   const RELATIONS_ARRAY = [
@@ -113,10 +119,24 @@ class ChatRoom extends Model implements RelationalDeleteInterface
     ];
   }
 
-  public function getUnreadCountAttribute()
+  /**
+   * @return int
+   */
+  public function getUnreadCountAttribute(): int
   {
     return $this->messages->filter(function ($chatMessage) {
       return $chatMessage->unread;
     })->count();
+  }
+
+  /**
+   * @return Carbon
+   */
+  public function getLatestMessageDateAttribute(): Carbon
+  {
+    if ($this->messages->count() === 0) {
+      return $this->created_at;
+    }
+    return $this->messages->max('created_at');
   }
 }

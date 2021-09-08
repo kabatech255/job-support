@@ -6,8 +6,8 @@ use App\Contracts\Queries\BlogImageQueryInterface as Query;
 use App\Contracts\Repositories\BlogImageRepositoryInterface as Repository;
 use App\Enums\ProcessFlag;
 use App\Services\FileUploadService;
-use App\Services\Traits\FileSupportTrait;
-use App\Services\Traits\WithRepositoryTrait;
+use App\Services\Supports\FileSupportTrait;
+use App\Services\Supports\WithRepositoryTrait;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Blog;
 use App\Models\BlogImage;
@@ -32,8 +32,7 @@ class BlogImageService extends Service
     Repository $repository,
     Query $query,
     FileUploadService $fileUploadService
-  )
-  {
+  ) {
     $this->setRepository($repository);
     $this->setQuery($query);
     $this->fileUploadService = $fileUploadService;
@@ -87,12 +86,12 @@ class BlogImageService extends Service
    */
   public function saveOrDelete(array $params, Blog $blog): array
   {
-    foreach($params as $param) {
+    foreach ($params as $param) {
       if (empty($param['id'] ?? '')) {
         $blogImages[] = $this->store($param, $blog);
-      } elseif($param['flag'] === ProcessFlag::value('delete')) {
+      } elseif ($param['flag'] === ProcessFlag::value('delete')) {
         $blogImages[] = $this->delete($param['id']);
-      } elseif($param['flag'] === ProcessFlag::value('update') && isset($param['file'])) {
+      } elseif ($param['flag'] === ProcessFlag::value('update') && isset($param['file'])) {
         $blogImages[] = $this->update($param, $blog, $param['id']);
       } else {
         $blogImages[] = $this->find($param['id']);
@@ -100,5 +99,4 @@ class BlogImageService extends Service
     }
     return $blogImages;
   }
-
 }

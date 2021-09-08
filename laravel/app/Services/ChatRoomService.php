@@ -6,7 +6,7 @@ use App\Contracts\Repositories\ChatRoomRepositoryInterface as Repository;
 use App\Models\ChatRoom;
 use App\Contracts\Queries\ChatRoomQueryInterface as Query;
 use App\Contracts\Repositories\UserRepositoryInterface as UserRepository;
-use App\Services\Traits\WithRepositoryTrait;
+use App\Services\Supports\WithRepositoryTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -28,8 +28,7 @@ class ChatRoomService extends Service
     Repository $repository,
     Query $query,
     UserRepository $userRepository
-  )
-  {
+  ) {
     $this->setRepository($repository);
     $this->setQuery($query);
     $this->userRepository = $userRepository;

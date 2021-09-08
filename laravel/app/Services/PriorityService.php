@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Contracts\Queries\PriorityQueryInterface as Query;
 use App\Contracts\Repositories\PriorityRepositoryInterface as Repository;
-use App\Services\Traits\WithRepositoryTrait;
+use App\Services\Supports\WithRepositoryTrait;
 use Illuminate\Support\Facades\Auth;
 
 class PriorityService extends Service

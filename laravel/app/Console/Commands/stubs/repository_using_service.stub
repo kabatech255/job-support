@@ -5,7 +5,7 @@ namespace DummyNamespace;
 use DummyContractRepository as Repository;
 use DummyContractQuery as Query;
 use Illuminate\Support\Facades\Auth;
-use DummyTraitNamespace\WithRepositoryTrait;
+use DummySupportNamespace\WithRepositoryTrait;
 
 class DummyClass extends Service
 {

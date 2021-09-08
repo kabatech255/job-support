@@ -18,12 +18,12 @@ variable "public_subnets" {
     0 = {
       cidr_block = "10.0.1.0/24"
       availability_zone = "ap-northeast-1a"
-      name = "kensa-system-public0"
+      name = "job-support-public0"
     }
     1 = {
       cidr_block = "10.0.2.0/24"
       availability_zone = "ap-northeast-1c"
-      name = "kensa-system-public1"
+      name = "job-support-public1"
     }
   }
 }
@@ -33,12 +33,12 @@ variable "private_subnets" {
     0 = {
       cidr_block = "10.0.61.0/24"
       availability_zone = "ap-northeast-1a"
-      name = "kensa-system-private0"
+      name = "job-support-private0"
     }
     1 = {
       cidr_block = "10.0.62.0/24"
       availability_zone = "ap-northeast-1c"
-      name = "kensa-system-private1"
+      name = "job-support-private1"
     }
   }
 }

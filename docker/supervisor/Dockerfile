@@ -1,7 +1,5 @@
 FROM php:7.3
 
-USER root
-
 COPY ./laravel/ /var/www/laravel/
 WORKDIR /var/www/laravel
 

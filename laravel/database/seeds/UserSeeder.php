@@ -39,17 +39,21 @@ class UserSeeder extends Seeder
         ],
       ];
     });
-    factory(User::class, 1)->create([
-      'department_code' => 5,
-      'user_code' => 111111,
-      'role_id' => 2,
-      'login_id' => 'testman1',
-      'family_name' => 'テスト',
-      'given_name' => '太郎',
-      'family_name_kana' => 'テスト',
-      'given_name_kana' => 'タロウ',
-      'email' => 'test@example.com',
-    ]);
+
+    if (\TestUser::hasId()) {
+      factory(User::class, 1)->create([
+        'department_code' => 5,
+        'user_code' => 111111,
+        'role_id' => 2,
+        'login_id' => config('app.test_id'),
+        'password' => \Hash::make(config('app.test_pass')),
+        'family_name' => 'テスト',
+        'given_name' => '太郎',
+        'family_name_kana' => 'テスト',
+        'given_name_kana' => 'タロウ',
+        'email' => config('app.test_mail', 'sample@example.com'),
+      ]);
+    }
     $departmentList->each(function ($department) {
       collect($department)->each(function ($member) {
         factory(User::class, 1)->create($member);

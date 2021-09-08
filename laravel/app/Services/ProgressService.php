@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Contracts\Queries\ProgressQueryInterface as Query;
 use App\Contracts\Repositories\ProgressRepositoryInterface as Repository;
-use App\Services\Traits\WithRepositoryTrait;
+use App\Services\Supports\WithRepositoryTrait;
 use Illuminate\Support\Facades\Auth;
 
 class ProgressService extends Service

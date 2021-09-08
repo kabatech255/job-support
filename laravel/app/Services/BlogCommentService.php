@@ -7,7 +7,7 @@ use App\Contracts\Repositories\BlogCommentRepositoryInterface as Repository;
 use App\Contracts\Repositories\BlogRepositoryInterface as BlogRepository;
 use App\Models\Blog;
 use App\Models\BlogComment;
-use App\Services\Traits\WithRepositoryTrait;
+use App\Services\Supports\WithRepositoryTrait;
 use Illuminate\Support\Facades\Auth;
 
 class BlogCommentService extends Service
@@ -29,8 +29,7 @@ class BlogCommentService extends Service
     Repository $repository,
     BlogRepository $blogRepository,
     Query $query
-  )
-  {
+  ) {
     $this->setRepository($repository);
     $this->blogRepository = $blogRepository;
     $this->setQuery($query);

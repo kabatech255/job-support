@@ -1,5 +1,5 @@
 data "aws_acm_certificate" "default" {
-  domain = "exam.${data.aws_route53_zone.default.name}"
+  domain = "api.${data.aws_route53_zone.default.name}"
   statuses = ["ISSUED"]
 }
 

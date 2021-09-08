@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|BlogComment withTrashed()
  * @method static \Illuminate\Database\Query\Builder|BlogComment withoutTrashed()
  * @mixin \Eloquent
+ * @property-read \App\Models\User $writtenBy
  */
 class BlogComment extends Model
 {

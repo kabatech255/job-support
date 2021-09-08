@@ -26,6 +26,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|ChatMessageImage whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ChatMessageImage whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Query\Builder|ChatMessageImage onlyTrashed()
+ * @method static \Illuminate\Database\Query\Builder|ChatMessageImage withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|ChatMessageImage withoutTrashed()
  */
 class ChatMessageImage extends Model implements ModelInterface
 {

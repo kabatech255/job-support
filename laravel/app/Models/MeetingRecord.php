@@ -48,6 +48,7 @@ use Illuminate\Support\Facades\Auth;
  * @property int $role_id 権限ID
  * @property-read \App\Models\Role $role
  * @method static \Illuminate\Database\Eloquent\Builder|MeetingRecord whereRoleId($value)
+ * @property-read bool $is_editable
  */
 class MeetingRecord extends Model implements RelationalDeleteInterface
 {

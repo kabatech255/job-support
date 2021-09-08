@@ -8,6 +8,8 @@ use Faker\Generator as Faker;
 $factory->define(ActionType::class, function (Faker $faker) {
   return [
     'key' => $faker->unique()->word,
-    'name' => $faker->word,
+    'label_name' => $faker->word,
+    'template_message' => $faker->sentence(2),
+    'link' => '/',
   ];
 });

@@ -69,4 +69,14 @@ class LoginController extends Controller
 
     return response()->json();
   }
+
+  /**
+   * @param Request $request
+   * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
+   * @throws \Illuminate\Validation\ValidationException
+   */
+  public function testLogin(Request $request)
+  {
+    return $this->login($request);
+  }
 }

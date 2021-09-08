@@ -20,7 +20,7 @@ variable "pj_name_short" {
 
 variable "domain_name" {
   type = string
-  default = "kensa-system.net"
+  default = "job-support.site"
 }
 
 variable "db_user" {}

@@ -1,6 +1,6 @@
 variable "domain_name" {
   type = string
-  default = "kensa-system.net"
+  default = "example.com"
 }
 
 variable "json_path_prefix" {

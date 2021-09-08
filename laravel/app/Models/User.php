@@ -82,6 +82,14 @@ use App\Notifications\MailResetPasswordNotification;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Blog[] $blogs
  * @property-read int|null $blogs_count
  * @property-read \App\Models\Role $role
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ActionType[] $activities
+ * @property-read int|null $activities_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ChatMessage[] $chatMessageReads
+ * @property-read int|null $chat_message_reads_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\MeetingRecord[] $joinedMeetings
+ * @property-read int|null $joined_meetings_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\NotifyValidation[] $notifyValidations
+ * @property-read int|null $notify_validations_count
  */
 class User extends Authenticatable
 {

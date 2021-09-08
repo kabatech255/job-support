@@ -55,6 +55,17 @@ abstract class EloquentQuery extends CommonAbstractQuery
   }
 
   /**
+   * @param int $limit
+   * @param array $params
+   * @param array|null $relation
+   * @return array
+   */
+  public function getLimit(int $limit, array $params, ?array $relation = null): array
+  {
+    return $this->search($params, $relation ?? $this->relation())->limit($limit)->get()->all();
+  }
+
+  /**
    * @param array $params
    * @param int|null $perPage
    * @param array|null $relation

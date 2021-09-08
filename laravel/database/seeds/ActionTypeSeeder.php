@@ -14,21 +14,28 @@ class ActionTypeSeeder extends Seeder
    */
   public function run()
   {
+    DB::table('activities')->truncate();
     DB::table('notify_validations')->truncate();
     DB::table('action_types')->truncate();
 
     $types = [
       [
         'key' => 'meeting_record_joined',
-        'name' => '議事録が追加されたとき',
+        'label_name' => '議事録が追加されたとき',
+        'template_message' => ':fromさんから議事録「:body」が追加されました',
+        'link' => '/mypage/meeting_record/:id',
       ],
       [
         'key' => 'schedule_shared',
-        'name' => '新たなスケジュールが共有されたとき',
+        'label_name' => '新たなスケジュールが共有されたとき',
+        'template_message' => ':fromさんからスケジュール「:body」が共有されました',
+        'link' => '/mypage/schedule',
       ],
       [
         'key' => 'message_sent',
-        'name' => '所属するチャットグループにメッセージが届いた時',
+        'label_name' => '所属するチャットグループにメッセージが届いた時',
+        'template_message' => ':fromさんが新着メッセージ「:body」を投稿しました',
+        'link' => '/mypage/chat/:id',
       ],
     ];
 
@@ -43,7 +50,7 @@ class ActionTypeSeeder extends Seeder
       foreach ($actionTypeIds as $actionTypeId) {
         $user->notifyValidations()->create([
           'action_type_id' => (int)$actionTypeId,
-          'is_valid' => $actionTypeId == 3 ? 0 : 1,
+          'is_valid' => 0,
         ]);
       }
     });

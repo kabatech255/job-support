@@ -130,7 +130,7 @@ resource "aws_lb_listener_rule" "back" {
 # Aレコードの作成
 resource "aws_route53_record" "default" {
   zone_id = data.aws_route53_zone.default.zone_id
-  name = "exam.${data.aws_route53_zone.default.name}"
+  name = "api.${data.aws_route53_zone.default.name}"
   type = "A"
 
   alias {

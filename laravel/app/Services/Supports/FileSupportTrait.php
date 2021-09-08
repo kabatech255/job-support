@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Traits;
+namespace App\Services\Supports;
 
 use App\Services\FileUploadService;
 use Illuminate\Database\Eloquent\Model;

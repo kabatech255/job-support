@@ -6,45 +6,45 @@ use App\Contracts\Queries\ScheduleQueryInterface as Query;
 use App\Contracts\Repositories\ScheduleRepositoryInterface as Repository;
 use App\Contracts\Repositories\UserRepositoryInterface as UserRepository;
 use App\Models\Schedule;
-use App\Models\User;
-use App\Services\Traits\WithRepositoryTrait;
+use App\Services\Supports\WithRepositoryTrait;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use App\Notifications\ScheduleSharedNotification;
 use Illuminate\Support\Facades\Notification;
-use App\Contracts\Repositories\ActionTypeRepositoryInterface as ActionTypeRepository;
 use App\Models\ActionType;
-use App\Models\NotifyValidation;
-use App\Services\Traits\NotifySupport;
+use App\Services\Supports\NotifySupport;
+use App\Services\Supports\StrSupportTrait;
+use App\Jobs\Supports\JobSupport;
+use App\Jobs\ScheduleShareActivityJob;
 
 class ScheduleService extends Service
 {
-  use WithRepositoryTrait;
+  use WithRepositoryTrait, StrSupportTrait;
   /**
    * @var UserRepository
    */
   private $userRepository;
-  /**
-   * @var ActionTypeRepository
-   */
-  private $actionTypeRepository;
+  private $jobSupport;
 
   /**
    * UserService constructor.
    * @param Repository $repository
    * @param Query $query,
    * @param UserRepository $userRepository
+   * @param JobSupport $jobSupport
+   * @param ScheduleShareActivityJob $job
    */
   public function __construct(
     Repository $repository,
     Query $query,
     UserRepository $userRepository,
-    ActionTypeRepository $actionTypeRepository
+    JobSupport $jobSupport,
+    ScheduleShareActivityJob $job
   ) {
     $this->setRepository($repository);
     $this->setQuery($query);
     $this->userRepository = $userRepository;
-    $this->actionTypeRepository = $actionTypeRepository;
+    $this->jobSupport = $jobSupport;
+    $this->jobSupport->init($job, 'schedule_shared');
   }
 
   public function index(array $params, ?array $relation = null)
@@ -88,6 +88,7 @@ class ScheduleService extends Service
     Notification::send($newSchedule->sharedMembers->filter(function ($member) use ($newSchedule) {
       return NotifySupport::shouldSend($member, $newSchedule->scheduled_by, ActionType::SCHEDULE_SHARED_KEY);
     }), new ScheduleSharedNotification($newSchedule));
+    $this->jobSupport->dispatch($newSchedule);
 
     return $newSchedule;
   }

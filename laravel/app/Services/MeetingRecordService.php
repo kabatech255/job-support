@@ -8,13 +8,15 @@ use App\Contracts\Repositories\UserRepositoryInterface as UserRepository;
 use App\Models\ActionType;
 use App\Models\MeetingDecision;
 use App\Services\MeetingDecisionService;
-use App\Services\Traits\WithRepositoryTrait;
+use App\Services\Supports\WithRepositoryTrait;
 use App\Models\MeetingRecord;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\MeetingRecordJoinedNotification;
-use App\Services\Traits\NotifySupport;
+use App\Services\Supports\NotifySupport;
+use App\Jobs\MeetingRecordJoinedActivityJob;
+use App\Jobs\Supports\JobSupport;
 
 class MeetingRecordService extends Service
 {
@@ -22,23 +24,32 @@ class MeetingRecordService extends Service
 
   protected $meetingDecisionService;
   protected $userRepository;
+  protected $actionTypeRepository;
+  protected $activityRepository;
+  protected $jobSupport;
   /**
    * UserService constructor.
    * @param Repository $repository
    * @param Query $query
    * @param MeetingDecisionService $meetingDecisionService
    * @param UserRepository $userRepository
+   * @param JobSupport $jobSupport
+   * @param MessageSentActivityJob $job
    */
   public function __construct(
     Repository $repository,
     Query $query,
     MeetingDecisionService $meetingDecisionService,
-    UserRepository $userRepository
+    UserRepository $userRepository,
+    JobSupport $jobSupport,
+    MeetingRecordJoinedActivityJob $job
   ) {
     $this->setRepository($repository);
     $this->setQuery($query);
     $this->meetingDecisionService = $meetingDecisionService;
     $this->userRepository = $userRepository;
+    $this->jobSupport = $jobSupport;
+    $this->jobSupport->init($job, 'meeting_record_joined');
   }
 
   /**
@@ -69,7 +80,7 @@ class MeetingRecordService extends Service
     for ($i = 0; $i < $diff; $i++) {
       $c = Carbon::parse("-{$i} month");
       $yearMonth[] = [
-        'value' => $c->format('Y/m'),
+        'value' => $c->format('Y-m'),
         'label' => $c->format('Y年n月'),
       ];
     }
@@ -112,7 +123,6 @@ class MeetingRecordService extends Service
     // 決議事項の保存
     if (isset($params['meeting_decisions'])) {
       foreach ($params['meeting_decisions'] as $meetingDecisionParams) {
-        //        $meetingDecisions[] = $this->saveDecisionByRecord($meetingDecisionParams, $meetingRecord);
         $this->saveDecisionByRecord($meetingDecisionParams, $meetingRecord);
       }
     }
@@ -121,6 +131,8 @@ class MeetingRecordService extends Service
     Notification::send($meetingRecord->members->filter(function ($member) use ($meetingRecord) {
       return NotifySupport::shouldSend($member, $meetingRecord->recorded_by, ActionType::MEETING_RECORD_JOINED_KEY);
     }), new MeetingRecordJoinedNotification($meetingRecord));
+
+    $this->jobSupport->dispatch($meetingRecord);
 
     return $meetingRecord;
   }

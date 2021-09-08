@@ -8,22 +8,24 @@ use App\Contracts\Repositories\ChatMessageImageRepositoryInterface as ChatMessag
 use App\Models\ActionType;
 use App\Models\ChatMessage;
 use App\Models\ChatRoom;
-use App\Services\Traits\WithRepositoryTrait;
+use App\Services\Supports\WithRepositoryTrait;
 use App\Services\FileUploadService;
-use App\Services\Traits\FileSupportTrait;
+use App\Services\Supports\FileSupportTrait;
 use App\Notifications\MessageSentNotification;
 use Illuminate\Support\Facades\Notification;
-use App\Services\Traits\NotifySupport;
+use App\Services\Supports\NotifySupport;
 use App\Events\MessageSent;
 use Illuminate\Support\Str;
+use App\Jobs\MessageSentActivityJob;
+use App\Jobs\Supports\JobSupport;
 
 class ChatMessageService extends Service
 {
-  use WithRepositoryTrait,
-    FileSupportTrait;
+  use WithRepositoryTrait, FileSupportTrait;
 
   private $fileUploadService;
   private $chatMessageImageRepository;
+  private $jobSupport;
   /**
    * @var string
    */
@@ -33,16 +35,25 @@ class ChatMessageService extends Service
    * @param Repository $repository
    * @param Query $query
    */
+  /**
+   * @var UserRepository
+   */
+  private $userRepository;
+
   public function __construct(
     Repository $repository,
     Query $query,
     FileUploadService $fileUploadService,
-    ChatMessageImageRepository $chatMessageImageRepository
+    ChatMessageImageRepository $chatMessageImageRepository,
+    JobSupport $jobSupport,
+    MessageSentActivityJob $job
   ) {
     $this->setRepository($repository);
     $this->setQuery($query);
     $this->fileUploadService = $fileUploadService;
     $this->chatMessageImageRepository = $chatMessageImageRepository;
+    $this->jobSupport = $jobSupport;
+    $this->jobSupport->init($job, 'message_sent');
   }
 
   /**
@@ -59,9 +70,11 @@ class ChatMessageService extends Service
     $newMessage->load(ChatMessage::RELATIONS_ARRAY);
 
     broadcast(new MessageSent($newMessage, 'store'))->toOthers();
+
     Notification::send($newMessage->chatRoom->members->filter(function ($member) use ($newMessage) {
       return NotifySupport::shouldSend($member, $newMessage->written_by, ActionType::MESSAGE_SENT_KEY);
     }), new MessageSentNotification($this->messageArr($newMessage)));
+    $this->jobSupport->dispatch($newMessage);
 
     return $newMessage;
   }

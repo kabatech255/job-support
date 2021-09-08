@@ -6,7 +6,7 @@ use App\Contracts\Queries\DocumentFolderQueryInterface as Query;
 use App\Contracts\Repositories\DocumentFolderRepositoryInterface as Repository;
 use App\Enums\ProcessFlag;
 use App\Models\DocumentFolder;
-use App\Services\Traits\WithRepositoryTrait;
+use App\Services\Supports\WithRepositoryTrait;
 use Illuminate\Support\Facades\Auth;
 
 class DocumentFolderService extends Service
@@ -21,8 +21,7 @@ class DocumentFolderService extends Service
   public function __construct(
     Repository $repository,
     Query $query
-  )
-  {
+  ) {
     $this->setRepository($repository);
     $this->setQuery($query);
   }

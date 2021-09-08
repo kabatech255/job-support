@@ -26,7 +26,6 @@ class MeetingRecordQuery extends EloquentQuery implements MeetingRecordQueryInte
         'family_name_kana',
       ],
       'members' => [
-        'id',
         'given_name',
         'family_name',
         'given_name_kana',
@@ -69,15 +68,16 @@ class MeetingRecordQuery extends EloquentQuery implements MeetingRecordQueryInte
 
   /**
    * @param Builder $query
-   * @param array $param
+   * @param string $param
    * @return Builder
    */
-  public function queryByMemberCount($query, array $param): Builder
+  public function queryByMemberCount($query, string $param): Builder
   {
-    $min = $param['min'] ?? 0;
+    $minMax = explode(',', $param);
+    $min = (int)$minMax[0] ?? 0;
     $query->has('members', '>=', $min);
-    if (isset($param['max'])) {
-      $query->has('members', '<=', $param['max']);
+    if (count($minMax) > 1) {
+      $query->has('members', '<=', (int)$minMax[1]);
     }
     return $query;
   }

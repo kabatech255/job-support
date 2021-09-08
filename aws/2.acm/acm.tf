@@ -14,7 +14,7 @@ provider "aws" {
 
 # ALBと紐付ける
 resource "aws_acm_certificate" "default" {
-  domain_name = "exam.${data.aws_route53_zone.default.name}"
+  domain_name = "api.${data.aws_route53_zone.default.name}"
   subject_alternative_names = []
   validation_method = "DNS"
   # リージョン：東京

@@ -9,6 +9,8 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
 use App\Models\User;
+use App\Models\ActionType;
+use App\Contracts\Repositories\ActionTypeRepositoryInterface as ActionTypeRepository;
 
 class ScheduleTest extends TestCase
 {

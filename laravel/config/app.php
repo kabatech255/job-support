@@ -56,6 +56,9 @@ return [
 
   'asset_url' => env('ASSET_URL', null),
   'front_url' => env('APP_FRONT_URL', 'localhost:3000'),
+  'test_id' => env('APP_TEST_ID', ''),
+  'test_pass' => env('APP_TEST_PASS', ''),
+  'test_mail' => env('APP_TEST_MAIL', ''),
 
   /*
   |--------------------------------------------------------------------------
@@ -226,10 +229,10 @@ return [
     'Session' => Illuminate\Support\Facades\Session::class,
     'Storage' => Illuminate\Support\Facades\Storage::class,
     'Str' => Illuminate\Support\Str::class,
+    'TestUser' => App\Common\TestUser::class,
     'URL' => Illuminate\Support\Facades\URL::class,
     'Validator' => Illuminate\Support\Facades\Validator::class,
     'View' => Illuminate\Support\Facades\View::class,
-
   ],
 
 ];
