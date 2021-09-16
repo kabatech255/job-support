@@ -68,6 +68,9 @@ class Task extends Model implements ModelInterface
     'time_limit',
   ];
 
+  protected $appends = [
+    'status'
+  ];
   protected $casts = [
     'time_limit' => 'date_time',
   ];
@@ -177,6 +180,12 @@ class Task extends Model implements ModelInterface
    */
   public function getStatusAttribute(): string
   {
+    if ($this->is_clear) {
+      return 'clear';
+    }
+    if (!!$this->progress_id && $this->progress->value >= Progress::EXCEPT_VALUE) {
+      return 'pending';
+    }
     if ($this->is_over) {
       return 'over';
     }
@@ -184,5 +193,16 @@ class Task extends Model implements ModelInterface
       return 'warning';
     }
     return 'safe';
+  }
+
+  /**
+   * @return bool
+   */
+  public function getIsClearAttribute(): bool
+  {
+    if (!!$this->progress_id) {
+      return $this->progress->value === Progress::COMPLETE_VALUE;
+    }
+    return false;
   }
 }
