@@ -15,7 +15,7 @@ $factory->define(Task::class, function ($faker) {
     'created_by' => $faker->randomNumber,
     'priority_id' => array_random(Priority::all()->pluck('id')->toArray()),
     'progress_id' => array_random(Progress::all()->pluck('id')->toArray()),
-    'body' => $faker->sentence(3),
+    'body' => 'TASK ' . $faker->word,
     'time_limit' => $faker->dateTimeThisMonth,
   ];
 });
