@@ -13,7 +13,7 @@ $factory->define(MeetingRecord::class, function ($faker) {
     'recorded_by' => $faker->randomNumber,
     'place_id' => array_random(MeetingPlace::all()->pluck('id')->toArray()),
     'meeting_date' => $faker->dateTimeThisYear,
-    'title' => $faker->word . ' meeting',
+    'title' => $faker->word . '会議',
     'summary' => $faker->realText,
   ];
 });
