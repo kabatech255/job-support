@@ -88,7 +88,8 @@ class MeetingRecord extends Model implements RelationalDeleteInterface
   ];
 
   protected $appends = [
-    'is_editable'
+    'is_editable',
+    'is_pin',
   ];
 
   /**
@@ -130,11 +131,26 @@ class MeetingRecord extends Model implements RelationalDeleteInterface
     return $this->belongsToMany(User::class, 'meeting_members', 'meeting_record_id', 'member_id')->withTimestamps();
   }
 
-  public function getDeleteRelations(): array
+  /**
+   * ピン留めしているユーザー達
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+   */
+  public function pinedUsers()
   {
-    return [
-      $this->decisions
-    ];
+    return $this->belongsToMany(User::class, 'meeting_record_pins', 'meeting_record_id', 'user_id')->withTimestamps();
+  }
+
+  /**
+   * @return bool
+   */
+  public function getIsPinAttribute(): bool
+  {
+    if (Auth::check()) {
+      return $this->pinedUsers->contains(function ($user) {
+        return $user->id === Auth::user()->id;
+      });
+    }
+    return false;
   }
 
   /**
@@ -142,9 +158,16 @@ class MeetingRecord extends Model implements RelationalDeleteInterface
    */
   public function getIsEditableAttribute(): bool
   {
-    if (!Auth::check()) {
-      return false;
+    if (Auth::check()) {
+      return $this->recorded_by === Auth::user()->id;
     }
-    return $this->recorded_by === Auth::user()->id;
+    return false;
+  }
+
+  public function getDeleteRelations(): array
+  {
+    return [
+      $this->decisions
+    ];
   }
 }
