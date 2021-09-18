@@ -86,6 +86,9 @@ Route::group(['middleware' => 'api'], function () {
     Route::put('/meeting_record/{id}', 'MeetingRecordController@update')->name('meetingRecord.update');
     Route::delete('/meeting_record/{id}', 'MeetingRecordController@destroy')->name('meetingRecord.destroy');
     Route::get('/author/meeting_record/recently', 'MeetingRecordController@recently')->name('meetingRecord.recently');
+    // 議事録のブックマーク
+    Route::post('/meeting_record/{id}/bookmark', 'MeetingRecordPinController@bookmark')->name('meetingRecordPin.bookmark');
+    Route::put('/meeting_record/{id}/bookmark', 'MeetingRecordPinController@unbookmark')->name('meetingRecordPin.unbookmark');
     // ブログ
     Route::get('/author/blog', 'BlogController@findByOwner')->name('blog.findByOwner');
     Route::get('/blog', 'BlogController@index')->name('blog.index');
