@@ -46,6 +46,11 @@ class MeetingRecordQuery extends EloquentQuery implements MeetingRecordQueryInte
         $q->where('member_id', Auth::user()->id);
       });
     }
+    if (!empty($params['only_bookmark'] ?? '') && Auth::check()) {
+      $query = $query->whereHas('pinedUsers', function ($q) {
+        $q->where('user_id', Auth::user()->id);
+      });
+    }
     if (isset($params['count'])) {
       $query = $this->queryByMemberCount($query, $params['count']);
     }
