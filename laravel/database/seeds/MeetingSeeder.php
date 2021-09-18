@@ -4,10 +4,6 @@ use Illuminate\Database\Seeder;
 use App\Models\MeetingRecord;
 use App\Models\MeetingDecision;
 use App\Models\User;
-use App\Models\Task;
-use App\Models\Priority;
-use App\Models\Progress;
-use App\Models\MeetingPlace;
 
 class MeetingSeeder extends Seeder
 {

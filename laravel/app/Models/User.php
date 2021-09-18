@@ -203,6 +203,14 @@ class User extends Authenticatable
   /**
    * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
    */
+  public function pinedMeetingRecords()
+  {
+    return $this->belongsToMany(MeetingRecord::class, 'meeting_record_pins', 'user_id', 'meeting_record_id')->withTimestamps();
+  }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+   */
   public function chatMessageReads()
   {
     return $this->belongsToMany(ChatMessage::class, 'chat_message_reads', 'member_id', 'chat_message_id')->withTimestamps();
