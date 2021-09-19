@@ -132,7 +132,7 @@ class MeetingRecord extends Model implements RelationalDeleteInterface
   }
 
   /**
-   * ピン留めしているユーザー達
+   * ブックマークしているユーザー達
    * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
    */
   public function pinedUsers()

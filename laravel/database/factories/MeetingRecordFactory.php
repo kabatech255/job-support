@@ -14,6 +14,6 @@ $factory->define(MeetingRecord::class, function ($faker) {
     'place_id' => array_random(MeetingPlace::all()->pluck('id')->toArray()),
     'meeting_date' => $faker->dateTimeThisYear,
     'title' => $faker->word . '会議',
-    'summary' => $faker->realText,
+    'summary' => "- 議題1\n- 議題2\n- 議題3",
   ];
 });

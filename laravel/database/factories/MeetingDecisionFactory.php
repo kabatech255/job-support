@@ -12,9 +12,9 @@ $faker = Factory::create('ja_JP');
 $factory->define(MeetingDecision::class, function ($faker) {
   return [
     'meeting_record_id' => $faker->randomNumber,
-    'decided_by' => $faker->numberBetween(1,10),
-    'written_by' => $faker->numberBetween(1,10),
-    'subject' => $faker->word,
-    'body' => Str::substr($faker->realText, 0, 100),
+    'decided_by' => $faker->numberBetween(1, 10),
+    'written_by' => $faker->numberBetween(1, 10),
+    'subject' => '決定内容件名',
+    'body' => '決定内容xxxxxxxxxx',
   ];
 });
