@@ -111,9 +111,9 @@ class TaskService extends Service
    * @param array $queryParams
    * @param array $params
    * @param int $perPage
-   * @return LengthAwarePaginator
+   * @return array
    */
-  public function deleteAll(array $queryParams, array $params, int $perPage): LengthAwarePaginator
+  public function deleteAll(array $queryParams, array $params, int $perPage): array
   {
     $tasks = $this->repository()->detach($params);
     return $this->findByOwner($queryParams, $perPage);
