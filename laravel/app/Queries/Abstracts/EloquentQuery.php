@@ -142,6 +142,7 @@ abstract class EloquentQuery extends CommonAbstractQuery
    */
   protected function searchOtherLocation(Builder $query, array $param)
   {
+    // ['table:column' => 1]
     $queryParamKey = key($param);
     $queryValue = $param[$queryParamKey];
     $relationalPair = $this->splitColumn($queryParamKey);
@@ -163,7 +164,7 @@ abstract class EloquentQuery extends CommonAbstractQuery
       $value = $this->liked($value);
     }
     $query->whereHas($tableName, function ($q) use ($tableName, $columnName, $value, $filter) {
-      if ($this->includesInRelationColumns($tableName, $columnName)) {
+      if ($this->includesInRelationalColumns($tableName, $columnName)) {
         $q->where($columnName, $filter, $value);
       }
     });

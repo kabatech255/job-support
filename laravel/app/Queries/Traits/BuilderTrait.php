@@ -33,7 +33,7 @@ trait BuilderTrait
    */
   public function relation(): array
   {
-    return defined(get_class($this->builder).'::RELATIONS_ARRAY') ? get_class($this->builder)::RELATIONS_ARRAY : $this->relation;
+    return defined(get_class($this->builder) . '::RELATIONS_ARRAY') ? get_class($this->builder)::RELATIONS_ARRAY : $this->relation;
   }
 
   /**
@@ -76,7 +76,7 @@ trait BuilderTrait
    * @param string $columnName
    * @return bool
    */
-  public function includesInRelationColumns(string $relationName, string $columnName)
+  public function includesInRelationalColumns(string $relationName, string $columnName)
   {
     return in_array($columnName, $this->relationTargets()[$relationName]);
   }
@@ -89,5 +89,4 @@ trait BuilderTrait
   {
     return '%' . addcslashes($word, '%_\\') . '%';
   }
-
 }

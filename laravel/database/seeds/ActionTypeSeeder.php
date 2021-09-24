@@ -37,6 +37,18 @@ class ActionTypeSeeder extends Seeder
         'template_message' => ':fromさんが新着メッセージ「:body」を投稿しました',
         'link' => '/mypage/chat/:id',
       ],
+      [
+        'key' => 'daily_limit_task',
+        'label_name' => '翌日締切のタスク（夜6:00頃）',
+        'template_message' => '',
+        'link' => '/mypage/task',
+      ],
+      [
+        'key' => 'daily_schedule',
+        'label_name' => '当日の予定（朝8:00頃）',
+        'template_message' => '',
+        'link' => '/mypage/schedule',
+      ],
     ];
 
     $actionTypeIds = collect($types)->map(function ($type) {
