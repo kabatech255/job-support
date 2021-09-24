@@ -1,4 +1,5 @@
 @component('mail::message')
+{{ $notifiable->full_name }}さん<br />
 {{ config('app.name') }}をご利用いただきありがとうございます。<br />
 {{ $chatMessage['sent_user'] }}さんから新着メッセージが届きました。<br />
 

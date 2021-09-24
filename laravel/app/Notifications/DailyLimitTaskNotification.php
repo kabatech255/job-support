@@ -6,26 +6,26 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use App\Models\Schedule;
+use Illuminate\Support\Carbon;
 
-class ScheduleSharedNotification extends Notification implements ShouldQueue
+class DailyLimitTaskNotification extends Notification
 {
   use Queueable;
-  public $schedule;
   public $subjectPrefix;
   /**
    * Create a new notification instance.
    *
    * @return void
    */
-  public function __construct(Schedule $schedule)
+  public function __construct()
   {
-    $this->schedule = $schedule;
-    // $this->queue = 'schedule_shared';
     $this->subjectPrefix = config('app.name');
+    $this->queue = 'daily_notification';
   }
 
   /**
+   * Get the notification's delivery channels.
+   *
    * @param  mixed  $notifiable
    * @return array
    */
@@ -42,12 +42,16 @@ class ScheduleSharedNotification extends Notification implements ShouldQueue
    */
   public function toMail($notifiable)
   {
+    $taskList = $notifiable->tasks->filter(function ($task) {
+      return Carbon::parse($task->time_limit)->format('Y-m-d') === Carbon::tomorrow()->format('Y-m-d')
+        && !$task->is_except;
+    });
     return (new MailMessage)
-      ->subject("【{$this->subjectPrefix}】新しい予定が共有されました")
-      ->markdown('mail.schedule.shared', [
-        'schedule' => $this->schedule,
+      ->subject("【{$this->subjectPrefix}】明日締切のタスク")
+      ->markdown('mail.task.limited', [
+        'taskList' => $taskList,
         'notifiable' => $notifiable,
-        'detailUrl' => config('app.front_url', 'http://localhost:3000') . '/mypage/schedule',
+        'detailUrl' => config('app.front_url', 'http://localhost:3000') . '/mypage/task',
       ]);
   }
 
