@@ -53,12 +53,15 @@ services:
     build:
       context: ./
       dockerfile: ./docker/supervisor/Dockerfile
+      args:
+        TZ: ${TZ}
     environment:
       - TZ=${TZ}
       - DB_HOST=${DB_HOST}
     volumes:
       - ${PROJECT_PATH}:/var/www/laravel
       - ./docker/supervisor:/etc/supervisor
+      - ./docker/supervisor/cron:/var/spool/cron/crontabs
     links:
       - app
       - db_master

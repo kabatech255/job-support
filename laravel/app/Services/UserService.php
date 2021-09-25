@@ -119,15 +119,6 @@ class UserService extends Service
   {
     // 未認証の場合はnullが返ってくる
     $author = Auth::user();
-    // if ($author instanceof User) {
-    // $author->setAttribute('recent_meeting_records', $this->meetingRecordService->findByUser($author->id));
-    // $author->setAttribute('daily_schedule', $this->scheduleService->index([
-    //   'sharedMembers:shared_with' => $author->id,
-    //   'sort_key' => 'start',
-    //   'order_by' => 'asc',
-    // ]));
-    // $author->setAttribute('busy_tasks', $this->taskService->findBusy($author->tasks));
-    // }
     return $author;
   }
 

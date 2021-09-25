@@ -17,7 +17,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $priority_id 優先順位ID
  * @property int|null $progress_id 進捗度ID
  * @property string $body 内容
- * @property int $time_limit 期日
+ * @property \Illuminate\Support\Carbon $time_limit 期日
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
@@ -72,10 +72,7 @@ class Task extends Model implements ModelInterface
     'status'
   ];
   protected $casts = [
-    'time_limit' => 'date_time',
-  ];
-  protected $dates = [
-    'time_limit',
+    'time_limit' => 'datetime',
   ];
 
   const RELATIONS_ARRAY = [

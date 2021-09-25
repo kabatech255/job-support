@@ -42,4 +42,10 @@ class ActionType extends Model implements ModelInterface
   const SCHEDULE_SHARED_KEY = 'schedule_shared';
   const MESSAGE_SENT_KEY = 'message_sent';
   const MEETING_RECORD_JOINED_KEY = 'meeting_record_joined';
+  const LIMIT_TASK_KEY = 'daily_limit_task';
+  const LIMIT_SCHEDULE_KEY = 'daily_schedule';
+  const DAILY_ALERT_ARR = [
+    self::LIMIT_TASK_KEY => 4,
+    self::LIMIT_SCHEDULE_KEY => 5,
+  ];
 }
