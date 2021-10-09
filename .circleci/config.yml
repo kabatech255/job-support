@@ -104,6 +104,7 @@ jobs:
   deploy:
     docker:
       - image: circleci/python
+    working_directory: ~/repo
     steps:
       - checkout
       - setup_remote_docker
