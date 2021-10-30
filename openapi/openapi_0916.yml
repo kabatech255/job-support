@@ -118,7 +118,7 @@ paths:
     get:
       security:
         - cookieAuth: []
-      operationId: getMyBlog
+      operationId: getBlog
       description: blog user joined
       responses:
         '200':
@@ -1587,6 +1587,26 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/MeetingRecordForm'
+            examples:
+              example-1:
+                value:
+                  recorded_by: 1
+                  place_id: 1
+                  meeting_date: '2020-12-31 23:59:59'
+                  title: 全体会議
+                  summary: 定例のミーティングです。
+                  decisions:
+                    - decided_by: 1
+                      written_by: 1
+                      subject: 〇〇店のクレームについて
+                      body: 再発防止策を立てる
+                      tasks:
+                        - owner_id: 1
+                          created_by: 1
+                          priority_id: 'null'
+                          progress_id: 'null'
+                          body: 資料作成
+                          time_limit: '2021-12-31 23:59:59'
         description: 議事録投稿フォーム
     parameters: []
   '/meeting_record/{id}':
@@ -2036,29 +2056,6 @@ paths:
         - cookieAuth: []
       tags:
         - task
-  /user:
-    get:
-      tags:
-        - user
-      summary: ユーザー一覧を返す
-      description: 会議の参加者を入力するドロップダウンリスト等に使用
-      operationId: getUser
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                anyOf:
-                  - nullable: true
-                  - $ref: '#/components/schemas/User'
-        default:
-          description: Unexpected Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultError'
-    parameters: []
   /user/current:
     get:
       tags:
@@ -2187,24 +2184,28 @@ components:
           $ref: '#/components/schemas/DateFormat'
         images:
           anyOf:
-            - items:
+            - $ref: '#/components/schemas/EmptyItem'
+            - type: array
+              items:
                 $ref: '#/components/schemas/BlogImage'
-          type: array
         likes:
           anyOf:
-            - items:
+            - $ref: '#/components/schemas/EmptyItem'
+            - type: array
+              items:
                 $ref: '#/components/schemas/User'
-          type: array
         comments:
           anyOf:
-            - items:
+            - $ref: '#/components/schemas/EmptyItem'
+            - type: array
+              items:
                 $ref: '#/components/schemas/BlogComment'
-          type: array
         tags:
           anyOf:
-            - items:
+            - $ref: '#/components/schemas/EmptyItem'
+            - type: array
+              items:
                 $ref: '#/components/schemas/Tag'
-          type: array
       required:
         - id
         - written_by
@@ -2212,6 +2213,7 @@ components:
         - body
         - created_at
         - updated_at
+        - images
         - likes
         - comments
         - tags
@@ -2424,19 +2426,22 @@ components:
             - $ref: '#/components/schemas/User'
         images:
           anyOf:
-            - items:
+            - $ref: '#/components/schemas/EmptyItem'
+            - type: array
+              items:
                 $ref: '#/components/schemas/ChatMessageImage'
-          type: array
         reactions:
           anyOf:
-            - items:
+            - $ref: '#/components/schemas/EmptyItem'
+            - type: array
+              items:
                 $ref: '#/components/schemas/Reaction'
-          type: array
         chat_message_reads:
           anyOf:
-            - items:
+            - $ref: '#/components/schemas/EmptyItem'
+            - type: array
+              items:
                 $ref: '#/components/schemas/User'
-          type: array
         created_at:
           $ref: '#/components/schemas/DateFormat'
         updated_at:
@@ -2459,6 +2464,7 @@ components:
           type: integer
           format: int64
           minimum: 0
+          exclusiveMinimum: true
         written_by:
           type: integer
           format: int64
@@ -2512,6 +2518,7 @@ components:
           type: integer
           format: int64
           minimum: 0
+          exclusiveMinimum: true
         chat_message_id:
           type: integer
           description: 権限値
@@ -2547,21 +2554,24 @@ components:
             $ref: '#/components/schemas/User'
         messages:
           anyOf:
-            - items:
+            - $ref: '#/components/schemas/EmptyItem'
+            - type: array
+              items:
                 $ref: '#/components/schemas/ChatMessage'
-          type: array
         created_at:
           $ref: '#/components/schemas/DateFormat'
         updated_at:
           $ref: '#/components/schemas/DateFormat'
         last_reads:
           anyOf:
-            - items:
+            - $ref: '#/components/schemas/EmptyItem'
+            - type: array
+              items:
                 $ref: '#/components/schemas/LastRead'
-          type: array
         unread_count:
           type: integer
           example: 0
+          exclusiveMinimum: true
           minimum: 0
       required:
         - id
@@ -2642,9 +2652,10 @@ components:
           $ref: '#/components/schemas/DateFormat'
         shared_members:
           anyOf:
-            - items:
+            - type: array
+              items:
                 $ref: '#/components/schemas/User'
-          type: array
+            - $ref: '#/components/schemas/EmptyItem'
       required:
         - id
         - uploaded_by
@@ -2662,7 +2673,10 @@ components:
           example: 1
           minimum: 0
         file:
-          type: string
+          type:
+            - string
+            - object
+          format: int64
         sharedMembers:
           type: object
         file_path:
@@ -2743,6 +2757,7 @@ components:
       title: EmptyItem
       description: データがないときの空配列
       type: array
+      example: []
       items:
         nullable: true
     ForbiddenError:
@@ -2769,6 +2784,7 @@ components:
           description: エラーメッセージ
           format: int64
           minimum: 0
+          exclusiveMinimum: true
         name:
           type: string
         file_path:
@@ -2814,20 +2830,24 @@ components:
           example: 0
           format: int64
           minimum: 0
+          exclusiveMinimum: true
         chat_room_id:
           type: integer
           format: int64
           example: 0
           minimum: 0
+          exclusiveMinimum: true
         member_id:
           type: integer
           format: int64
           minimum: 0
+          exclusiveMinimum: true
           example: 0
         last_message_id:
           type: integer
           format: int64
           minimum: 0
+          exclusiveMinimum: true
           example: 0
         created_at:
           $ref: '#/components/schemas/DateFormat'
@@ -2873,6 +2893,7 @@ components:
           type: integer
           format: int64
           minimum: 0
+          exclusiveMinimum: true
         decided_by:
           type: integer
           example: 1
@@ -2882,6 +2903,7 @@ components:
           type: integer
           example: 1
           minimum: 0
+          exclusiveMinimum: true
           format: int64
         subject:
           type: string
@@ -3033,6 +3055,7 @@ components:
           example: 1
           format: int64
           minimum: 0
+          exclusiveMinimum: true
         place_id:
           type: integer
           format: int64
@@ -3048,7 +3071,7 @@ components:
           example: これは全体の会議です。
           nullable: true
         meeting_decisions:
-          example: []
+          example: これは全体の会議です。
           type: array
           items:
             $ref: '#/components/schemas/MeetingDecisionForm'
@@ -3070,6 +3093,7 @@ components:
           example: 1
           format: int64
           minimum: 0
+          exclusiveMinimum: true
         place_id:
           type: integer
           format: int64
@@ -3085,7 +3109,7 @@ components:
           example: これは全体の会議です。
           nullable: true
         meeting_decisions:
-          example: []
+          example: これは全体の会議です。
           type: array
           items:
             $ref: '#/components/schemas/MeetingDecisionForm'
@@ -3164,11 +3188,13 @@ components:
           type: integer
           format: int64
           minimum: 0
+          exclusiveMinimum: true
         chat_message_id:
           type: integer
           description: 権限値
           format: int64
           minimum: 0
+          exclusiveMinimum: true
         member:
           $ref: '#/components/schemas/User'
         facial_expression:
@@ -3200,6 +3226,7 @@ components:
           description: 権限値
           format: int64
           minimum: 0
+          exclusiveMinimum: true
         created_at:
           $ref: '#/components/schemas/DateFormat'
         updated_at:
@@ -3396,11 +3423,13 @@ components:
           type: integer
           format: int64
           minimum: 0
+          exclusiveMinimum: true
         owner_id:
           type: integer
           format: int64
           example: 1
           minimum: 0
+          exclusiveMinimum: true
         created_by:
           type: integer
           format: int64
@@ -3409,11 +3438,13 @@ components:
           type: integer
           format: int64
           minimum: 0
+          exclusiveMinimum: true
           nullable: true
         progress_id:
           type: integer
           format: int64
           minimum: 0
+          exclusiveMinimum: true
           nullable: true
         body:
           type: string
