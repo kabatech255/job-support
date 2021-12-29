@@ -3,7 +3,7 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "1" },
+          "id": { "S": "00000001_axgark6gnv0ly81" },
           "title": {
             "S": "ブログです1"
           },
@@ -11,7 +11,31 @@
             "S": "ブログの内容です"
           },
           "status": {
-            "S": "pending"
+            "S": "done"
+          },
+          "tags": {
+            "L": [
+              {
+                "M": {
+                  "id": {
+                    "S": "00000001_axgark6gnv0ly81"
+                  },
+                  "name": {
+                    "S": "HTML"
+                  }
+                }
+              },
+              {
+                "M": {
+                  "id": {
+                    "S": "00000002_xm3h0gekl7q7ap0xkhl"
+                  },
+                  "name": {
+                    "S": "CSS3"
+                  }
+                }
+              }
+            ]
           },
           "created_at": {
             "S": "2021-11-09T04:05Z"
@@ -22,10 +46,10 @@
           "writtenBy": {
             "M": {
               "id": {
-                "S": "1"
+                "S": "111111"
               },
               "name": {
-                "S": "suzuki"
+                "S": "テスト"
               }
             }
           }
@@ -35,7 +59,7 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "2" },
+          "id": { "S": "00000002_xm3h0gekl7q7ap0xkhl" },
           "title": {
             "S": "ブログです2"
           },
@@ -43,7 +67,10 @@
             "S": "ブログの内容です"
           },
           "status": {
-            "S": "pending"
+            "S": "done"
+          },
+          "tags": {
+            "L": []
           },
           "created_at": {
             "S": "2021-11-09T04:05Z"
@@ -54,10 +81,10 @@
           "writtenBy": {
             "M": {
               "id": {
-                "S": "1"
+                "S": "111111"
               },
               "name": {
-                "S": "suzuki"
+                "S": "テスト多頭"
               }
             }
           }
@@ -67,7 +94,7 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "3" },
+          "id": { "S": "00000003_xm3h0gekl7q7ap0xkhl" },
           "title": {
             "S": "ブログです3"
           },
@@ -75,7 +102,10 @@
             "S": "ブログの内容です"
           },
           "status": {
-            "S": "pending"
+            "S": "done"
+          },
+          "tags": {
+            "L": []
           },
           "created_at": {
             "S": "2021-11-09T04:05Z"
@@ -86,10 +116,10 @@
           "writtenBy": {
             "M": {
               "id": {
-                "S": "1"
+                "S": "111111"
               },
               "name": {
-                "S": "suzuki"
+                "S": "テスト　太郎"
               }
             }
           }
@@ -99,7 +129,7 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "4" },
+          "id": { "S": "00000004_xm3h0gekl7q7ap0xkhl" },
           "title": {
             "S": "ブログです4"
           },
@@ -107,7 +137,10 @@
             "S": "ブログの内容です"
           },
           "status": {
-            "S": "pending"
+            "S": "done"
+          },
+          "tags": {
+            "L": []
           },
           "created_at": {
             "S": "2021-11-09T04:05Z"
@@ -131,7 +164,7 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "5" },
+          "id": { "S": "00000005_xm3h0gekl7q7ap0xkhl" },
           "title": {
             "S": "ブログです5"
           },
@@ -139,7 +172,10 @@
             "S": "ブログの内容です"
           },
           "status": {
-            "S": "pending"
+            "S": "done"
+          },
+          "tags": {
+            "L": []
           },
           "created_at": {
             "S": "2021-11-09T04:05Z"
@@ -163,7 +199,7 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "6" },
+          "id": { "S": "00000006_xm3h0gekl7q7ap0xkhl" },
           "title": {
             "S": "ブログです6"
           },
@@ -171,7 +207,10 @@
             "S": "ブログの内容です"
           },
           "status": {
-            "S": "pending"
+            "S": "done"
+          },
+          "tags": {
+            "L": []
           },
           "created_at": {
             "S": "2021-11-09T04:05Z"
@@ -195,7 +234,7 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "7" },
+          "id": { "S": "00000007_xm3h0gekl7q7ap0xkhl" },
           "title": {
             "S": "ブログです7"
           },
@@ -203,7 +242,10 @@
             "S": "ブログの内容です"
           },
           "status": {
-            "S": "pending"
+            "S": "done"
+          },
+          "tags": {
+            "L": []
           },
           "created_at": {
             "S": "2021-11-09T04:05Z"
@@ -227,7 +269,7 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "8" },
+          "id": { "S": "00000008_xm3h0gekl7q7ap0xkhl" },
           "title": {
             "S": "ブログです8"
           },
@@ -235,7 +277,10 @@
             "S": "ブログの内容です"
           },
           "status": {
-            "S": "pending"
+            "S": "done"
+          },
+          "tags": {
+            "L": []
           },
           "created_at": {
             "S": "2021-11-09T04:05Z"
@@ -259,7 +304,7 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "9" },
+          "id": { "S": "00000009_xm3h0gekl7q7ap0xkhl" },
           "title": {
             "S": "ブログです9"
           },
@@ -267,7 +312,10 @@
             "S": "ブログの内容です"
           },
           "status": {
-            "S": "pending"
+            "S": "done"
+          },
+          "tags": {
+            "L": []
           },
           "created_at": {
             "S": "2021-11-09T04:05Z"
@@ -291,7 +339,7 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "10" },
+          "id": { "S": "00000010_xm3h0gekl7q7ap0xkhl" },
           "title": {
             "S": "ブログです10"
           },
@@ -299,7 +347,10 @@
             "S": "ブログの内容です"
           },
           "status": {
-            "S": "pending"
+            "S": "done"
+          },
+          "tags": {
+            "L": []
           },
           "created_at": {
             "S": "2021-11-09T04:05Z"
