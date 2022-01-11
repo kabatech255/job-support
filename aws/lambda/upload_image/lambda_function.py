@@ -14,10 +14,12 @@ class InvalidError(Exception):
   def __str__(self):
     return repr(self.value)
 
-
 bucket_name = 'asset.job-support.site'
 s3 = boto3.resource('s3')
 bucket = s3.Bucket(bucket_name)
+
+dynamodb = boto3.resource('dynamodb')
+sequences_table = dynamodb.Table('sequences')
 
 def lambda_handler(event, context):
   print(json.dumps(event))
@@ -31,14 +33,18 @@ def lambda_handler(event, context):
   print('request_origin:{}'.format(request_origin))
   if is_white_origin(request_origin):
     try:
+      path_list = []
       # 画像のアップロード
       for f in fs.list:
         file_name = f.filename
         result = file_upload(f, get_relative_path(dir_name, file_name))
-      storage_url = os.environ['STORAGE_URL'] if 'STORAGE_URL' in os.environ else ''
+        if result:
+          path_list.append(result)
+      
       response_body = {
-        'src': '{}/{}'.format(storage_url, result)
+        'src': path_list
       }
+      
       return response(request_origin, response_body)
 
     except InvalidError as e:
@@ -79,18 +85,38 @@ def is_image_type(file_type):
   return file_type in permitted_list
 
 def get_relative_path(dir_name, file_name):
+  file_name = random_prefix() + file_name
   return '{}/{}'.format(dir_name, file_name)
 
+def random_prefix():
+  # テーブル内の項目更新
+  response = sequences_table.update_item(
+    Key={
+      'table_name': 's3_blog_assets'
+    },
+    UpdateExpression="set seq = seq + :val",
+    ExpressionAttributeValues={
+      ':val': 1
+    },
+    ReturnValues='UPDATED_NEW'
+  )
+  
+  return '{}_'.format(str(response['Attributes']['seq']))
+
+def uploaded_image_url(relative_path):
+  storage_url = os.environ['STORAGE_URL'] if 'STORAGE_URL' in os.environ else ''
+  return '{}/{}'.format(storage_url, relative_path)
+
 def file_upload(f, s3_key):
-  print(f.name, f.filename, f.type, f.value)
+  print(f.filename, f.type, f.value)
   if not is_image_type(f.type):
     raise InvalidError('PNG、JPEG、GIF、SVG形式を選択してください')
-  if f.name == 'thumbnail':
-    bucket.put_object(
-      Body = f.value,
-      Key = s3_key
-    )
-    return s3_key
+
+  bucket.put_object(
+    Body = f.value,
+    Key = s3_key
+  )
+  return uploaded_image_url(s3_key)
 
 def show_err_log(e):
   print('============')
