@@ -42,8 +42,10 @@ return [
     ],
 
     'api' => [
-      'driver' => 'session',
+      // 'driver' => 'session',
+      'driver' => 'cognito',
       'provider' => 'users',
+      'hash' => false,
     ],
 
     'admin' => [

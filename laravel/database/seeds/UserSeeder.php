@@ -46,6 +46,7 @@ class UserSeeder extends Seeder
         'user_code' => 111111,
         'role_id' => 2,
         'login_id' => config('app.test_id'),
+        'cognito_sub' => config('app.test_cognito_sub'),
         'password' => \Hash::make(config('app.test_pass')),
         'family_name' => 'テスト',
         'given_name' => '太郎',

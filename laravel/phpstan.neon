@@ -12,7 +12,7 @@ parameters:
   fileExtensions:
     - php
   ignoreErrors:
-    - '#Call to an undefined static method Illuminate\\Support\\Arr::[a-zA-Z0-9\\_]+\(\)#'
-    - '#Call to an undefined static method Illuminate\\Support\\Str::[a-zA-Z0-9\\_]+\(\)#'
-    - '#Call to an undefined static method Illuminate\\Support\\Facades\\Storage::[a-zA-Z0-9\\_]+\(\)#'
+    - '#Call to an undefined static method (Illuminate\\Support\\)?Arr::[a-zA-Z0-9\\_]+\(\)#'
+    - '#Call to an undefined static method (Illuminate\\Support\\)?Str::[a-zA-Z0-9\\_]+\(\)#'
+    - '#Call to an undefined static method (Illuminate\\Support\\Facades\\)?Storage::[a-zA-Z0-9\\_]+\(\)#'
   reportUnmatchedIgnoredErrors: false

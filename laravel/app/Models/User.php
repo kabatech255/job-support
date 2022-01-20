@@ -121,7 +121,7 @@ class User extends Authenticatable
     'created_by',
     'updated_by',
     'deleted_by',
-    'sub',
+    'cognito_sub',
   ];
 
   protected $appends = [
@@ -138,6 +138,7 @@ class User extends Authenticatable
     'remember_token',
     'email_verified_at',
     'login_id',
+    'cognito_sub',
     'role_id',
     'deleted_at',
     'created_by',
