@@ -7,6 +7,9 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Illuminate\Support\Facades\Gate;
 use App\Models\Role;
 use App\Enums\Role as RoleEnum;
+use Auth;
+use App\Services\Auth\CognitoGuard;
+use App\Services\JWTVerifierService;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -37,6 +40,16 @@ class AuthServiceProvider extends ServiceProvider
   public function boot()
   {
     $this->registerPolicies();
+    // Auth
+    Auth::extend('cognito', function($app, $name, array $config) {
+      return new CognitoGuard(
+        new JWTVerifierService(),
+        $app['request'],
+        Auth::createUserProvider($config['provider'])
+      );
+    });
+
+    // Gate
     Gate::define('overManager', function ($user) {
       return $user instanceof User && $user->role->value >= RoleEnum::value('manager');
     });

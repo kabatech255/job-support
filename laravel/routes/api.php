@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -21,23 +23,20 @@ Route::group(['middleware' => 'api'], function () {
   // 認証中の一般ユーザーを返却
   Route::get('/user/current', 'UserController@currentUser')->name('currentUser');
   Route::get('/user/current/chat_rooms', 'UserController@withChatRooms')->name('withChatRooms');
-  Route::get('/private', function (Request $request) {
-    return response()->json(["message" => "welcome to private endpoint!"]);
-  })->middleware('jwt');
   Route::get('/meeting_place', 'MeetingPlaceController@index')->name('meetingPlace.index');
   Route::get('/meeting_record/ids', 'MeetingRecordController@ids')->name('meetingRecord.ids');
 
   // 認証手続
   Route::namespace('Auth')->group(function () {
-    Route::post('/register', 'RegisterController@register')->name('register');
-    Route::post('/login', 'LoginController@login')->name('login');
-    Route::post('/testlogin', 'LoginController@testLogin')->middleware('rewriteuser')->name('testlogin');
+    // Route::post('/register', 'RegisterController@register')->name('register');
+    // Route::post('/login', 'LoginController@login')->name('login');
+    // Route::post('/testlogin', 'LoginController@testLogin')->middleware('rewriteuser')->name('testlogin');
     // パスワードリセット
     Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
     Route::post('/password/reset', 'ResetPasswordController@reset')->name('password.update');
 
     Route::middleware('auth')->group(function () {
-      Route::post('/logout', 'LoginController@logout')->name('logout');
+      // Route::post('/logout', 'LoginController@logout')->name('logout');
     });
   });
 
