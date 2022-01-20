@@ -64,7 +64,8 @@ class LoginController extends Controller
    */
   protected function loggedOut(Request $request)
   {
-    Auth::logout();
+    // Auth::logout();
+    Auth::guard('cognito')->logout();
     $request->session()->regenerate();
 
     return response()->json();

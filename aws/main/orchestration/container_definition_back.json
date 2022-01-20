@@ -61,6 +61,10 @@
         "name": "APP_TEST_MAIL"
       },
       {
+        "valueFrom": "APP_TEST_COGNITO_SUB",
+        "name": "APP_TEST_COGNITO_SUB"
+      },
+      {
         "valueFrom": "AMAZON_ACCESS_KEY_ID",
         "name": "AWS_ACCESS_KEY_ID"
       },
@@ -79,6 +83,14 @@
       {
         "valueFrom": "AMAZON_URL",
         "name": "AWS_URL"
+      },
+      {
+        "valueFrom": "AMAZON_COGNITO_REGION",
+        "name": "AWS_COGNITO_REGION"
+      },
+      {
+        "valueFrom": "AMAZON_COGNITO_USER_POOL_ID",
+        "name": "AWS_COGNITO_USER_POOL_ID"
       },
       {
         "valueFrom": "BROADCAST_DRIVER",
@@ -214,6 +226,10 @@
         "name": "APP_TEST_MAIL"
       },
       {
+        "valueFrom": "APP_TEST_COGNITO_SUB",
+        "name": "APP_TEST_COGNITO_SUB"
+      },
+      {
         "valueFrom": "AMAZON_ACCESS_KEY_ID",
         "name": "AWS_ACCESS_KEY_ID"
       },
@@ -232,6 +248,14 @@
       {
         "valueFrom": "AMAZON_URL",
         "name": "AWS_URL"
+      },
+      {
+        "valueFrom": "AMAZON_COGNITO_REGION",
+        "name": "AWS_COGNITO_REGION"
+      },
+      {
+        "valueFrom": "AMAZON_COGNITO_USER_POOL_ID",
+        "name": "AWS_COGNITO_USER_POOL_ID"
       },
       {
         "valueFrom": "BROADCAST_DRIVER",
