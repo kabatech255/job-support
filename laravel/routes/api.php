@@ -32,8 +32,8 @@ Route::group(['middleware' => 'api'], function () {
     // Route::post('/login', 'LoginController@login')->name('login');
     // Route::post('/testlogin', 'LoginController@testLogin')->middleware('rewriteuser')->name('testlogin');
     // パスワードリセット
-    Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-    Route::post('/password/reset', 'ResetPasswordController@reset')->name('password.update');
+    // Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+    // Route::post('/password/reset', 'ResetPasswordController@reset')->name('password.update');
 
     Route::middleware('auth')->group(function () {
       // Route::post('/logout', 'LoginController@logout')->name('logout');

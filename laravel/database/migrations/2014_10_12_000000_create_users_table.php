@@ -15,7 +15,8 @@ class CreateUsersTable extends Migration
   {
     Schema::create('users', function (Blueprint $table) {
       $table->id();
-      $table->unsignedInteger('user_code')->unique()->comment('ユーザーコード');
+      // $table->unsignedInteger('user_code')->unique()->comment('ユーザーコード');
+      $table->unsignedInteger('user_code')->nullable()->comment('ユーザーコード');
       $table->unsignedBigInteger('role_id')->comment('ロールID');
       $table->string('login_id')->unique()->comment('ログインID');
       $table->string('family_name')->comment('姓');
