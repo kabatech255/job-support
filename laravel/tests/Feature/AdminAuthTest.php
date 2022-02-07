@@ -46,7 +46,7 @@ class AdminAuthTest extends TestCase
     $this->assertFalse($result->hasErrors(), $result);
   }
   /**
-   * @test
+   * This will be failed: Authentication feature have moved to Cognito
    * @group auth
    */
   public function should_ログインに成功すると認証中のユーザーを返却する()
@@ -75,7 +75,7 @@ class AdminAuthTest extends TestCase
     $this->assertFalse($result->hasErrors(), $result);
   }
   /**
-   * @test
+   * This will be failed: Authentication feature have moved to Cognito
    * @group auth
    */
   public function should_送信データが不正だと422を返却する()
@@ -115,7 +115,7 @@ class AdminAuthTest extends TestCase
     $this->assertFalse($result->hasErrors(), $result);
   }
   /**
-   * @test
+   * This will be failed: Authentication feature have moved to Cognito
    * @group auth
    */
   public function should_認証中にログインAPIにアクセスするとリダイレクトコードを返却する()
@@ -136,7 +136,7 @@ class AdminAuthTest extends TestCase
     $response->assertStatus(302);
   }
   /**
-   * @test
+   * This will be failed: Authentication feature have moved to Cognito
    * @group auth
    */
   public function should_認証中にログアウトをすると空のJsonを返却する()
@@ -150,7 +150,7 @@ class AdminAuthTest extends TestCase
   }
 
   /**
-   * @test
+   * This will be failed: Authentication feature have moved to Cognito
    * @group auth
    */
   public function should_未認証でログアウトAPIにアクセスすると401を返却する()
