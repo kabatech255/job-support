@@ -104,13 +104,13 @@ Route::group(['middleware' => 'api'], function () {
     Route::put('/blog/{blog_id}/comment/{id}', 'BlogCommentController@update')->name('blogComment.update');
     Route::delete('/blog/{blog_id}/comment/{id}', 'BlogCommentController@destroy')->name('blogComment.destroy');
     // タスク
-    Route::get('/task', 'TaskController@index')->name('task.index');
     Route::get('/author/task', 'TaskController@findByOwner')->name('task.findByOwner');
     Route::delete('/author/task', 'TaskController@deleteAll')->name('task.deleteAll');
+    Route::get('/author/task/busy', 'TaskController@busyTaskByAuthor')->name('task.busyTaskByAuthor');
+    Route::get('/task', 'TaskController@index')->name('task.index');
     Route::post('/task', 'TaskController@store')->name('task.store');
     Route::put('/task/{id}', 'TaskController@update')->name('task.update');
     Route::delete('/task/{id}', 'TaskController@destroy')->name('task.destroy');
-    Route::get('/author/task/busy', 'TaskController@busyTaskByAuthor')->name('task.busyTaskByAuthor');
     // プロフィール
     Route::put('/user/{id}/profile', 'UserController@updateProfile')->name('user.update');
     // 設定

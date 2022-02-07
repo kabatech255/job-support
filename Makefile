@@ -14,11 +14,11 @@ phpstan:
 	docker compose exec app ash -c "composer phpstan"
 
 test:
-	cp ./openapi/openapi.yml ./laravel/
+	cp ./openapi/openapi.develop.yaml ./laravel/openapi.yaml
 	docker compose exec app ash -c "make test GROUP=${GROUP}"
 
 test-all:
-	cp ./openapi/openapi.yml ./laravel/
+	cp ./openapi/openapi.develop.yaml ./laravel/openapi.yaml
 	docker compose exec app ash -c "make test-all"
 
 crud:
