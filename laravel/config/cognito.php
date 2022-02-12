@@ -1,6 +1,12 @@
 <?php
 
 return [
-  'region' => env('AWS_COGNITO_REGION', 'ap-northeast-1a'),
-  'userpoolId' => env('AWS_COGNITO_USER_POOL_ID', ''),
+  'user' => [
+    'region' => env('AWS_USER_COGNITO_REGION', 'ap-northeast-1'),
+    'userpoolId' => env('AWS_USER_COGNITO_POOL_ID', ''),
+  ],
+  'admin' => [
+    'region' => env('AWS_ADMIN_COGNITO_REGION', 'ap-northeast-1'),
+    'userpoolId' => env('AWS_ADMIN_COGNITO_POOL_ID', ''),
+  ],
 ];

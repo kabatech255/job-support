@@ -17,10 +17,14 @@ use Faker\Factory;
 | model instances for testing / seeding your application's database.
 |
 */
+
 $faker = Factory::create('ja_JP');
 $factory->define(Admin::class, function ($faker) {
   return [
+    'admin_code' => $faker->unique()->numberBetween(120000, 129999),
+    'role_id' => $faker->numberBetween(1, 3),
     'login_id' => Str::random(8),
+    'cognito_sub' => Str::random(8) . '-' . Str::random(4) . '-' . Str::random(4) . '-' . Str::random(4) . '-' . Str::random(12),
     'family_name' => $faker->lastName,
     'given_name' => $faker->firstName,
     'family_name_kana' => $faker->lastKanaName,

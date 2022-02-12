@@ -13,14 +13,20 @@ class AdminSeeder extends Seeder
   public function run()
   {
     DB::table('admins')->truncate();
-
-    factory(Admin::class, 1)->create([
-      'login_id' => 'testadmin',
-      'family_name' => 'テスト',
-      'given_name' => '太郎',
-      'family_name_kana' => 'テスト',
-      'given_name_kana' => 'タロウ',
-      'email' => 'test@example.com',
-    ]);
+    if (\TestUser::hasId()) {
+      factory(Admin::class, 1)->create([
+        'department_code' => 5,
+        'admin_code' => 111111,
+        'role_id' => 2,
+        'login_id' => config('app.test_id'),
+        'cognito_sub' => config('app.test_admin_cognito_sub'),
+        'password' => \Hash::make(config('app.test_pass')),
+        'family_name' => 'テスト',
+        'given_name' => '太郎',
+        'family_name_kana' => 'テスト',
+        'given_name_kana' => 'タロウ',
+        'email' => config('app.test_mail', 'sample@example.com'),
+      ]);
+    }
   }
 }

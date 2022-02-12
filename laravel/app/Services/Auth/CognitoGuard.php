@@ -2,12 +2,13 @@
 
 namespace App\Services\Auth;
 
-use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use App\Services\JWTVerifierService;
 use Illuminate\Auth\GuardHelpers;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class CognitoGuard implements Guard
 {
@@ -28,6 +29,8 @@ class CognitoGuard implements Guard
    */
   private $userProvider;
 
+  private $builder;
+
   /**
    * @param JWTVerifierService $JWTVerifier
    * @param UserProvider $userProvider
@@ -35,12 +38,13 @@ class CognitoGuard implements Guard
   public function __construct(
     JWTVerifierService $JWTVerifier,
     Request $request,
-    UserProvider $userProvider
-  )
-  {
+    UserProvider $userProvider,
+    Authenticatable $builder
+  ) {
     $this->JWTVerifier = $JWTVerifier;
     $this->request = $request;
     $this->userProvider = $userProvider;
+    $this->builder = $builder;
   }
 
   public function user()
@@ -65,14 +69,14 @@ class CognitoGuard implements Guard
 
   public function validate(array $credentials = [])
   {
-      throw new \RuntimeException('Cognito guard cannot be used for credential based authentication.');
+    throw new \RuntimeException('Cognito guard cannot be used for credential based authentication.');
   }
 
   private function create($decoded)
   {
     $cognito_username = 'cognito:username';
 
-    return User::updateOrCreate(['cognito_sub' => $decoded->sub], [
+    return get_class($this->builder)::updateOrCreate(['cognito_sub' => $decoded->sub], [
       'cognito_sub' => $decoded->sub,
       'email' => $decoded->email ?? '',
       'login_id' => $decoded->{$cognito_username},

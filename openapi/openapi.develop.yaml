@@ -48,13 +48,7 @@ paths:
               schema:
                 anyOf:
                   - $ref: '#/components/schemas/Admin'
-                  - $ref: '#/components/schemas/EmptyItem'
-        default:
-          description: Unexpected Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultError'
+                  - nullable: true
       summary: 現在の管理者を返す
   /admin/login:
     post:
@@ -81,12 +75,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InvalidError'
-        default:
-          description: Unexpected Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultError'
       summary: 管理者ログイン
   /admin/logout:
     post:
@@ -103,12 +91,6 @@ paths:
                 $ref: '#/components/schemas/EmptyItem'
         '401':
           description: Unauthorized Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultError'
-        default:
-          description: Unexpected Error
           content:
             application/json:
               schema:
@@ -131,12 +113,6 @@ paths:
                     items:
                       $ref: '#/components/schemas/Blog'
                   - $ref: '#/components/schemas/EmptyItem'
-        default:
-          description: Unexpected Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultError'
       tags:
         - blog
       parameters:
@@ -168,12 +144,6 @@ paths:
                   - $ref: '#/components/schemas/TaskPage'
         '401':
           description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultError'
-        default:
-          description: Unexpected Error
           content:
             application/json:
               schema:
@@ -211,12 +181,6 @@ paths:
                 items:
                   $ref: '#/components/schemas/ChatRoom'
           headers: {}
-        default:
-          description: Unexpected Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultError'
       summary: 認証者のチャットルーム取得
   /author/meeting_record:
     get:
@@ -237,12 +201,6 @@ paths:
                   - $ref: '#/components/schemas/MeetingPage'
         '401':
           description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultError'
-        default:
-          description: Unexpected Error
           content:
             application/json:
               schema:
@@ -1514,12 +1472,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InvalidError'
-        default:
-          description: Unexpected Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultError'
       summary: ユーザーログイン
   /logout:
     post:
@@ -1536,12 +1488,6 @@ paths:
                 $ref: '#/components/schemas/EmptyItem'
         '401':
           description: Unauthorized Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultError'
-        default:
-          description: Unexpected Error
           content:
             application/json:
               schema:
@@ -2052,12 +1998,6 @@ paths:
                 anyOf:
                   - nullable: true
                   - $ref: '#/components/schemas/User'
-        default:
-          description: Unexpected Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultError'
     parameters: []
   /user/current:
     get:
@@ -2075,12 +2015,6 @@ paths:
                 anyOf:
                   - nullable: true
                   - $ref: '#/components/schemas/User'
-        default:
-          description: Unexpected Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DefaultError'
   '/user/{user_id}/schedule':
     parameters:
       - schema:

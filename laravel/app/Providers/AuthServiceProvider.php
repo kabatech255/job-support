@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Role;
@@ -41,11 +42,20 @@ class AuthServiceProvider extends ServiceProvider
   {
     $this->registerPolicies();
     // Auth
-    Auth::extend('cognito', function($app, $name, array $config) {
+    Auth::extend('cognito', function ($app, $name, array $config) {
       return new CognitoGuard(
         new JWTVerifierService(),
         $app['request'],
-        Auth::createUserProvider($config['provider'])
+        Auth::createUserProvider($config['provider']),
+        new User(),
+      );
+    });
+    Auth::extend('cognito:admin', function ($app, $name, array $config) {
+      return new CognitoGuard(
+        new JWTVerifierService(config('cognito.admin.userpoolId'), config('cognito.admin.region')),
+        $app['request'],
+        Auth::createUserProvider($config['provider']),
+        new Admin(),
       );
     });
 
