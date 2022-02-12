@@ -59,7 +59,8 @@ return [
   'test_id' => env('APP_TEST_ID', ''),
   'test_pass' => env('APP_TEST_PASS', ''),
   'test_mail' => env('APP_TEST_MAIL', ''),
-  'test_cognito_sub' => env('APP_TEST_COGNITO_SUB', ''),
+  'test_user_cognito_sub' => env('APP_TEST_USER_COGNITO_SUB', ''),
+  'test_admin_cognito_sub' => env('APP_TEST_ADMIN_COGNITO_SUB', ''),
 
   /*
   |--------------------------------------------------------------------------

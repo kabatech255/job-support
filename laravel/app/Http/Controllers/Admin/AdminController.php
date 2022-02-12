@@ -21,6 +21,6 @@ class AdminController extends Controller
   public function currentAdmin()
   {
     $currentAdmin = $this->service->currentAdmin();
-    return !!$currentAdmin ? response($currentAdmin) : response()->json();
+    return !!$currentAdmin ? response($currentAdmin) : response('');
   }
 }

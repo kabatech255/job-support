@@ -59,6 +59,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereFamilyNameKana($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereGivenName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereGivenNameKana($value)
+ * @property int|null $admin_code ユーザーコード
+ * @property int $role_id ロールID
+ * @property string $cognito_sub unique id of cognito admin
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin whereAdminCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin whereCognitoSub($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin whereRoleId($value)
+ * @property string|null $department_code 部署ID
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin whereDepartmentCode($value)
  */
 class Admin extends Authenticatable
 {
@@ -79,11 +87,15 @@ class Admin extends Authenticatable
     'given_name_kana',
     'file_path',
     'email',
+    'admin_code',
+    'role_id',
     'login_id',
     'password',
     'created_by',
     'updated_by',
     'deleted_by',
+    'cognito_sub',
+    'department_code'
   ];
 
   protected $appends = [
@@ -100,6 +112,7 @@ class Admin extends Authenticatable
     'remember_token',
     'email_verified_at',
     'login_id',
+    'cognito_sub',
     'role_id',
     'deleted_at',
     'created_by',

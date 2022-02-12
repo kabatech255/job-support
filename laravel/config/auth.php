@@ -49,8 +49,9 @@ return [
     ],
 
     'admin' => [
-      'driver' => 'session',
+      'driver' => 'cognito:admin',
       'provider' => 'admins',
+      'hash' => false,
     ],
   ],
 

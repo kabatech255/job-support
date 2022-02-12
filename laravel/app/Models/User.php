@@ -94,6 +94,8 @@ use App\Notifications\MailResetPasswordNotification;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\MeetingRecord[] $pinedMeetingRecords
  * @property-read int|null $pined_meeting_records_count
  * @method static \Illuminate\Database\Eloquent\Builder|User whereSub($value)
+ * @property string $cognito_sub unique id of cognito user
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCognitoSub($value)
  */
 class User extends Authenticatable
 {

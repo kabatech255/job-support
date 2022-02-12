@@ -47,7 +47,7 @@ jobs:
       - image: circleci/mysql:5.7
         environment:
           MYSQL_DATABASE: "job_support_test"
-          MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+          MYSQL_ALLOW_EMPTY_PASSWORD: "true"
           MYSQL_ROOT_HOST: "%"
 
     working_directory: ~/repo

@@ -15,6 +15,9 @@ class CreateAdminsTable extends Migration
   {
     Schema::create('admins', function (Blueprint $table) {
       $table->id();
+      // $table->unsignedInteger('user_code')->unique()->comment('ユーザーコード');
+      $table->unsignedInteger('admin_code')->nullable()->comment('ユーザーコード');
+      $table->unsignedBigInteger('role_id')->comment('ロールID');
       $table->string('login_id')->unique()->comment('ログインID');
       $table->string('family_name')->comment('姓');
       $table->string('given_name')->comment('名');

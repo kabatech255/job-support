@@ -8,6 +8,15 @@ use Illuminate\Support\Facades\Http;
 
 class JWTVerifierService
 {
+  private $region;
+  private $userpoolId;
+
+  public function __construct($userpoolId = '', $region = '')
+  {
+    $this->userpoolId = empty($userpoolId) ? config('cognito.user.userpoolId') : $userpoolId;
+    $this->region = empty($region) ? config('cognito.user.region') : $region;
+  }
+
   public function decode()
   {
     $jwt = \Request::header('Authorization');
@@ -28,7 +37,6 @@ class JWTVerifierService
       $alg = $this->getAlg($jwks, $kid);
       $decodedData = JWT::decode($jwt, $jwk, [$alg]);
       return $decodedData;
-      // TODO: $resultをAuth::user()に入れる
     } catch (\RuntimeException $exception) {
       \Log::debug(json_decode(json_encode($exception), true));
       return null;
@@ -37,7 +45,7 @@ class JWTVerifierService
 
   private function fetchJWKs(): array
   {
-    $downloadUrl = 'https://cognito-idp.' . config('cognito.region') . '.amazonaws.com/' . config('cognito.userpoolId') . '/.well-known/jwks.json';
+    $downloadUrl = 'https://cognito-idp.' . $this->region . '.amazonaws.com/' . $this->userpoolId . '/.well-known/jwks.json';
     $response = Http::get($downloadUrl);
     return json_decode($response->getBody()->getContents(), true) ?: [];
   }
