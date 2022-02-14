@@ -33,4 +33,22 @@ class UserQuery extends EloquentQuery implements UserQueryInterface
     });
     return $query->get()->all();
   }
+
+  /**
+   * @param array $params
+   * @param array|null $relation
+   * @return array
+   */
+  public function all(array $params, ?array $relation = null): array
+  {
+    $collection = $this->search($params, $relation ?? $this->relation())->get();
+    if (isset($params['slim']) && !!$params['slim']) {
+      return $collection->map(function ($user) {
+        return [
+          'email' => $user->email
+        ];
+      })->all();
+    }
+    return $collection->all();
+  }
 }

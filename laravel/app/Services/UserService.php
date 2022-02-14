@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Contracts\Queries\UserQueryInterface as Query;
 use App\Contracts\Repositories\UserRepositoryInterface as UserRepository;
 use App\Contracts\Repositories\NotifyValidationRepositoryInterface as NotifyValidationRepository;
 use Illuminate\Support\Facades\Auth;
@@ -34,6 +35,7 @@ class UserService extends Service
   /**
    * UserService constructor.
    * @param UserRepository $repository
+   * @param Query $query
    * @param NotifyValidationRepository $notifyValidationRepository
    * @param FileUploadService $fileUploadService
    * @param MeetingRecordService $meetingRecordService
@@ -42,6 +44,7 @@ class UserService extends Service
    */
   public function __construct(
     UserRepository $repository,
+    Query $query,
     NotifyValidationRepository $notifyValidationRepository,
     FileUploadService $fileUploadService,
     MeetingRecordService $meetingRecordService,
@@ -49,11 +52,22 @@ class UserService extends Service
     TaskService $taskService
   ) {
     $this->setRepository($repository);
+    $this->setQuery($query);
     $this->notifyValidationRepository = $notifyValidationRepository;
     $this->fileUploadService = $fileUploadService;
     $this->meetingRecordService = $meetingRecordService;
     $this->scheduleService = $scheduleService;
     $this->taskService = $taskService;
+  }
+
+  /**
+   * @param array $params
+   * @param array|null $relation
+   * @return User[]
+   */
+  public function index(array $params = [], array $relation = []): array
+  {
+    return $this->query()->all($params, $relation);
   }
 
   /**
@@ -102,14 +116,6 @@ class UserService extends Service
       }
     }
     return $this->repository()->update($params, $id);
-  }
-
-  /**
-   * @return Collection
-   */
-  public function all(): Collection
-  {
-    return $this->repository()->all();
   }
 
   /**
