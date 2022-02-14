@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Contracts\Queries\UserQueryInterface as Query;
 use App\Contracts\Repositories\UserRepositoryInterface as UserRepository;
 use App\Contracts\Repositories\NotifyValidationRepositoryInterface as NotifyValidationRepository;
+use App\Contracts\Repositories\ActionTypeRepositoryInterface as ActionTypeRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Supports\WithRepositoryTrait;
 use Illuminate\Support\Collection;
@@ -26,6 +27,10 @@ class UserService extends Service
    * @var NotifyValidationRepository
    */
   private $notifyValidationRepository;
+  /**
+   * @var ActionTypeRepository
+   */
+  private $actionTypeRepository;
 
   private $fileUploadService;
   private $meetingRecordService;
@@ -37,6 +42,7 @@ class UserService extends Service
    * @param UserRepository $repository
    * @param Query $query
    * @param NotifyValidationRepository $notifyValidationRepository
+   * @param ActionTypeRepository $actionTypeRepository
    * @param FileUploadService $fileUploadService
    * @param MeetingRecordService $meetingRecordService
    * @param ScheduleService $scheduleService
@@ -46,6 +52,7 @@ class UserService extends Service
     UserRepository $repository,
     Query $query,
     NotifyValidationRepository $notifyValidationRepository,
+    ActionTypeRepository $actionTypeRepository,
     FileUploadService $fileUploadService,
     MeetingRecordService $meetingRecordService,
     ScheduleService $scheduleService,
@@ -54,6 +61,7 @@ class UserService extends Service
     $this->setRepository($repository);
     $this->setQuery($query);
     $this->notifyValidationRepository = $notifyValidationRepository;
+    $this->actionTypeRepository = $actionTypeRepository;
     $this->fileUploadService = $fileUploadService;
     $this->meetingRecordService = $meetingRecordService;
     $this->scheduleService = $scheduleService;
@@ -155,12 +163,27 @@ class UserService extends Service
   public function notifyStatus($id)
   {
     $user = $this->repository()->find($id);
+    if ($user->notifyValidations->count() === 0) {
+      return $this->newValidations();
+    }
     return $user->notifyValidations->map(function ($notifyValidation) {
       return [
         'id' => $notifyValidation->actionType->id,
         'key' => $notifyValidation->actionType->key,
         'label_name' => $notifyValidation->actionType->label_name,
         'is_valid' => $notifyValidation->is_valid,
+      ];
+    })->all();
+  }
+
+  private function newValidations()
+  {
+    return $this->actionTypeRepository->all()->map(function ($actionType) {
+      return [
+        'id' => $actionType->id,
+        'key' => $actionType->key,
+        'label_name' => $actionType->label_name,
+        'is_valid' => false,
       ];
     })->all();
   }
