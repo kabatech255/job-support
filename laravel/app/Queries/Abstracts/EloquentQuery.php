@@ -84,13 +84,16 @@ abstract class EloquentQuery extends CommonAbstractQuery
   public function search(array $params, array $relation = []): Builder
   {
     $query = $this->builder()->with($relation);
+    $likely = isset($params['likely']) ? (bool) $params['likely'] : true;
     foreach ($params as $column => $val) {
       if ($column === 'keyword') {
         $query = $this->searchByKeywords($query, $val);
       } elseif (count($this->splitColumn($column)) >= 2) {
         $query = $this->searchOtherLocation($query, [$column => $val]);
       } elseif ($this->isValidColumnName($column)) {
-        $query->where($column, 'like', $this->liked($val));
+        $operator = $likely ? 'like' : '=';
+        $value = $likely ? $this->liked($val) : $val;
+        $query->where($column, $operator, $value);
       }
     }
 

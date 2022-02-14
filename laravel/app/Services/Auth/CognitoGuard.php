@@ -75,15 +75,17 @@ class CognitoGuard implements Guard
   private function create($decoded)
   {
     $cognito_username = 'cognito:username';
+    $custom_family_name_kana = 'custom:family_name_kana';
+    $custom_given_name_kana = 'custom:given_name_kana';
 
     return get_class($this->builder)::updateOrCreate(['cognito_sub' => $decoded->sub], [
       'cognito_sub' => $decoded->sub,
       'email' => $decoded->email ?? '',
       'login_id' => $decoded->{$cognito_username},
-      'family_name' => '',
-      // 'family_name_kana' => '',
-      'given_name' => '',
-      // 'given_name_kana' => '',
+      'family_name' => $decoded->family_name,
+      'family_name_kana' => $decoded->{$custom_family_name_kana},
+      'given_name' => $decoded->given_name,
+      'given_name_kana' => $decoded->{$custom_given_name_kana},
       'password' => \Hash::make(\Str::random(32)),
       'role_id' => 1,
     ]);
