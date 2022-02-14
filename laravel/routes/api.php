@@ -24,7 +24,8 @@ Route::group(['middleware' => 'api'], function () {
   Route::get('/user/current', 'UserController@currentUser')->name('currentUser');
   Route::get('/user/current/chat_rooms', 'UserController@withChatRooms')->name('withChatRooms');
   Route::get('/meeting_place', 'MeetingPlaceController@index')->name('meetingPlace.index');
-  Route::get('/meeting_record/ids', 'MeetingRecordController@ids')->name('meetingRecord.ids');
+  // ユーザ
+  Route::get('/user', 'UserController@index')->name('user.index');
 
   // 認証手続
   Route::namespace('Auth')->group(function () {
@@ -42,8 +43,6 @@ Route::group(['middleware' => 'api'], function () {
 
   // 一般認証が必要なAPI
   Route::middleware('auth')->group(function () {
-    // ユーザ
-    Route::get('/user', 'UserController@index')->name('user.index');
     // 優先順位
     Route::get('/priority', 'PriorityController@index')->name('priority.index');
     // 進捗状態

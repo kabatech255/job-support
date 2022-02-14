@@ -23,9 +23,9 @@ class UserController extends Controller
     $this->notifyValidationService = $notifyValidationService;
   }
 
-  public function index()
+  public function index(Request $request)
   {
-    return response($this->service->all(), 200);
+    return response($this->service->index($request->query()), 200);
   }
 
   /**
