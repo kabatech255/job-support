@@ -24,11 +24,12 @@ $factory->define(User::class, function ($faker) {
     'user_code' => $faker->unique()->numberBetween(120000, 129999),
     'role_id' => $faker->numberBetween(1, 3),
     'login_id' => Str::random(8),
-    'cognito_sub' => Str::random(8).'-'.Str::random(4).'-'.Str::random(4).'-'.Str::random(4).'-'.Str::random(12),
+    'cognito_sub' => Str::random(8) . '-' . Str::random(4) . '-' . Str::random(4) . '-' . Str::random(4) . '-' . Str::random(12),
     'family_name' => $faker->lastName,
     'given_name' => $faker->firstName,
     'family_name_kana' => $faker->lastKanaName,
     'given_name_kana' => $faker->firstKanaName,
+    'organization_id' => 1,
     'email' => $faker->unique()->safeEmail,
     'email_verified_at' => now(),
     'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
