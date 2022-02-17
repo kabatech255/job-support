@@ -57,9 +57,7 @@ class TaskService extends Service
    */
   public function findByOwner(array $params, $perPage, $ownerId = null): array
   {
-    if (!$ownerId) {
-      $params['owner_id'] = !$ownerId ? Auth::user()->id : $ownerId;
-    }
+    $params['owner_id'] = !$ownerId ? Auth::user()->id : $ownerId;
     $pager = $this->query()->paginate($params, $perPage);
     if (!!$pager) {
       $data = json_decode(json_encode($pager), true);

@@ -25,7 +25,15 @@ abstract class EloquentQuery extends CommonAbstractQuery
    */
   protected function setRelationTargets(array $relationTargets)
   {
-    $this->relationTargets = $relationTargets;
+    $mergedCreatedBy = [
+      'createdBy' => ['organization_id']
+    ];
+
+    if (in_array('createdBy', array_keys($relationTargets))) {
+      $mergedCreatedBy['createdBy'] = array_merge($mergedCreatedBy['createdBy'], $relationTargets['createdBy']);
+    }
+
+    $this->relationTargets = array_merge($relationTargets, $mergedCreatedBy);
   }
 
   /**
@@ -167,11 +175,13 @@ abstract class EloquentQuery extends CommonAbstractQuery
     if ($filter === 'like') {
       $value = $this->liked($value);
     }
+
     $query->whereHas($tableName, function ($q) use ($tableName, $columnName, $value, $filter) {
       if ($this->includesInRelationalColumns($tableName, $columnName)) {
         $q->where($columnName, $filter, $value);
       }
     });
+
     return $query;
   }
 }

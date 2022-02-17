@@ -50,12 +50,24 @@ class Activity extends Model implements ModelInterface
     'replaced_link',
   ];
 
+  const RELATIONS_ARRAY = [
+    'user'
+  ];
+
   /**
    * @return \Illuminate\Database\Eloquent\Relations\HasOne
    */
   public function actionType()
   {
     return $this->hasOne(ActionType::class, 'id', 'action_type_id');
+  }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+   */
+  public function user()
+  {
+    return $this->belongsTo(User::class, 'user_id', 'id');
   }
 
   /**

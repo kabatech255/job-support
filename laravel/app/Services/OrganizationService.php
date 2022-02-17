@@ -45,9 +45,8 @@ class OrganizationService extends Service
     $organization = $this->repository()->save($params);
 
     if ($organization) {
-      $user = $this->userRepository->find(Auth::user()->id);
       // リクエストユーザのorganization_idを更新し、以後エンドポイントにアクセスできるようにする
-      $this->userRepository->update([
+      $user = $this->userRepository->update([
         'organization_id' => $organization->id,
       ], Auth::user()->id);
 

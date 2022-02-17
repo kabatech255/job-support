@@ -78,7 +78,7 @@ class CognitoGuard implements Guard
     $custom_family_name_kana = 'custom:family_name_kana';
     $custom_given_name_kana = 'custom:given_name_kana';
 
-    $author = get_class($this->builder)::updateOrCreate(['cognito_sub' => $decoded->sub], [
+    $author = get_class($this->builder)::updateOrCreate(['email' => $decoded->email], [
       'cognito_sub' => $decoded->sub,
       'email' => $decoded->email ?? '',
       'login_id' => $decoded->{$cognito_username},
@@ -89,7 +89,7 @@ class CognitoGuard implements Guard
       'password' => \Hash::make(\Str::random(32)),
       'role_id' => 1,
     ]);
-    if ($author) {
+    if ($author && !$author->created_by) {
       $author->update([
         'created_by' => $author->id,
       ]);

@@ -15,11 +15,11 @@ class OrganizationFilter
    * @param string|null $guard
    * @return mixed
    */
-  public function handle($request, Closure $next)
+  public function handle($request, Closure $next, $belongs = 'createdBy', $guard = null)
   {
-    $request->fullUrlWithQuery([
-      'createdBy:organization_id' => 1,
-    ]);
+    if (Auth::guard($guard)->check()) {
+      $request->merge([$belongs . ':organization_id' => Auth::user()->organization_id,]);
+    }
     return $next($request);
   }
 }
