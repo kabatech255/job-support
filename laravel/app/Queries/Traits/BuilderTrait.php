@@ -78,7 +78,8 @@ trait BuilderTrait
    */
   public function includesInRelationalColumns(string $relationName, string $columnName)
   {
-    return in_array($columnName, $this->relationTargets()[$relationName]);
+    $relationTargetsExist = in_array($relationName, array_keys($this->relationTargets()));
+    return $relationTargetsExist && in_array($columnName, $this->relationTargets()[$relationName]);
   }
 
   /**

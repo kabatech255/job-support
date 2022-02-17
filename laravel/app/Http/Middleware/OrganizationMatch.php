@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class OrganizationMatch
 {
@@ -35,7 +36,7 @@ class OrganizationMatch
    */
   private function mismatchOrg($resource, $belongs): bool
   {
-    $belongsOrg = $resource->{$belongs}->organization_id;
-    return $belongsOrg !== Auth::user()->organization_id;
+    $belongsOrgId = $resource instanceof Authenticatable ? $resource->organization_id : $resource->{$belongs}->organization_id;
+    return $belongsOrgId !== Auth::user()->organization_id;
   }
 }

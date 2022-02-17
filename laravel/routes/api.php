@@ -25,7 +25,7 @@ Route::group(['middleware' => 'api'], function () {
   Route::get('/user/current/chat_rooms', 'UserController@withChatRooms')->name('withChatRooms');
   Route::get('/meeting_place', 'MeetingPlaceController@index')->name('meetingPlace.index');
   // ユーザ（候補一覧・メール重複チェック）
-  Route::get('/user', 'UserController@index')->name('user.index');
+  Route::get('/user', 'UserController@index')->name('user.index')->middleware('org.filter');
 
   // 認証手続
   Route::namespace('Auth')->group(function () {
@@ -45,21 +45,21 @@ Route::group(['middleware' => 'api'], function () {
   Route::middleware('auth')->group(function () {
     // 組織情報の登録・更新
     Route::post('/organization', 'OrganizationController@store')->name('organization.store');
+    // OrganizationPolicyでガードされている
     Route::put('/organization/{id}', 'OrganizationController@update')->name('organization.update');
     Route::get('/prefecture', 'PrefectureController@index')->name('prefecture.index');
 
     // 組織情報の登録後にアクセス可能なエンドポイント
-    Route::middleware('org.exists')->group(function () {
+    Route::middleware(['org.exists'])->group(function () {
+      // OrganizationPolicyでガードされている
       Route::get('/organization/{id}', 'OrganizationController@show')->name('organization.show');
       // 優先順位
       Route::get('/priority', 'PriorityController@index')->name('priority.index');
       // 進捗状態
       Route::get('/progress', 'ProgressController@index')->name('progress.index');
-      // スケジュール
-      Route::get('/schedule', 'ScheduleController@index')->name('schedule.index');
 
       // リソースの属する組織とリクエストユーザの組織が一致している場合にアクセス可能なエンドポイント
-      Route::middleware('org.match')->group(function () {
+      Route::middleware(['org.match', 'org.filter'])->group(function () {
         // プロフィール
         Route::put('/user/{id}/profile', 'UserController@updateProfile')->name('user.update');
         // 設定
@@ -71,6 +71,7 @@ Route::group(['middleware' => 'api'], function () {
 
         // スケジュール
         Route::get('/user/{id}/schedule', 'ScheduleController@findByOwner')->name('schedule.findByOwner');
+        // Route::get('/schedule', 'ScheduleController@index')->name('schedule.index');
         Route::post('/schedule', 'ScheduleController@store')->name('schedule.store');
         Route::put('/schedule/{id}', 'ScheduleController@update')->name('schedule.update');
         Route::get('/schedule/{id}', 'ScheduleController@show')->name('schedule.show');
@@ -115,7 +116,7 @@ Route::group(['middleware' => 'api'], function () {
         Route::put('/meeting_record/{id}/bookmark', 'MeetingRecordPinController@unbookmark')->name('meetingRecordPin.unbookmark');
 
         // タスク
-        Route::get('/author/task', 'TaskController@findByOwner')->name('task.findByOwner')->middleware('org.filter');
+        Route::get('/author/task', 'TaskController@findByOwner')->name('task.findByOwner');
         Route::delete('/author/task', 'TaskController@deleteAll')->name('task.deleteAll');
         Route::get('/author/task/busy', 'TaskController@busyTaskByAuthor')->name('task.busyTaskByAuthor');
         Route::get('/task', 'TaskController@index')->name('task.index');
@@ -138,7 +139,7 @@ Route::group(['middleware' => 'api'], function () {
         Route::delete('/blog/{id}/comment/{comment_id}', 'BlogCommentController@destroy')->name('blogComment.destroy');
       });
 
-      Route::middleware('org.match:id,user_id')->group(function () {
+      Route::middleware('org.match:id,user')->group(function () {
         // アクティビティ
         Route::put('/activity/{id}', 'ActivityController@update')->name('activity.update');
       });
