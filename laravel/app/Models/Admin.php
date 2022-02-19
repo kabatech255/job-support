@@ -59,7 +59,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereFamilyNameKana($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereGivenName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereGivenNameKana($value)
- * @property int|null $admin_code ユーザーコード
+ * @property int|null $user_code ユーザーコード
  * @property int $role_id ロールID
  * @property string $cognito_sub unique id of cognito admin
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereAdminCode($value)
@@ -90,7 +90,7 @@ class Admin extends Authenticatable
     'given_name_kana',
     'file_path',
     'email',
-    'admin_code',
+    'user_code',
     'role_id',
     'login_id',
     'password',
@@ -147,5 +147,13 @@ class Admin extends Authenticatable
   public function organization()
   {
     return $this->belongsTo(Organization::class, 'organization_id', 'id');
+  }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasOne
+   */
+  public function bUser()
+  {
+    return $this->hasOne(User::class, 'email', 'email');
   }
 }

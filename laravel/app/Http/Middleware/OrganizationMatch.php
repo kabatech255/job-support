@@ -21,7 +21,10 @@ class OrganizationMatch
     // リソースが属している組織と、リクエストユーザの所属組織が一致しない場合は403
     $resource = $request->route($bind);
     if ($resource && $this->mismatchOrg($resource, $belongs)) {
-      return response()->json(['message' => 'Organization doesn\'t match.'], 403);
+      return response()->json([
+        'message' => 'Organization doesn\'t match.',
+        'status' => 'ORGANIZATION_MISMATCH',
+      ], 403);
     }
 
     return $next($request);

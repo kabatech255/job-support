@@ -45,7 +45,8 @@ class UserQuery extends EloquentQuery implements UserQueryInterface
     if (isset($params['slim']) && !!$params['slim']) {
       return $collection->map(function ($user) {
         return [
-          'email' => $user->email
+          'email' => $user->email,
+          'email_verified_at' => !!$user->email_verified_at
         ];
       })->all();
     }

@@ -16,7 +16,7 @@ class AdminSeeder extends Seeder
     if (\TestUser::hasId()) {
       factory(Admin::class, 1)->create([
         'department_code' => 5,
-        'admin_code' => 111111,
+        'user_code' => 111111,
         'role_id' => 2,
         'login_id' => config('app.test_id'),
         'cognito_sub' => config('app.test_admin_cognito_sub'),
@@ -26,6 +26,7 @@ class AdminSeeder extends Seeder
         'family_name_kana' => 'テスト',
         'given_name_kana' => 'タロウ',
         'email' => config('app.test_mail', 'sample@example.com'),
+        'created_by' => 1,
       ]);
     }
   }
