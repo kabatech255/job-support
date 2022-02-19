@@ -16,6 +16,8 @@ use App\Services\TaskService;
 use App\Services\FileUploadService;
 use App\Services\Supports\FileSupportTrait;
 use App\Services\Supports\StrSupportTrait;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\UserCreatedNotification;
 
 class UserService extends Service
 {
@@ -76,6 +78,28 @@ class UserService extends Service
   public function index(array $params = [], array $relation = []): array
   {
     return $this->query()->all($params, $relation);
+  }
+
+  /**
+   * @param array $params
+   * @param array|null $relation
+   * @return User
+   */
+  public function store(array $params = []): User
+  {
+    $inviter = Auth::guard('admin')->user();
+    $params = array_merge($params, [
+      'created_by' => $inviter->bUser->id,
+      'organization_id' => $inviter->organization_id,
+    ]);
+    $user = $this->repository()->save($params);
+
+    if ($user) {
+      // 登録された人にメール通知
+      Notification::send([$user], new UserCreatedNotification($inviter));
+    }
+
+    return $user;
   }
 
   /**

@@ -118,6 +118,7 @@ class User extends Authenticatable
     'given_name_kana',
     'file_path',
     'email',
+    'email_verified_at',
     'user_code',
     'role_id',
     'login_id',

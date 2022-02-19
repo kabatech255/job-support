@@ -29,11 +29,8 @@ Route::name('admin.')->group(function () {
   });
 
   // 管理者認証が必要なAPI
-  Route::middleware('auth:admin')->group(function () {
-    // TODO: 組織情報更新のエンドポイント
-    // ...
-    Route::middleware('orgExists')->group(function () {
-      // 組織情報の登録後にアクセス可能なエンドポイント
-    });
+  Route::middleware(['auth:admin', 'org.exists:admin'])->group(function () {
+    // 組織情報の登録後にアクセス可能なエンドポイント
+    Route::post('/user', 'UserController@store')->name('user.store');
   });
 });

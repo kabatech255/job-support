@@ -15,10 +15,10 @@ class CreateAdminsTable extends Migration
   {
     Schema::create('admins', function (Blueprint $table) {
       $table->id();
-      // $table->unsignedInteger('user_code')->unique()->comment('ユーザーコード');
-      $table->unsignedInteger('admin_code')->nullable()->comment('ユーザーコード');
-      $table->unsignedBigInteger('role_id')->comment('ロールID');
-      $table->string('login_id')->unique()->comment('ログインID');
+      $table->unsignedInteger('user_code')->nullable()->comment('ユーザーコード');
+      $table->unsignedBigInteger('role_id')->default(1)->comment('ロールID');
+      $table->string('cognito_sub')->unique()->nullable()->comment('unique id of cognito user');
+      $table->string('login_id')->unique()->nullable()->comment('ログインID');
       $table->string('family_name')->comment('姓');
       $table->string('given_name')->comment('名');
       $table->string('family_name_kana')->nullable()->comment('セイ');
@@ -26,7 +26,7 @@ class CreateAdminsTable extends Migration
       $table->string('file_path')->nullable()->comment('画像');
       $table->string('email')->unique();
       $table->timestamp('email_verified_at')->nullable();
-      $table->string('password');
+      $table->string('password')->nullable();
       $table->rememberToken();
 
       $table->string('created_by')->nullable()->comment('登録者');

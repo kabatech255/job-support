@@ -8,6 +8,7 @@ use App\Http\Requests\User\ProfileRequest;
 use App\Http\Requests\User\SettingRequest;
 use App\Models\User;
 use App\Services\NotifyValidationService;
+use DB;
 
 class UserController extends Controller
 {
@@ -37,12 +38,12 @@ class UserController extends Controller
    */
   public function updateProfile(ProfileRequest $request, User $id)
   {
-    \DB::beginTransaction();
+    DB::beginTransaction();
     try {
       $user = $this->service->updateProfile($request->all(), $id);
-      \DB::commit();
+      DB::commit();
     } catch (\Exception $e) {
-      \DB::rollback();
+      DB::rollback();
       throw $e;
     }
     return response($user, 200);

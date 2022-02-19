@@ -90,6 +90,7 @@ return [
   'uploaded'             => ':attributeのアップロードに失敗しました。',
   'url'                  => ':attributeには正しい形式のURLを指定してください。',
   'postalcode'              => ':attributeは5~7桁の整数で入力してください',
+  'katakana'              => ':attributeはカタカナで入力してください',
 
   /*
     |--------------------------------------------------------------------------
@@ -129,6 +130,10 @@ return [
     'city' => '市区町村',
     'tel' => '電話番号',
     'supervisor_id' => '責任者',
+    'family_name' => '姓',
+    'family_name_kana' => 'セイ',
+    'given_name' => '名',
+    'given_name_kana' => 'メイ',
   ],
 
 ];

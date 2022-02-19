@@ -9,6 +9,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Carbon;
 
 class CognitoGuard implements Guard
 {
@@ -58,8 +59,8 @@ class CognitoGuard implements Guard
     if ($decoded) {
       $result = $this->userProvider->retrieveByCredentials(['cognito_sub' => $decoded->sub]);
       if (is_null($result)) {
-        $registered = $this->create($decoded);
-        $result = $this->userProvider->retrieveByCredentials(['cognito_sub' => $registered->cognito_sub]);
+        $registered = $this->createOrUpdate($decoded);
+        $result = $this->userProvider->retrieveByCredentials(['cognito_sub' => $decoded->sub]);
       }
       return $result;
     }
@@ -72,7 +73,7 @@ class CognitoGuard implements Guard
     throw new \RuntimeException('Cognito guard cannot be used for credential based authentication.');
   }
 
-  private function create($decoded)
+  private function createOrUpdate($decoded)
   {
     $cognito_username = 'cognito:username';
     $custom_family_name_kana = 'custom:family_name_kana';
@@ -86,8 +87,7 @@ class CognitoGuard implements Guard
       'family_name_kana' => $decoded->{$custom_family_name_kana},
       'given_name' => $decoded->given_name,
       'given_name_kana' => $decoded->{$custom_given_name_kana},
-      'password' => \Hash::make(\Str::random(32)),
-      'role_id' => 1,
+      'email_verified_at' => Carbon::now(),
     ]);
     if ($author && !$author->created_by) {
       $author->update([
