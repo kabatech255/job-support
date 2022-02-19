@@ -27,12 +27,6 @@ abstract class TestCase extends BaseTestCase
     self::$openApiValidator = new Validator(Yaml::parse(file_get_contents(__DIR__ . '/../openapi.yaml')));
   }
 
-  // static public function tearDownAfterClass(): void
-  // {
-  //   parent::tearDownAfterClass();
-  //   Artisan::call('migrate:reset');
-  // }
-
   protected function setUp(): void
   {
     parent::setUp();
