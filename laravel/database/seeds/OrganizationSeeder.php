@@ -3,6 +3,7 @@
 use App\Models\Organization;
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use App\Models\Admin;
 
 class OrganizationSeeder extends Seeder
 {
@@ -19,6 +20,9 @@ class OrganizationSeeder extends Seeder
     ]);
 
     User::where('organization_id', null)->update([
+      'organization_id' => $organization[0]->id,
+    ]);
+    Admin::where('organization_id', null)->update([
       'organization_id' => $organization[0]->id,
     ]);
   }
