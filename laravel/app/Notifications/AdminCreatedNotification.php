@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class UserCreatedNotification extends Notification implements ShouldQueue
+class AdminCreatedNotification extends Notification implements ShouldQueue
 {
   use Queueable;
 
@@ -46,12 +46,12 @@ class UserCreatedNotification extends Notification implements ShouldQueue
   public function toMail($notifiable)
   {
     $tempArr = $notifiable->toArray();
-    \Log::debug(json_decode($tempArr, true));
     foreach ($tempArr as $key => $val) {
-      if (in_array($key, ['email', 'family_name', 'family_name_kana', 'given_name', 'given_name_kana'])) {
+      if (gettype($key) === 'string' && in_array($key, ['email', 'family_name', 'family_name_kana', 'given_name', 'given_name_kana'])) {
         $slim[$key] = base64_encode($val);
       }
     }
+
     $query = \Arr::query([
       'email' => $slim['email'],
       'family_name' => $slim['family_name'],
@@ -59,11 +59,12 @@ class UserCreatedNotification extends Notification implements ShouldQueue
       'given_name' => $slim['given_name'],
       'given_name_kana' => $slim['given_name_kana'],
     ]);
+
     return (new MailMessage)
-      ->subject("【{$this->subjectPrefix}】{$this->inviter->full_name}さんから招待されています")
-      ->markdown('mail.user.created', [
+      ->subject("【{$this->subjectPrefix}】{$this->inviter->full_name}さんから管理者システムに招待されました")
+      ->markdown('mail.admin.created', [
         'notifiable' => $notifiable,
-        'accountSetupUrl' => config('app.front_url', 'http://localhost:3000') . '/account_setup?' . $query,
+        'accountSetupUrl' => config('app.admin_front_url', 'http://localhost:3001') . '/account_setup?' . $query,
       ]);
   }
 
