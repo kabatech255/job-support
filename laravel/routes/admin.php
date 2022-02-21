@@ -18,19 +18,17 @@ Route::name('admin.')->group(function () {
   // 認証中の管理ユーザーを返却
   Route::get('/current', 'AdminController@currentAdmin')->name('currentAdmin');
 
-  // 管理者認証手続
-  Route::namespace('Auth')->group(function () {
-    //     Route::post('/register', 'RegisterController@register')->name('register');
-    //     Route::post('/login', 'LoginController@login')->name('login');
-    //
-    //     Route::middleware('auth:admin')->group(function() {
-    //       Route::post('/logout', 'LoginController@logout')->name('logout');
-    //     });
-  });
-
   // 管理者認証が必要なAPI
-  Route::middleware(['auth:admin', 'org.exists:admin'])->group(function () {
+  Route::middleware(['auth:admin', 'org.exists'])->group(function () {
     // 組織情報の登録後にアクセス可能なエンドポイント
+    // User
     Route::post('/user', 'UserController@store')->name('user.store');
+    // Admin
+    Route::post('/admin', 'AdminController@store')->name('admin.store');
+
+    Route::middleware(['auth:admin', 'org.filter'])->group(function () {
+      Route::get('/user', 'UserController@index')->name('user.index');
+      Route::get('/admin', 'AdminController@index')->name('admin.index');
+    });
   });
 });

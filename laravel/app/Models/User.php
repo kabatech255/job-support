@@ -132,6 +132,7 @@ class User extends Authenticatable
 
   protected $appends = [
     'full_name',
+    'full_name_kana',
     'is_initialized',
   ];
 
@@ -143,7 +144,6 @@ class User extends Authenticatable
   protected $hidden = [
     'password',
     'remember_token',
-    'email_verified_at',
     'login_id',
     'cognito_sub',
     'role_id',
@@ -169,6 +169,14 @@ class User extends Authenticatable
   public function getFullNameAttribute()
   {
     return $this->family_name . ' ' . $this->given_name;
+  }
+
+  /**
+   * @return string
+   */
+  public function getFullNameKanaAttribute()
+  {
+    return $this->family_name_kana . ' ' . $this->given_name_kana;
   }
 
   /**

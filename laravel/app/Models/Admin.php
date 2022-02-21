@@ -104,6 +104,8 @@ class Admin extends Authenticatable
 
   protected $appends = [
     'full_name',
+    'full_name_kana',
+    'organization_name',
   ];
 
   /**
@@ -114,7 +116,7 @@ class Admin extends Authenticatable
   protected $hidden = [
     'password',
     'remember_token',
-    'email_verified_at',
+    // 'email_verified_at',
     'login_id',
     'cognito_sub',
     'role_id',
@@ -142,6 +144,22 @@ class Admin extends Authenticatable
   }
 
   /**
+   * @return string
+   */
+  public function getFullNameKanaAttribute()
+  {
+    return $this->family_name_kana . ' ' . $this->given_name_kana;
+  }
+
+  /**
+   * @return string
+   */
+  public function getOrganizationNameAttribute()
+  {
+    return $this->organization->name;
+  }
+
+  /**
    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
    */
   public function organization()
@@ -155,5 +173,13 @@ class Admin extends Authenticatable
   public function bUser()
   {
     return $this->hasOne(User::class, 'email', 'email');
+  }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+   */
+  public function createdBy()
+  {
+    return $this->belongsTo(User::class, 'created_by', 'id');
   }
 }

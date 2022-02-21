@@ -14,10 +14,10 @@ class OrganizationExists
    * @param  \Closure  $next
    * @return mixed
    */
-  public function handle($request, Closure $next, $guard = null)
+  public function handle($request, Closure $next)
   {
     // 組織情報を登録していない場合は403
-    if (!Auth::guard($guard)->user()->organization) {
+    if (!Auth::user()->organization) {
       return response()->json([
         'message' => 'Organization doesn\'t exist.',
         'status' => 'ORGANIZATION_EMPTY',
