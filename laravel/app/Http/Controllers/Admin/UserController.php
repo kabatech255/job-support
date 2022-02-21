@@ -17,14 +17,14 @@ class UserController extends Controller
   {
     $this->service = $service;
   }
+
   /**
-   * Display a listing of the resource.
-   *
+   * @param Illuminate\Http\Request $request
    * @return \Illuminate\Http\Response
    */
-  public function index()
+  public function index(Request $request)
   {
-    return response('');
+    return response($this->service->index($request->query(), ['createdBy']), 200);
   }
 
   /**

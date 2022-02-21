@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Admin;
+use App\Models\User;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,9 +17,9 @@ class OrganizationFilter
    * @param string|null $guard
    * @return mixed
    */
-  public function handle($request, Closure $next, $belongs = 'createdBy', $guard = null)
+  public function handle($request, Closure $next, $belongs = 'createdBy')
   {
-    if (Auth::guard($guard)->check()) {
+    if (Auth::check()) {
       $request->merge([$belongs . ':organization_id' => Auth::user()->organization_id,]);
     }
     return $next($request);
