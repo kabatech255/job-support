@@ -87,7 +87,7 @@ class UserService extends Service
    */
   public function store(array $params = []): User
   {
-    $inviter = Auth::guard('admin')->user();
+    $inviter = Auth::user();
     $params = array_merge($params, [
       'created_by' => $inviter->bUser->id,
       'organization_id' => $inviter->organization_id,

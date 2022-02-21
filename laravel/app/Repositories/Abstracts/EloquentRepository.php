@@ -14,13 +14,14 @@ abstract class EloquentRepository extends CommonAbstractRepository
 
   public function qualifiedStoreParams(array $params): array
   {
-    $params['updated_by'] = Auth::check() ? Auth::user()->id : null;
+    $params['created_by'] = Auth::check() ? $this->idByInstance(Auth::user()) : null;
+    $params['updated_by'] = Auth::check() ? $this->idByInstance(Auth::user()) : null;
     return parent::qualifiedStoreParams($params);
   }
 
   public function qualifiedUpdateParams(array $params): array
   {
-    $params['updated_by'] = Auth::check() ? Auth::user()->id : null;
+    $params['updated_by'] = Auth::check() ? $this->idByInstance(Auth::user()) : null;
     return parent::qualifiedUpdateParams($params);
   }
 

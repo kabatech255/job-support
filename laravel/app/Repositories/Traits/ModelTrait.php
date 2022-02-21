@@ -2,7 +2,9 @@
 
 namespace App\Repositories\Traits;
 
+use App\Models\Admin;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 trait ModelTrait
 {
@@ -27,5 +29,14 @@ trait ModelTrait
   public function model(): Model
   {
     return $this->model;
+  }
+
+  /**
+   * @param Authenticatable $createdBy
+   * @return integer
+   */
+  public function idByInstance(Authenticatable $createdBy): int
+  {
+    return $createdBy instanceof Admin ? $createdBy->bUser->id : $createdBy->id;
   }
 }
