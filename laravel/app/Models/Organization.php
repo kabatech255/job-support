@@ -37,6 +37,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|Organization whereTel($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Organization whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read string $pref_name
+ * @property-read \App\Models\Prefecture|null $prefecture
+ * @property-read \App\Models\User|null $supervisor
+ * @method static \Illuminate\Database\Query\Builder|Organization onlyTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Organization withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Organization withoutTrashed()
  */
 class Organization extends Model
 {
