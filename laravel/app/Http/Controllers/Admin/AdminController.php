@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\AdminService;
 use App\Http\Requests\Admin\StoreRequest;
+use App\Models\Admin;
 
 class AdminController extends Controller
 {
@@ -51,5 +52,14 @@ class AdminController extends Controller
       throw $e;
     }
     return response($user, 201);
+  }
+
+  /**
+   * @param Admin $id
+   * @return \Illuminate\Http\Response
+   */
+  public function show(Admin $id)
+  {
+    return response($this->service->find($id), 200);
   }
 }

@@ -98,6 +98,10 @@ use App\Notifications\MailResetPasswordNotification;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCognitoSub($value)
  * @property int|null $organization_id 会社ID
  * @method static \Illuminate\Database\Eloquent\Builder|User whereOrganizationId($value)
+ * @property-read User|null $createdBy
+ * @property-read string $full_name_kana
+ * @property-read bool $is_initialized
+ * @property-read \App\Models\Organization|null $organization
  */
 class User extends Authenticatable
 {

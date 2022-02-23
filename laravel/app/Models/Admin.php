@@ -70,6 +70,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int|null $organization_id 会社ID
  * @property-read \App\Models\Organization|null $organization
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereOrganizationId($value)
+ * @property-read \App\Models\User|null $bUser
+ * @property-read \App\Models\User|null $createdBy
+ * @property-read \App\Models\Department|null $department
+ * @property-read string $full_name_kana
+ * @property-read string $organization_name
+ * @method static \Illuminate\Database\Eloquent\Builder|Admin whereUserCode($value)
  */
 class Admin extends Authenticatable
 {
@@ -181,5 +187,13 @@ class Admin extends Authenticatable
   public function createdBy()
   {
     return $this->belongsTo(User::class, 'created_by', 'id');
+  }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+   */
+  public function department()
+  {
+    return $this->belongsTo(Department::class, 'department_code', 'department_code');
   }
 }
