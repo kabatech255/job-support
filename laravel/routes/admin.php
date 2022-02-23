@@ -18,15 +18,23 @@ Route::name('admin.')->group(function () {
   // 認証中の管理ユーザーを返却
   Route::get('/current', 'AdminController@currentAdmin')->name('currentAdmin');
 
-  // 管理者認証が必要なAPI
-  Route::middleware(['auth:admin', 'org.exists'])->group(function () {
-    // 組織情報の登録後にアクセス可能なエンドポイント
+  /**
+   * ==========
+   * middleware
+   * ==========
+   * - auth:admin...管理者認証
+   * - org.exists...organization_idがnullでない
+   * - organization_idとアクセスするリソースのcreatedBy.organization_idが一致する
+   */
+  Route::middleware(['auth:admin', 'org.exists', 'org.match'])->group(function () {
     // User
     Route::post('/user', 'UserController@store')->name('user.store');
+    Route::get('/user/{id}', 'UserController@show')->name('user.show');
     // Admin
     Route::post('/admin', 'AdminController@store')->name('admin.store');
+    Route::get('/admin/{id}', 'AdminController@show')->name('admin.show');
 
-    Route::middleware(['auth:admin', 'org.filter'])->group(function () {
+    Route::middleware(['org.filter'])->group(function () {
       Route::get('/user', 'UserController@index')->name('user.index');
       Route::get('/admin', 'AdminController@index')->name('admin.index');
     });

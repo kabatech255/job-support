@@ -31,6 +31,7 @@ use App\Services\Supports\StrSupportTrait;
  * @property-read \App\Models\ActionType|null $actionType
  * @property-read string $replaced_link
  * @method static \Illuminate\Database\Eloquent\Builder|Activity whereModelId($value)
+ * @property-read \App\Models\User $user
  */
 class Activity extends Model implements ModelInterface
 {

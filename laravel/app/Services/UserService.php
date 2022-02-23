@@ -103,6 +103,16 @@ class UserService extends Service
   }
 
   /**
+   * @param int|User $id
+   * @param array $loads
+   * @return User
+   */
+  public function find($id, array $loads = ['department', 'activities']): User
+  {
+    return $this->repository()->find($id, $loads);
+  }
+
+  /**
    * @param array $params
    * @param $id
    * @return User
