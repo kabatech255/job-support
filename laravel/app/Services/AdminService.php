@@ -56,6 +56,16 @@ class AdminService extends Service
   }
 
   /**
+   * @param Admin|int $id
+   * @param array $loads
+   * @return Admin
+   */
+  public function find($id, array $loads = ['department']): Admin
+  {
+    return $this->repository()->find($id, $loads);
+  }
+
+  /**
    * @return \Illuminate\Contracts\Auth\Authenticatable|null
    */
   public function currentAdmin()
