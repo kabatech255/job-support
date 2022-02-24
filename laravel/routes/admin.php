@@ -33,6 +33,8 @@ Route::name('admin.')->group(function () {
     // Admin
     Route::post('/admin', 'AdminController@store')->name('admin.store');
     Route::get('/admin/{id}', 'AdminController@show')->name('admin.show');
+    // プロフィール
+    Route::put('/admin/{id}/profile', 'AdminController@updateProfile')->name('admin.profile');
 
     Route::middleware(['org.filter'])->group(function () {
       Route::get('/user', 'UserController@index')->name('user.index');

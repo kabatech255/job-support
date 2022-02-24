@@ -136,7 +136,7 @@ class UserService extends Service
       // mode = "KV"
       $params['given_name_kana'] = mb_convert_kana($this->mbTrim($params['given_name_kana']));
     }
-    return $this->repository()->update($params, $id);
+    return $this->repository()->save($params, $id);
   }
 
   /**
