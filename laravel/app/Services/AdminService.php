@@ -3,12 +3,13 @@
 namespace App\Services;
 
 use App\Contracts\Repositories\AdminRepositoryInterface as Repository;
-use App\Services\Supports\WithRepositoryTrait;
 use Illuminate\Support\Facades\Auth;
 use App\Queries\AdminQuery as Query;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\AdminCreatedNotification;
+use App\Services\FileUploadService;
+use App\Services\Supports\WithRepositoryTrait;
 use App\Services\Supports\StrSupportTrait;
 use App\Services\Supports\FileSupportTrait;
 
@@ -19,15 +20,17 @@ class AdminService extends Service
     StrSupportTrait,
     FileSupportTrait;
 
+  private $fileUploadService;
 
   /**
    * UserService constructor.
    * @param Repository $repository
    */
-  public function __construct(Repository $repository, Query $query)
+  public function __construct(Repository $repository, Query $query, FileUploadService $fileUploadService)
   {
     $this->setRepository($repository);
     $this->setQuery($query);
+    $this->fileUploadService = $fileUploadService;
     // else repository...
   }
 
@@ -81,6 +84,11 @@ class AdminService extends Service
     if (isset($params['file'])) {
       $admin = $this->find($id);
       $params = $this->fileUpload($params, $admin, 'id', $this->repository()->findPath($id));
+    }
+    // $params['delete_flag']が"'0'"の場合スルーしたいため、isset(...)を使わない
+    if (!empty($params['delete_flag'] ?? '') && !!$this->repository()->findPath($id)) {
+      $this->fileUploadService->remove($this->repository()->findPath($id));
+      $params['file_path'] = null;
     }
     if (isset($params['family_name_kana'])) {
       // mode = "KV"
