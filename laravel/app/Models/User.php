@@ -138,6 +138,7 @@ class User extends Authenticatable
     'full_name',
     'full_name_kana',
     'is_initialized',
+    'is_invited'
   ];
 
   /**
@@ -189,6 +190,14 @@ class User extends Authenticatable
   public function getIsInitializedAttribute(): bool
   {
     return !!$this->organization_id;
+  }
+
+  /**
+   * @return boolean
+   */
+  public function getIsInvitedAttribute(): bool
+  {
+    return !!$this->admin;
   }
 
   /**
@@ -322,5 +331,13 @@ class User extends Authenticatable
   public function organization()
   {
     return $this->belongsTo(Organization::class, 'organization_id', 'id');
+  }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasOne
+   */
+  public function admin()
+  {
+    return $this->hasOne(Admin::class, 'email', 'email');
   }
 }
