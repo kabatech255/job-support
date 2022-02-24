@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\AdminService;
 use App\Http\Requests\Admin\StoreRequest;
+use App\Http\Requests\Admin\ProfileRequest;
 use App\Models\Admin;
 
 class AdminController extends Controller
@@ -61,5 +62,25 @@ class AdminController extends Controller
   public function show(Admin $id)
   {
     return response($this->service->find($id), 200);
+  }
+
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param ProfileRequest $request
+   * @param Admin $id
+   * @return \Illuminate\Http\Response
+   */
+  public function updateProfile(ProfileRequest $request, Admin $id)
+  {
+    \DB::beginTransaction();
+    try {
+      $admin = $this->service->updateProfile($request->all(), $id);
+      \DB::commit();
+    } catch (\Exception $e) {
+      \DB::rollback();
+      throw $e;
+    }
+    return response($admin, 200);
   }
 }

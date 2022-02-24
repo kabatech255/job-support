@@ -12,4 +12,16 @@ class AdminRepository extends EloquentRepository implements AdminRepositoryInter
   {
     $this->setModel($model);
   }
+
+  /**
+   * @param $id
+   * @return string | null
+   */
+  public function findPath($id): ?string
+  {
+    if ($id instanceof Admin) {
+      return $id->file_path;
+    }
+    return parent::find($id)->file_path;
+  }
 }
