@@ -9,10 +9,16 @@ use App\Queries\AdminQuery as Query;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\AdminCreatedNotification;
+use App\Services\Supports\StrSupportTrait;
+use App\Services\Supports\FileSupportTrait;
+
 
 class AdminService extends Service
 {
-  use WithRepositoryTrait;
+  use WithRepositoryTrait,
+    StrSupportTrait,
+    FileSupportTrait;
+
 
   /**
    * UserService constructor.
@@ -63,6 +69,28 @@ class AdminService extends Service
   public function find($id, array $loads = ['department']): Admin
   {
     return $this->repository()->find($id, $loads);
+  }
+
+  /**
+   * @param array $params
+   * @param $id
+   * @return Admin
+   */
+  public function updateProfile(array $params, $id)
+  {
+    if (isset($params['file'])) {
+      $admin = $this->find($id);
+      $params = $this->fileUpload($params, $admin, 'id', $this->repository()->findPath($id));
+    }
+    if (isset($params['family_name_kana'])) {
+      // mode = "KV"
+      $params['family_name_kana'] = mb_convert_kana($this->mbTrim($params['family_name_kana']));
+    }
+    if (isset($params['given_name_kana'])) {
+      // mode = "KV"
+      $params['given_name_kana'] = mb_convert_kana($this->mbTrim($params['given_name_kana']));
+    }
+    return $this->repository()->save($params, $id);
   }
 
   /**
