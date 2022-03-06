@@ -114,10 +114,11 @@ web サーバーに **Nginx** を使い、**ALB** でリクエストの分配を
   - Route53
   - ACM
   - Amazon SES
-  - AppSync **(New)**
-  - API Gateway **(New)**
-  - Lambda **(New)**
-  - DynamoDB **(New)**
+  - AppSync
+  - API Gateway
+  - Lambda
+  - DynamoDB
+  - Cognito
 - Docker
 - CircleCI
   - ecs-deploy
