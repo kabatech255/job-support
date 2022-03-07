@@ -22,8 +22,8 @@ class ProgressController extends Controller
    *
    * @return \Illuminate\Http\Response
    */
-  public function index()
+  public function index(Request $request)
   {
-    return response($this->service->all(), 200);
+    return response($this->service->all($request->query()), 200);
   }
 }

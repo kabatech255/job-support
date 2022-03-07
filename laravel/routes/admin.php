@@ -36,9 +36,23 @@ Route::name('admin.')->group(function () {
     // プロフィール
     Route::put('/admin/{id}/profile', 'AdminController@updateProfile')->name('admin.profile');
 
+    // 会議室
+    Route::post('/department', 'DepartmentController@store')->name('department.store');
+    Route::put('/department/{id}', 'DepartmentController@update')->name('department.update');
+    Route::delete('/department/{id}', 'DepartmentController@destroy')->name('department.destroy');
+    Route::post('/meeting_place', 'MeetingPlaceController@store')->name('meetingPlace.store');
+    Route::put('/meeting_place/{id}', 'MeetingPlaceController@update')->name('meetingPlace.update');
+    Route::delete('/meeting_place/{id}', 'MeetingPlaceController@destroy')->name('meetingPlace.destroy');
+    Route::post('/progress', 'ProgressController@store')->name('progress.store');
+    Route::put('/progress/{id}', 'ProgressController@update')->name('progress.update');
+    Route::delete('/progress/{id}', 'ProgressController@destroy')->name('progress.destroy');
+
     Route::middleware(['org.filter'])->group(function () {
       Route::get('/user', 'UserController@index')->name('user.index');
       Route::get('/admin', 'AdminController@index')->name('admin.index');
+      Route::get('/department', 'DepartmentController@index')->name('department.index');
+      Route::get('/meeting_place', 'MeetingPlaceController@index')->name('meetingPlace.index');
+      Route::get('/progress', 'ProgressController@index')->name('progress.index');
     });
   });
 });

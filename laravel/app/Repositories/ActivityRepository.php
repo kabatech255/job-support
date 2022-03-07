@@ -13,6 +13,11 @@ class ActivityRepository extends EloquentRepository implements ActivityRepositor
     $this->setModel($model);
   }
 
+  public function qualifiedStoreParams(array $params): array
+  {
+    return $params;
+  }
+
   public function read($userId)
   {
     return $this->model()->where('user_id', $userId)->update([

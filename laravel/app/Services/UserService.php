@@ -212,7 +212,7 @@ class UserService extends Service
 
   private function newValidations()
   {
-    return $this->actionTypeRepository->all()->map(function ($actionType) {
+    return collect($this->actionTypeRepository->findBy('is_notify', 1))->map(function ($actionType) {
       return [
         'id' => $actionType->id,
         'key' => $actionType->key,

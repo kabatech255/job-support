@@ -17,7 +17,7 @@ class ScheduleQuery extends EloquentQuery implements ScheduleQueryInterface
       'sharedMembers' => [
         'family_name',
         'given_name',
-        'department_code',
+        'department_id',
         'shared_with',
       ],
     ]);

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * App\Models\Department
  *
  * @property int $id
- * @property string $department_code 部署コード
+ * @property string $department_id 部署コード
  * @property string $name 部署名
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -35,12 +35,13 @@ class Department extends Model
   use SoftDeletes;
 
   protected $table = 'departments';
-  protected $primaryKey = 'department_code';
-  public $incrementing = false;
 
   protected $fillable = [
-    'department_code',
     'name',
+    'department_code',
+    'created_by',
+    'updated_by',
+    'deleted_by',
   ];
 
   /**
@@ -48,7 +49,14 @@ class Department extends Model
    */
   public function members()
   {
-    return $this->hasMany(User::class, 'department_code', 'department_code');
+    return $this->hasMany(User::class, 'department_id', 'id');
   }
 
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+   */
+  public function createdBy()
+  {
+    return $this->belongsTo(User::class, 'created_by', 'id');
+  }
 }

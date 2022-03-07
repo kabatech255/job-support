@@ -12,13 +12,13 @@ use App\Models\Organization;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\OrganizationCreatedNotification;
 use Illuminate\Contracts\Auth\Authenticatable;
+use App\Jobs\MasterInitializationJob;
 
 class OrganizationService extends Service
 {
   use WithRepositoryTrait;
 
   private $userRepository;
-  private $jobSupport;
   /**
    * UserService constructor.
    * @param Repository $repository
@@ -54,7 +54,7 @@ class OrganizationService extends Service
 
       // メール通知「組織情報登録完了のお知らせ」
       Notification::send([Auth::user()], new OrganizationCreatedNotification());
-
+      MasterInitializationJob::dispatch($user)->onQueue('default');
       return $user;
     }
 

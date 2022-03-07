@@ -18,6 +18,7 @@ class CreateActionTypesTable extends Migration
       $table->string('key')->comment('アクションキー');
       $table->string('label_name')->comment('アクション名');
       $table->text('template_message')->comment('テンプレートメッセージ');
+      $table->boolean('is_notify')->default(0)->comment('ユーザが通知設定の画面で変更できるか');
       $table->string('link')->comment('リンク');
       $table->timestamps();
       $table->softDeletes();
