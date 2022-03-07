@@ -73,5 +73,6 @@ class Kernel extends HttpKernel
     'org.exists' => \App\Http\Middleware\OrganizationExists::class,
     'org.match' => \App\Http\Middleware\OrganizationMatch::class,
     'org.filter' => \App\Http\Middleware\OrganizationFilter::class,
+    'activity.job' => \App\Http\Middleware\ActivityJobDispatcher::class,
   ];
 }

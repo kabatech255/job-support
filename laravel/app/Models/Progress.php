@@ -33,6 +33,9 @@ class Progress extends Model
   protected $fillable = [
     'name',
     'value',
+    'created_by',
+    'updated_by',
+    'deleted_by',
   ];
 
   const COMPLETE_VALUE = 128;
@@ -44,5 +47,13 @@ class Progress extends Model
   public function tasks()
   {
     return $this->hasMany(Task::class, 'progress_id', 'id');
+  }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+   */
+  public function createdBy()
+  {
+    return $this->belongsTo(User::class, 'created_by', 'id');
   }
 }

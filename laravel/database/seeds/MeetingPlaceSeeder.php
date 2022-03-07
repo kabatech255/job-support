@@ -1,5 +1,6 @@
 <?php
 
+use App\Common\TestUser;
 use Illuminate\Database\Seeder;
 
 class MeetingPlaceSeeder extends Seeder
@@ -18,16 +19,22 @@ class MeetingPlaceSeeder extends Seeder
         'name' => '会議室1',
         'created_at' => now(),
         'updated_at' => now(),
+        'created_by' => TestUser::id(),
+        'updated_by' => TestUser::id(),
       ],
       [
         'name' => '会議室2',
         'created_at' => now(),
         'updated_at' => now(),
+        'created_by' => TestUser::id(),
+        'updated_by' => TestUser::id(),
       ],
       [
         'name' => '会議室3',
         'created_at' => now(),
         'updated_at' => now(),
+        'created_by' => TestUser::id(),
+        'updated_by' => TestUser::id(),
       ],
     ];
 

@@ -13,8 +13,6 @@ use Illuminate\Support\Facades\Notification;
 use App\Models\ActionType;
 use App\Services\Supports\NotifySupport;
 use App\Services\Supports\StrSupportTrait;
-use App\Jobs\Supports\JobSupport;
-use App\Jobs\ScheduleShareActivityJob;
 
 class ScheduleService extends Service
 {
@@ -23,28 +21,21 @@ class ScheduleService extends Service
    * @var UserRepository
    */
   private $userRepository;
-  private $jobSupport;
 
   /**
    * UserService constructor.
    * @param Repository $repository
    * @param Query $query,
    * @param UserRepository $userRepository
-   * @param JobSupport $jobSupport
-   * @param ScheduleShareActivityJob $job
    */
   public function __construct(
     Repository $repository,
     Query $query,
-    UserRepository $userRepository,
-    JobSupport $jobSupport,
-    ScheduleShareActivityJob $job
+    UserRepository $userRepository
   ) {
     $this->setRepository($repository);
     $this->setQuery($query);
     $this->userRepository = $userRepository;
-    $this->jobSupport = $jobSupport;
-    $this->jobSupport->init($job, 'schedule_shared');
   }
 
   public function index(array $params, ?array $relation = null)
@@ -88,7 +79,6 @@ class ScheduleService extends Service
     Notification::send($newSchedule->sharedMembers->filter(function ($member) use ($newSchedule) {
       return NotifySupport::shouldSend($member, $newSchedule->created_by, ActionType::SCHEDULE_SHARED_KEY);
     }), new ScheduleSharedNotification($newSchedule));
-    $this->jobSupport->dispatch($newSchedule);
 
     return $newSchedule;
   }

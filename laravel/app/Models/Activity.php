@@ -45,6 +45,7 @@ class Activity extends Model implements ModelInterface
     'model_id',
     'is_read',
     'content',
+    'created_by',
   ];
 
   protected $appends = [

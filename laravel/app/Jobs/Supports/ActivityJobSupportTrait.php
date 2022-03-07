@@ -2,11 +2,10 @@
 
 namespace App\Jobs\Supports;
 
-use App\Models\ActionType;
 use App\Contracts\Repositories\ActionTypeRepositoryInterface as ActionTypeRepository;
 use App\Contracts\Repositories\ActivityRepositoryInterface as ActivityRepository;
 
-class JobSupport
+trait ActivityJobSupportTrait
 {
   /**
    * @var ActionTypeRepository
