@@ -6,7 +6,7 @@ use App\Events\MessageDelete;
 use App\Models\ChatMessage;
 use App\Models\ChatRoom;
 use App\Services\ChatMessageService;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use App\Http\Requests\ChatMessage\StoreRequest;
 use App\Http\Requests\ChatMessage\UpdateRequest;
 use Illuminate\Support\Facades\Auth;

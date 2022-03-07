@@ -19,35 +19,40 @@ class UserSeeder extends Seeder
       return [
         [
           'role_id' => 3,
-          'department_code' => $department->department_code,
-          'created_by' => 1,
+          'department_id' => $department->id,
+          'created_by' => $department->created_by,
+          'updated_by' => $department->updated_by,
         ],
         [
           'role_id' => 4,
-          'department_code' => $department->department_code,
-          'created_by' => 1,
+          'department_id' => $department->id,
+          'created_by' => $department->created_by,
+          'updated_by' => $department->updated_by,
         ],
         [
           'role_id' => 1,
-          'department_code' => $department->department_code,
-          'created_by' => 1,
+          'department_id' => $department->id,
+          'created_by' => $department->created_by,
+          'updated_by' => $department->updated_by,
         ],
         [
           'role_id' => 1,
-          'department_code' => $department->department_code,
-          'created_by' => 1,
+          'department_id' => $department->id,
+          'created_by' => $department->created_by,
+          'updated_by' => $department->updated_by,
         ],
         [
           'role_id' => 1,
-          'department_code' => $department->department_code,
-          'created_by' => 1,
+          'department_id' => $department->id,
+          'created_by' => $department->created_by,
+          'updated_by' => $department->updated_by,
         ],
       ];
     });
 
     if (\TestUser::hasId()) {
       factory(User::class, 1)->create([
-        'department_code' => 5,
+        'department_id' => 5,
         'user_code' => 111111,
         'role_id' => 2,
         'login_id' => config('app.test_id'),

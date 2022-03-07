@@ -62,6 +62,7 @@ abstract class EloquentRepository extends CommonAbstractRepository
   }
 
   /**
+   * @param $id
    * @return Model
    */
   public function delete($id): Model

@@ -31,8 +31,6 @@ class OrganizationMatch
   }
 
   /**
-   * Undocumented function
-   *
    * @param Model $resource
    * @param string $belongs
    * @return bool

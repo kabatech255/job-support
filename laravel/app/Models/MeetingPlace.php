@@ -53,4 +53,12 @@ class MeetingPlace extends Model
   {
     return $this->hasMany(MeetingRecord::class, 'meeting_place_id', 'id');
   }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+   */
+  public function createdBy()
+  {
+    return $this->belongsTo(User::class, 'created_by', 'id');
+  }
 }

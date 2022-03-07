@@ -23,7 +23,6 @@ Route::group(['middleware' => 'api'], function () {
   // 認証中の一般ユーザーを返却
   Route::get('/user/current', 'UserController@currentUser')->name('currentUser');
   Route::get('/user/current/chat_rooms', 'UserController@withChatRooms')->name('withChatRooms');
-  Route::get('/meeting_place', 'MeetingPlaceController@index')->name('meetingPlace.index');
   // ユーザ（候補一覧・メール重複チェック）
   Route::get('/user', 'UserController@index')->name('user.index')->middleware('org.filter');
 
@@ -55,11 +54,13 @@ Route::group(['middleware' => 'api'], function () {
       Route::get('/organization/{id}', 'OrganizationController@show')->name('organization.show');
       // 優先順位
       Route::get('/priority', 'PriorityController@index')->name('priority.index');
-      // 進捗状態
-      Route::get('/progress', 'ProgressController@index')->name('progress.index');
 
       // リソースの属する組織とリクエストユーザの組織が一致している場合にアクセス可能なエンドポイント
       Route::middleware(['org.match', 'org.filter'])->group(function () {
+        // 会議室
+        Route::get('/meeting_place', 'MeetingPlaceController@index')->name('meetingPlace.index');
+        // 進捗状態
+        Route::get('/progress', 'ProgressController@index')->name('progress.index');
         // プロフィール
         Route::put('/user/{id}/profile', 'UserController@updateProfile')->name('user.update');
         // 設定
@@ -72,7 +73,7 @@ Route::group(['middleware' => 'api'], function () {
         // スケジュール
         Route::get('/user/{id}/schedule', 'ScheduleController@findByOwner')->name('schedule.findByOwner');
         // Route::get('/schedule', 'ScheduleController@index')->name('schedule.index');
-        Route::post('/schedule', 'ScheduleController@store')->name('schedule.store');
+        Route::post('/schedule', 'ScheduleController@store')->name('schedule.store')->middleware('activity.job');
         Route::put('/schedule/{id}', 'ScheduleController@update')->name('schedule.update');
         Route::get('/schedule/{id}', 'ScheduleController@show')->name('schedule.show');
         Route::delete('/schedule/{id}', 'ScheduleController@destroy')->name('schedule.destroy');
@@ -85,7 +86,7 @@ Route::group(['middleware' => 'api'], function () {
         Route::get('/chat_room/{id}', 'ChatRoomController@show')->name('chatRoom.show');
         Route::delete('/chat_room/{id}', 'ChatRoomController@destroy')->name('chatRoom.destroy');
         // チャットメッセージ
-        Route::post('/chat_room/{id}/message', 'ChatMessageController@store')->name('chatMessage.store');
+        Route::post('/chat_room/{id}/message', 'ChatMessageController@store')->name('chatMessage.store')->middleware('activity.job');
         Route::put('/chat_room/{id}/message/{chat_message_id}', 'ChatMessageController@update')->name('chatMessage.update');
         Route::delete('/chat_room/{id}/message/{chat_message_id}', 'ChatMessageController@destroy')->name('chatMessage.destroy');
         // 既読
@@ -106,7 +107,7 @@ Route::group(['middleware' => 'api'], function () {
 
         // 会議議事録
         Route::get('/meeting_record', 'MeetingRecordController@index')->name('meetingRecord.index');
-        Route::post('/meeting_record', 'MeetingRecordController@store')->name('meetingRecord.store');
+        Route::post('/meeting_record', 'MeetingRecordController@store')->name('meetingRecord.store')->middleware('activity.job');
         Route::get('/meeting_record/{id}', 'MeetingRecordController@show')->name('meetingRecord.show');
         Route::put('/meeting_record/{id}', 'MeetingRecordController@update')->name('meetingRecord.update');
         Route::delete('/meeting_record/{id}', 'MeetingRecordController@destroy')->name('meetingRecord.destroy');

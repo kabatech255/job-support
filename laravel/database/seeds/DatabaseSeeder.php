@@ -17,13 +17,13 @@ class DatabaseSeeder extends Seeder
     $this->setFKCheckOff();
 
     $this->call(PrefectureSeeder::class);
-    $this->call(DepartmentSeeder::class);
     $this->call(RoleSeeder::class);
     $this->call(PrioritySeeder::class);
-    $this->call(ProgressSeeder::class);
     $this->call(TagSeeder::class);
-    $this->call(MeetingPlaceSeeder::class);
+    $this->call(DepartmentSeeder::class);
     $this->call(UserSeeder::class);
+    $this->call(MeetingPlaceSeeder::class);
+    $this->call(ProgressSeeder::class);
     $this->call(AdminSeeder::class);
     $this->call(OrganizationSeeder::class);
     $this->call(BlogSeeder::class);

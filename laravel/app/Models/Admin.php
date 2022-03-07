@@ -65,7 +65,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereAdminCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereCognitoSub($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereRoleId($value)
- * @property string|null $department_code 部署ID
+ * @property string|null $department_id 部署ID
  * @method static \Illuminate\Database\Eloquent\Builder|Admin whereDepartmentCode($value)
  * @property int|null $organization_id 会社ID
  * @property-read \App\Models\Organization|null $organization
@@ -104,7 +104,7 @@ class Admin extends Authenticatable
     'updated_by',
     'deleted_by',
     'cognito_sub',
-    'department_code',
+    'department_id',
     'organization_id',
   ];
 
@@ -194,6 +194,6 @@ class Admin extends Authenticatable
    */
   public function department()
   {
-    return $this->belongsTo(Department::class, 'department_code', 'department_code');
+    return $this->belongsTo(Department::class, 'department_id', 'id');
   }
 }
