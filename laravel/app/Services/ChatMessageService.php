@@ -16,8 +16,6 @@ use Illuminate\Support\Facades\Notification;
 use App\Services\Supports\NotifySupport;
 use App\Events\MessageSent;
 use Illuminate\Support\Str;
-use App\Jobs\MessageSentActivityJob;
-use App\Jobs\Supports\JobSupport;
 
 class ChatMessageService extends Service
 {
@@ -25,7 +23,6 @@ class ChatMessageService extends Service
 
   private $fileUploadService;
   private $chatMessageImageRepository;
-  private $jobSupport;
   /**
    * @var string
    */
@@ -44,16 +41,12 @@ class ChatMessageService extends Service
     Repository $repository,
     Query $query,
     FileUploadService $fileUploadService,
-    ChatMessageImageRepository $chatMessageImageRepository,
-    JobSupport $jobSupport,
-    MessageSentActivityJob $job
+    ChatMessageImageRepository $chatMessageImageRepository
   ) {
     $this->setRepository($repository);
     $this->setQuery($query);
     $this->fileUploadService = $fileUploadService;
     $this->chatMessageImageRepository = $chatMessageImageRepository;
-    $this->jobSupport = $jobSupport;
-    $this->jobSupport->init($job, 'message_sent');
   }
 
   /**
@@ -74,7 +67,6 @@ class ChatMessageService extends Service
     Notification::send($newMessage->chatRoom->members->filter(function ($member) use ($newMessage) {
       return NotifySupport::shouldSend($member, $newMessage->created_by, ActionType::MESSAGE_SENT_KEY);
     }), new MessageSentNotification($this->messageArr($newMessage)));
-    $this->jobSupport->dispatch($newMessage);
 
     return $newMessage;
   }

@@ -15,7 +15,7 @@ class AdminSeeder extends Seeder
     DB::table('admins')->truncate();
     if (\TestUser::hasId()) {
       factory(Admin::class, 1)->create([
-        'department_code' => 5,
+        'department_id' => 5,
         'user_code' => 111111,
         'role_id' => 2,
         'login_id' => config('app.test_id'),

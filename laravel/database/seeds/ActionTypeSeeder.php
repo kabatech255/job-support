@@ -24,37 +24,86 @@ class ActionTypeSeeder extends Seeder
         'label_name' => '議事録が追加されたとき',
         'template_message' => ':fromさんから議事録「:body」が追加されました',
         'link' => '/mypage/meeting_record/:id',
+        'is_notify' => 1,
       ],
       [
         'key' => 'schedule_shared',
         'label_name' => '新たなスケジュールが共有されたとき',
         'template_message' => ':fromさんからスケジュール「:body」が共有されました',
         'link' => '/mypage/schedule',
+        'is_notify' => 1,
       ],
       [
         'key' => 'message_sent',
         'label_name' => '所属するチャットグループにメッセージが届いた時',
         'template_message' => ':fromさんが新着メッセージ「:body」を投稿しました',
         'link' => '/mypage/chat/:id',
+        'is_notify' => 1,
       ],
       [
         'key' => 'daily_limit_task',
-        'label_name' => '翌日締切のタスク（夜6:00頃）',
+        'label_name' => '翌日締切のタスク（前日夕方）',
         'template_message' => '',
         'link' => '/mypage/task',
+        'is_notify' => 1,
       ],
       [
         'key' => 'daily_schedule',
-        'label_name' => '当日の予定（朝8:00頃）',
+        'label_name' => '当日の予定（当日朝）',
         'template_message' => '',
         'link' => '/mypage/schedule',
+        'is_notify' => 1,
+      ],
+      [
+        'key' => 'blog_report',
+        'label_name' => 'ブログの通報',
+        'template_message' => '',
+        'link' => '/blog/report',
+      ],
+      [
+        'key' => 'chat_report',
+        'label_name' => 'チャットの通報',
+        'template_message' => '',
+        'link' => '/chat/report',
+      ],
+      [
+        'key' => 'user_create',
+        'label_name' => '一般アカウントの追加',
+        'template_message' => ':fromさんが一般アカウントを追加しました',
+        'link' => '/user',
+      ],
+      [
+        'key' => 'admin_create',
+        'label_name' => '管理者アカウントの追加',
+        'template_message' => ':fromさんが管理者アカウントを追加しました',
+        'link' => '/admin',
+      ],
+      [
+        'key' => 'meeting_place_create',
+        'label_name' => '会議室の追加',
+        'template_message' => ':fromさんが会議室に「:body」を追加しました',
+        'link' => '/master/meeting_room',
+      ],
+      [
+        'key' => 'department_create',
+        'label_name' => '部署の追加',
+        'template_message' => ':fromさんが部署に「:body」を追加しました',
+        'link' => '/master/department',
+      ],
+      [
+        'key' => 'progress_create',
+        'label_name' => '進捗度の追加',
+        'template_message' => ':fromさんが進捗度に「:body」を追加しました',
+        'link' => '/master/progress',
       ],
     ];
 
     $actionTypeIds = collect($types)->map(function ($type) {
       $newActionType = factory(ActionType::class)->create($type);
-      return $newActionType->id;
-    })->all();
+      return $newActionType;
+    })->filter(function ($type) {
+      return $type->is_notify;
+    })->pluck('id');
 
     $users = User::all();
 

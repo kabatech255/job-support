@@ -1746,7 +1746,7 @@ paths:
         - schema:
             type: string
           in: query
-          name: "sharedMembers:department_code"
+          name: "sharedMembers:department_id"
           description: 部署コード
       description: みんなのデイリースケジュール
       tags:
@@ -2057,7 +2057,7 @@ paths:
         - schema:
             type: string
           in: query
-          name: "sharedMembers:department_code"
+          name: "sharedMembers:department_id"
           description: 部署コード
       description: 特定のユーザのスケジュール一覧
       tags:

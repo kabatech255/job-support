@@ -12,7 +12,7 @@ use App\Notifications\MailResetPasswordNotification;
  * App\Models\User
  *
  * @property int $id
- * @property string|null $department_code 部署ID
+ * @property string|null $department_id 部署ID
  * @property int $user_code ユーザーコード
  * @property int $role_id ロールID
  * @property string $login_id ログインID
@@ -125,6 +125,7 @@ class User extends Authenticatable
     'email_verified_at',
     'user_code',
     'role_id',
+    'department_id',
     'login_id',
     'password',
     'created_by',
@@ -213,7 +214,7 @@ class User extends Authenticatable
    */
   public function department()
   {
-    return $this->belongsTo(Department::class, 'department_code', 'department_code');
+    return $this->belongsTo(Department::class, 'department_id', 'id');
   }
 
   /**

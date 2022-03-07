@@ -18,12 +18,11 @@ class MeetingPlaceController extends Controller
   }
 
   /**
-   * Display a listing of the resource.
-   *
-   * @return \Illuminate\Http\Response
+   * @param Request $request
+   * @return void
    */
   public function index(Request $request)
   {
-    return response($this->service->all(), 200);
+    return response($this->service->all($request->query()), 200);
   }
 }
