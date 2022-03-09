@@ -46,7 +46,6 @@ class UserCreatedNotification extends Notification implements ShouldQueue
   public function toMail($notifiable)
   {
     $tempArr = $notifiable->toArray();
-    \Log::debug(json_decode($tempArr, true));
     foreach ($tempArr as $key => $val) {
       if (in_array($key, ['email', 'family_name', 'family_name_kana', 'given_name', 'given_name_kana'])) {
         $slim[$key] = base64_encode($val);

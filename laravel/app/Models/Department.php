@@ -39,6 +39,7 @@ class Department extends Model
   protected $fillable = [
     'name',
     'department_code',
+    'color',
     'created_by',
     'updated_by',
     'deleted_by',

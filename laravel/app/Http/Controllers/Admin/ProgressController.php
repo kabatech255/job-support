@@ -71,6 +71,6 @@ class ProgressController extends Controller
    */
   public function destroy(Request $request, Progress $id)
   {
-    return response($this->service->delete($id), 200);
+    return response($this->service->delete($id), 204);
   }
 }
