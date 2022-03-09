@@ -73,6 +73,14 @@ class Activity extends Model implements ModelInterface
   }
 
   /**
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+   */
+  public function createdBy()
+  {
+    return $this->belongsTo(User::class, 'created_by', 'id');
+  }
+
+  /**
    * @return string
    */
   public function getReplacedLinkAttribute(): string

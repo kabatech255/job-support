@@ -4,7 +4,7 @@ namespace App\Http\Requests\MeetingPlace;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateRequest extends FormRequest
+class UpdateRequest extends StoreRequest
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -24,5 +24,14 @@ class UpdateRequest extends FormRequest
   public function rules()
   {
     return parent::rules();
+  }
+
+  protected function nameArr()
+  {
+    $names = parent::nameArr();
+    return \Arr::where($names, function ($value) {
+      $me = $this->route('id');
+      return $value !== $me->name;
+    });
   }
 }

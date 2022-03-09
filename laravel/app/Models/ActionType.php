@@ -37,6 +37,7 @@ class ActionType extends Model implements ModelInterface
     'name',
     'template_message',
     'link',
+    'is_admin',
   ];
 
   const SCHEDULE_SHARED_KEY = 'schedule_shared';

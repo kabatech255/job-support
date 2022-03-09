@@ -25,15 +25,4 @@ trait ActivityJobSupportTrait
     $this->actionTypeRepository = $actionTypeRepository;
     $this->activityRepository = $activityRepository;
   }
-
-  public function init($job, $queue = 'default')
-  {
-    $this->job = $job;
-    $this->queue = $queue;
-  }
-
-  public function dispatch($model)
-  {
-    get_class($this->job)::dispatch($model, $this->actionTypeRepository, $this->activityRepository)->onQueue($this->queue);
-  }
 }

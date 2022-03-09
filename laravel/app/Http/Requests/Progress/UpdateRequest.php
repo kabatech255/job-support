@@ -15,4 +15,13 @@ class UpdateRequest extends StoreRequest
   {
     return true;
   }
+
+  protected function nameArr()
+  {
+    $names = parent::nameArr();
+    return \Arr::where($names, function ($value) {
+      $me = $this->route('id');
+      return $value !== $me->name;
+    });
+  }
 }

@@ -14,6 +14,7 @@ class DepartmentCreateActivityJob extends ActivityJob implements ShouldQueue
    * @var Department
    */
   protected $model;
+  protected $bodyLength = 30;
 
   /**
    * @param Department $model
@@ -25,10 +26,18 @@ class DepartmentCreateActivityJob extends ActivityJob implements ShouldQueue
     parent::__construct($actionTypeRepository, $activityRepository);
     $this->model = $model;
     $this->actionTypeKey = ActionType::DEPARTMENT_CREATE_KEY;
+    $this->bodyKey = ['department_code', 'name'];
   }
 
-  protected function members()
+  protected function store(array $actionType, string $content)
   {
-    return [$this->model->createdBy];
+    $attributes = [
+      'action_type_id' => $actionType[0]->id,
+      'model_id' => $this->model->id,
+      'user_id' => $this->model->created_by,
+      'created_by' => $this->model->created_by,
+      'content' => $content,
+    ];
+    $this->activityRepository->save($attributes);
   }
 }

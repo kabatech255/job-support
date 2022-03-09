@@ -71,6 +71,6 @@ class MeetingPlaceController extends Controller
    */
   public function destroy(Request $request, MeetingPlace $id)
   {
-    return response($this->service->delete($id), 200);
+    return response($this->service->delete($id), 204);
   }
 }

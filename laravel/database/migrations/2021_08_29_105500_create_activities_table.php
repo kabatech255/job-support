@@ -19,7 +19,7 @@ class CreateActivitiesTable extends Migration
       $table->unsignedBigInteger('created_by')->comment('誰のアクティビティか');
       $table->unsignedBigInteger('action_type_id')->comment('アクションID');
       $table->unsignedBigInteger('model_id')->nullable()->comment('モデルID');
-      $table->boolean('is_read')->default(0)->comment('既読フラグ ');
+      $table->boolean('is_read')->default(0)->comment('既読フラグ');
       $table->text('content')->comment('通知内容');
       $table->timestamps();
 

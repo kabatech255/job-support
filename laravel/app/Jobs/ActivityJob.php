@@ -25,6 +25,7 @@ class ActivityJob implements ShouldQueue
   protected $model;
 
   protected $members = 'members';
+  protected $bodyLength = 15;
 
   /**
    * @var ActionTypeRepository
@@ -42,7 +43,7 @@ class ActivityJob implements ShouldQueue
   protected $actionTypeKey = ActionType::MEETING_RECORD_JOINED_KEY;
 
   /**
-   * @var string
+   * @var string|string[]
    */
   protected $bodyKey = 'title';
 
@@ -62,16 +63,25 @@ class ActivityJob implements ShouldQueue
   public function handle()
   {
     $actionType = $this->actionTypeRepository->findBy('key', $this->actionTypeKey);
+    if (is_array($this->bodyKey)) {
+      $body = '';
+      foreach ($this->bodyKey as $key) {
+        $body .= $this->model->{$key};
+        $body .= ' ';
+      }
+    } else {
+      $body = $this->model->{$this->bodyKey};
+    }
     $content = $this->replaceAttribute($actionType[0]->template_message, [
       'from' => $this->model->createdBy->full_name,
-      'body' => \Str::limit($this->model->{$this->bodyKey}, 15, '（...）'),
+      'body' => \Str::limit(trim($body), $this->bodyLength, '（...）'),
     ]);
     $this->store($actionType, $content);
   }
 
   protected function store(array $actionType, string $content)
   {
-    $this->members()->each(function ($member) use ($actionType, $content) {
+    foreach ($this->members() as $member) {
       if ($this->model->created_by !== $member->id) {
         $attributes = [
           'action_type_id' => $actionType[0]->id,
@@ -82,11 +92,11 @@ class ActivityJob implements ShouldQueue
         ];
         $this->activityRepository->save($attributes);
       }
-    });
+    }
   }
 
   protected function members()
   {
-    return $this->model->{$this->members};
+    return $this->model->{$this->members}->all();
   }
 }
