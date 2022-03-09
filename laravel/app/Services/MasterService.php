@@ -26,7 +26,9 @@ class MasterService extends Service
    */
   public function store(array $params)
   {
-    return $this->repository()->save($params);
+    $model = $this->repository()->save($params);
+    $model->load(['createdBy']);
+    return $model;
   }
 
   /**
@@ -36,7 +38,9 @@ class MasterService extends Service
    */
   public function update(array $params, $id): Model
   {
-    return $this->repository()->save($params, $id);
+    $model = $this->repository()->save($params, $id);
+    $model->load(['createdBy']);
+    return $model;
   }
 
   /**

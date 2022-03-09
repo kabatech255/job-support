@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Department;
 
+use App\Models\Department;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRequest extends StoreRequest
@@ -24,5 +25,22 @@ class UpdateRequest extends StoreRequest
   public function rules()
   {
     return parent::rules();
+  }
+
+  protected function departmentCodeArr()
+  {
+    $codes = parent::departmentCodeArr();
+    return \Arr::where($codes, function ($value) {
+      $me = $this->route('id');
+      return $value !== $me->department_code;
+    });
+  }
+
+  protected function departmentNameArr()
+  {
+    return \Arr::where(parent::departmentNameArr(), function ($value) {
+      $me = $this->route('id');
+      return $value !== $me->name;
+    });
   }
 }
