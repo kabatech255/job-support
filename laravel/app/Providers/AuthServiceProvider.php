@@ -51,6 +51,7 @@ class AuthServiceProvider extends ServiceProvider
         new User(),
       );
     });
+
     Auth::extend('cognito:admin', function ($app, $name, array $config) {
       return new CognitoGuard(
         new JWTVerifierService(config('cognito.admin.userpoolId'), config('cognito.admin.region')),
