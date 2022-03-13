@@ -2,8 +2,11 @@
 
 namespace App\Policies;
 
+use App\Models\Admin;
 use App\Models\Organization;
 use App\Models\User;
+use Illuminate\Auth\Authenticatable;
+
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class OrganizationPolicy
@@ -47,13 +50,17 @@ class OrganizationPolicy
   /**
    * Determine whether the user can update the model.
    *
-   * @param  \App\Models\User  $user
+   * @param  $user
    * @param  \App\Models\Organization  $organization
    * @return mixed
    */
-  public function update(User $user, Organization $organization)
+  public function update($user, Organization $organization)
   {
-    return $organization->supervisor_id === $user->id;
+    if ($user instanceof Admin) {
+      return $organization->supervisor_id === $user->bUser->id;
+    } else {
+      return $organization->supervisor_id === $user->id;
+    }
   }
 
   /**
