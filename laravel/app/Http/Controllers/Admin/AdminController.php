@@ -24,7 +24,7 @@ class AdminController extends Controller
    */
   public function index(Request $request)
   {
-    return response($this->service->index($request->query(), ['createdBy']), 200);
+    return response($this->service->index($request->query(), ['createdBy', 'department']), 200);
   }
 
   /**
