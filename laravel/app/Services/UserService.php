@@ -103,6 +103,16 @@ class UserService extends Service
   }
 
   /**
+   * @param array $params
+   * @param $id
+   * @return User
+   */
+  public function update(array $params, $id): User
+  {
+    return $this->repository()->save($params, $id);
+  }
+
+  /**
    * @param int|User $id
    * @param array $loads
    * @return User

@@ -36,6 +36,7 @@ Route::name('admin.')->group(function () {
       // User
       Route::post('/user', 'UserController@store')->name('user.store');
       Route::get('/user/{id}', 'UserController@show')->name('user.show');
+      Route::put('/user/{id}', 'UserController@update')->name('user.update');
       Route::get('/user/{id}/activity', 'ActivityController@findByCreatedUser')->name('activity.findByCreatedUser');
       // Admin
       Route::post('/admin', 'AdminController@store')->name('admin.store');
