@@ -7,9 +7,9 @@ use App\Contracts\Queries\MeetingRecordQueryInterface as Query;
 use App\Contracts\Repositories\UserRepositoryInterface as UserRepository;
 use App\Models\ActionType;
 use App\Models\MeetingDecision;
+use App\Models\MeetingRecord;
 use App\Services\MeetingDecisionService;
 use App\Services\Supports\WithRepositoryTrait;
-use App\Models\MeetingRecord;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Notification;
@@ -187,7 +187,7 @@ class MeetingRecordService extends Service
     if ($id === null) {
       $id = Auth::user()->id;
     }
-    $user = $this->userRepository->find($id, ['joinedMeetings.createdBy', 'joinedMeetings.place']);
+    $user = $this->userRepository->find($id, ['joinedMeetings.createdBy', 'joinedMeetings.place', 'joinedMeetings.members']);
     return $user->joinedMeetings->sortByDesc('id')->splice(0, 5)->all();
   }
 
