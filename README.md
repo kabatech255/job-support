@@ -14,9 +14,9 @@
 
 ## 素材
 
-[https://o-dan.net/ja/](https://o-dan.net/ja/)
-[https://www.manypixels.co/gallery](https://www.manypixels.co/gallery)
-[トップページのメインビジュアル画像](https://pixabay.com/photos/work-workaholic-writer-programmer-1627703/#content)
+- [https://o-dan.net/ja/](https://o-dan.net/ja/)
+- [https://www.manypixels.co/gallery](https://www.manypixels.co/gallery)
+- [トップページのメインビジュアル画像](https://pixabay.com/photos/work-workaholic-writer-programmer-1627703/#content)
 
 
 - デモユーザー「テスト太郎」としてログインし、サイト内のサービスをご精査いただけます
