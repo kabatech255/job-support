@@ -5,6 +5,7 @@ namespace App\Queries;
 use App\Contracts\Queries\ActivityQueryInterface;
 use App\Models\Activity;
 use App\Queries\Abstracts\EloquentQuery;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 
 class ActivityQuery extends EloquentQuery implements ActivityQueryInterface
@@ -31,6 +32,11 @@ class ActivityQuery extends EloquentQuery implements ActivityQueryInterface
     return $query->get()->all();
   }
 
+  public function searchByActionTypeIds($query, array $actionTypeIds): Builder
+  {
+    return $query->whereIn('action_type_id', $actionTypeIds);
+  }
+
   /**
    * @param int $createdBy
    * @param string $authenticatable
@@ -41,10 +47,13 @@ class ActivityQuery extends EloquentQuery implements ActivityQueryInterface
   {
     $year = Carbon::parse('-1 years');
     $query = $this->builder()->with($relation);
-    return $query
+
+    $query = $query
       ->where('created_by', $params['created_by'])
-      ->where('created_at', '>', $year)
-      ->whereIn('action_type_id', $params['action_type_ids'])
+      ->where('created_at', '>', $year);
+
+    $query = $this->searchByActionTypeIds($query, $params['action_type_ids']);
+    return $query
       ->orderBy('id', 'desc')
       ->get();
   }

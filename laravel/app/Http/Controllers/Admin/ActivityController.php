@@ -20,6 +20,15 @@ class ActivityController extends Controller
 
   /**
    * @param Request $request
+   * @return \Illuminate\Http\Response
+   */
+  public function index(Request $request)
+  {
+    return response($this->service->limit($request->query()), 200);
+  }
+
+  /**
+   * @param Request $request
    * @param User $id
    * @return \Illuminate\Http\Response
    */

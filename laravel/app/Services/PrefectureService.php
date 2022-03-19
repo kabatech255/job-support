@@ -4,13 +4,13 @@ namespace App\Services;
 
 use App\Contracts\Queries\PrefectureQueryInterface as Query;
 use App\Contracts\Repositories\PrefectureRepositoryInterface as Repository;
-use App\Services\Supports\WithRepositoryTrait;
+use App\Services\Supports\RepositoryUsingSupport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Collection;
 
 class PrefectureService extends Service
 {
-  use WithRepositoryTrait;
+  use RepositoryUsingSupport;
 
   /**
    * UserService constructor.

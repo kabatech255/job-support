@@ -8,11 +8,11 @@ use App\Enums\ProcessFlag;
 use App\Models\MeetingDecision;
 use App\Models\MeetingRecord;
 use App\Models\Task;
-use App\Services\Supports\WithRepositoryTrait;
+use App\Services\Supports\RepositoryUsingSupport;
 
 class MeetingDecisionService extends Service
 {
-  use WithRepositoryTrait;
+  use RepositoryUsingSupport;
 
   /**
    * @var string

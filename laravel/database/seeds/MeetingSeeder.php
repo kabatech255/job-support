@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use App\Models\MeetingRecord;
 use App\Models\MeetingDecision;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 
 class MeetingSeeder extends Seeder
 {
@@ -18,12 +19,22 @@ class MeetingSeeder extends Seeder
     DB::table('meeting_decisions')->truncate();
     DB::table('meeting_members')->truncate();
     DB::table('meeting_records')->truncate();
-    for ($i = 0; $i < 100; $i++) {
+    $interval = 5;
+
+    for ($i = 1; $i < 101; $i++) {
       $members = User::all()->pluck('id')->shuffle()->splice(0, random_int(2, 15))->all();
       $createdBy = array_random($members);
+      $diff = (int)floor($i / $interval);
+      $created_at = Carbon::parse("-{$diff}month")
+        ->firstOfMonth()
+        ->addDays(random_int(0, 25))
+        ->addHours(random_int(11, 18))
+        ->format('Y-m-d H:i:s');
       // 議事録の追加
       $meetingRecord = factory(MeetingRecord::class)->create([
         'created_by' => $createdBy,
+        'meeting_date' => $created_at,
+        'created_at' => $created_at,
       ]);
       // 参加者の追加
       $meetingRecord->members()->sync($members);

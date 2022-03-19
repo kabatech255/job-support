@@ -7,12 +7,12 @@ use App\Contracts\Repositories\MeetingRecordPinRepositoryInterface as Repository
 use App\Contracts\Repositories\UserRepositoryInterface as UserRepository;
 use App\Contracts\Repositories\MeetingRecordRepositoryInterface as MeetingRecordRepository;
 use App\Models\MeetingRecord;
-use App\Services\Supports\WithRepositoryTrait;
+use App\Services\Supports\RepositoryUsingSupport;
 use Illuminate\Support\Facades\Auth;
 
 class MeetingRecordPinService extends Service
 {
-  use WithRepositoryTrait;
+  use RepositoryUsingSupport;
 
   private $userRepository;
   private $meetingRecordRepository;

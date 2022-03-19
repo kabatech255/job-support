@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Contracts\Queries\OrganizationQueryInterface as Query;
 use App\Contracts\Repositories\OrganizationRepositoryInterface as Repository;
 use App\Contracts\Repositories\UserRepositoryInterface as UserRepository;
-use App\Services\Supports\WithRepositoryTrait;
+use App\Services\Supports\RepositoryUsingSupport;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Organization;
@@ -16,7 +16,7 @@ use App\Jobs\MasterInitializationJob;
 
 class OrganizationService extends Service
 {
-  use WithRepositoryTrait;
+  use RepositoryUsingSupport;
 
   private $userRepository;
   /**

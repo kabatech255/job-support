@@ -7,14 +7,14 @@ use App\Contracts\Repositories\ChatMessageReadRepositoryInterface as Repository;
 use App\Contracts\Repositories\ChatRoomRepositoryInterface as ChatRoomRepository;
 use App\Contracts\Repositories\LastReadRepositoryInterface as LastReadRepository;
 use App\Contracts\Repositories\UserRepositoryInterface as UserRepository;
-use App\Services\Supports\WithRepositoryTrait;
+use App\Services\Supports\RepositoryUsingSupport;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ChatRoom;
 use App\Queries\ChatMessageQuery;
 
 class ChatMessageReadService extends Service
 {
-  use WithRepositoryTrait;
+  use RepositoryUsingSupport;
 
   private $chatMessageQuery,
     $chatRoomRepository,

@@ -62,7 +62,7 @@ class ActionType extends Model implements ModelInterface
     self::LIMIT_TASK_KEY => 4,
     self::LIMIT_SCHEDULE_KEY => 5,
   ];
-
+  // Adminとしてのアクション
   const ADMIN_ACTION_TYPES = [
     self::USER_CREATE_KEY,
     self::ADMIN_CREATE_KEY,
@@ -71,6 +71,7 @@ class ActionType extends Model implements ModelInterface
     self::MEETING_PLACE_CREATE_KEY,
   ];
 
+  // Userとしてのアクション
   const USER_ACTION_TYPES = [
     self::SCHEDULE_SHARED_KEY,
     self::MESSAGE_SENT_KEY,

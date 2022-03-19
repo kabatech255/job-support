@@ -60,7 +60,7 @@ class MeetingRecordTest extends TestCase
     $response = $this->actingAs($this->user)->postJson(route('meetingRecord.store'), $expects);
     $response->assertCreated();
     $meetingRecord = MeetingRecord::with(['decisions'])
-      ->latest()
+      ->orderBy('id', 'desc')
       ->first();
     // 会議議事録
     $this->assertDatabaseHas('meeting_records', [
