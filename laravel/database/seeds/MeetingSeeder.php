@@ -21,10 +21,10 @@ class MeetingSeeder extends Seeder
     DB::table('meeting_records')->truncate();
     $interval = 5;
 
-    for ($i = 1; $i < 101; $i++) {
+    for ($i = 100; $i > 0; $i--) {
       $members = User::all()->pluck('id')->shuffle()->splice(0, random_int(2, 15))->all();
       $createdBy = array_random($members);
-      $diff = (int)floor($i / $interval);
+      $diff = (int)ceil($i / $interval);
       $created_at = Carbon::parse("-{$diff}month")
         ->firstOfMonth()
         ->addDays(random_int(0, 25))

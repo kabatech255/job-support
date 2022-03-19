@@ -188,7 +188,7 @@ class MeetingRecordService extends Service
       $id = Auth::user()->id;
     }
     $user = $this->userRepository->find($id, ['joinedMeetings.createdBy', 'joinedMeetings.place', 'joinedMeetings.members']);
-    return $user->joinedMeetings->sortByDesc('id')->splice(0, 5)->all();
+    return $user->joinedMeetings->sortByDesc('created_at')->splice(0, 5)->all();
   }
 
   /**
