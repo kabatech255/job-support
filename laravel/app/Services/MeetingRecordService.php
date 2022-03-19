@@ -9,7 +9,7 @@ use App\Models\ActionType;
 use App\Models\MeetingDecision;
 use App\Models\MeetingRecord;
 use App\Services\MeetingDecisionService;
-use App\Services\Supports\WithRepositoryTrait;
+use App\Services\Supports\RepositoryUsingSupport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Notification;
@@ -18,7 +18,7 @@ use App\Services\Supports\NotifySupport;
 
 class MeetingRecordService extends Service
 {
-  use WithRepositoryTrait;
+  use RepositoryUsingSupport;
 
   protected $meetingDecisionService;
   protected $userRepository;

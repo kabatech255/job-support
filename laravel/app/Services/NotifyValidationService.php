@@ -4,11 +4,11 @@ namespace App\Services;
 
 use App\Contracts\Queries\NotifyValidationQueryInterface as Query;
 use App\Contracts\Repositories\NotifyValidationRepositoryInterface as Repository;
-use App\Services\Supports\WithRepositoryTrait;
+use App\Services\Supports\RepositoryUsingSupport;
 
 class NotifyValidationService extends Service
 {
-  use WithRepositoryTrait;
+  use RepositoryUsingSupport;
 
   /**
    * UserService constructor.

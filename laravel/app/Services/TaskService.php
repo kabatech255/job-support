@@ -7,7 +7,7 @@ use App\Enums\ProcessFlag;
 use App\Models\MeetingDecision;
 use App\Models\Task as Task;
 use App\Models\User;
-use App\Services\Supports\WithRepositoryTrait;
+use App\Services\Supports\RepositoryUsingSupport;
 use App\Contracts\Queries\TaskQueryInterface as Query;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -16,7 +16,7 @@ use App\Contracts\Repositories\UserRepositoryInterface as UserRepository;
 
 class TaskService extends Service
 {
-  use WithRepositoryTrait;
+  use RepositoryUsingSupport;
 
   private $attachMethod = 'tasks';
 

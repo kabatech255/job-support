@@ -69,14 +69,14 @@ class ActionTypeSeeder extends Seeder
       [
         'key' => 'user_create',
         'label_name' => '一般アカウントの追加',
-        'template_message' => ':fromさんが一般アカウントを追加しました',
+        'template_message' => ':fromさんが一般アカウント「:bodyさん」を追加しました',
         'is_admin' => 1,
         'link' => '/user',
       ],
       [
         'key' => 'admin_create',
         'label_name' => '管理者アカウントの追加',
-        'template_message' => ':fromさんが管理者アカウントを追加しました',
+        'template_message' => ':fromさんが管理者アカウントに「:bodyさん」を招待しました',
         'is_admin' => 1,
         'link' => '/admin',
       ],

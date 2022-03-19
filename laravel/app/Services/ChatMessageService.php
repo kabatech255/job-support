@@ -8,7 +8,7 @@ use App\Contracts\Repositories\ChatMessageImageRepositoryInterface as ChatMessag
 use App\Models\ActionType;
 use App\Models\ChatMessage;
 use App\Models\ChatRoom;
-use App\Services\Supports\WithRepositoryTrait;
+use App\Services\Supports\RepositoryUsingSupport;
 use App\Services\FileUploadService;
 use App\Services\Supports\FileSupportTrait;
 use App\Notifications\MessageSentNotification;
@@ -19,7 +19,7 @@ use Illuminate\Support\Str;
 
 class ChatMessageService extends Service
 {
-  use WithRepositoryTrait, FileSupportTrait;
+  use RepositoryUsingSupport, FileSupportTrait;
 
   private $fileUploadService;
   private $chatMessageImageRepository;

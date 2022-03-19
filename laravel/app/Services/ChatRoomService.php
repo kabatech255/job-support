@@ -6,13 +6,13 @@ use App\Contracts\Repositories\ChatRoomRepositoryInterface as Repository;
 use App\Models\ChatRoom;
 use App\Contracts\Queries\ChatRoomQueryInterface as Query;
 use App\Contracts\Repositories\UserRepositoryInterface as UserRepository;
-use App\Services\Supports\WithRepositoryTrait;
+use App\Services\Supports\RepositoryUsingSupport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class ChatRoomService extends Service
 {
-  use WithRepositoryTrait;
+  use RepositoryUsingSupport;
 
   /**
    * @var UserRepository

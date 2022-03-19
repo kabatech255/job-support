@@ -2,12 +2,12 @@
 
 namespace App\Services;
 
-use App\Services\Supports\WithRepositoryTrait;
+use App\Services\Supports\RepositoryUsingSupport;
 use Illuminate\Database\Eloquent\Model;
 
 class MasterService extends Service
 {
-  use WithRepositoryTrait;
+  use RepositoryUsingSupport;
 
   /**
    * @param array $params

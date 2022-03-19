@@ -6,7 +6,7 @@ use App\Contracts\Queries\ScheduleQueryInterface as Query;
 use App\Contracts\Repositories\ScheduleRepositoryInterface as Repository;
 use App\Contracts\Repositories\UserRepositoryInterface as UserRepository;
 use App\Models\Schedule;
-use App\Services\Supports\WithRepositoryTrait;
+use App\Services\Supports\RepositoryUsingSupport;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\ScheduleSharedNotification;
 use Illuminate\Support\Facades\Notification;
@@ -16,7 +16,7 @@ use App\Services\Supports\StrSupportTrait;
 
 class ScheduleService extends Service
 {
-  use WithRepositoryTrait, StrSupportTrait;
+  use RepositoryUsingSupport, StrSupportTrait;
   /**
    * @var UserRepository
    */

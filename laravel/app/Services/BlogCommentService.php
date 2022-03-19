@@ -7,12 +7,12 @@ use App\Contracts\Repositories\BlogCommentRepositoryInterface as Repository;
 use App\Contracts\Repositories\BlogRepositoryInterface as BlogRepository;
 use App\Models\Blog;
 use App\Models\BlogComment;
-use App\Services\Supports\WithRepositoryTrait;
+use App\Services\Supports\RepositoryUsingSupport;
 use Illuminate\Support\Facades\Auth;
 
 class BlogCommentService extends Service
 {
-  use WithRepositoryTrait;
+  use RepositoryUsingSupport;
 
   private $attachMethod = 'comments';
   /**

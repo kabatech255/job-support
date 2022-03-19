@@ -9,14 +9,14 @@ use App\Models\Admin;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\AdminCreatedNotification;
 use App\Services\FileUploadService;
-use App\Services\Supports\WithRepositoryTrait;
+use App\Services\Supports\RepositoryUsingSupport;
 use App\Services\Supports\StrSupportTrait;
 use App\Services\Supports\FileSupportTrait;
 
 
 class AdminService extends Service
 {
-  use WithRepositoryTrait,
+  use RepositoryUsingSupport,
     StrSupportTrait,
     FileSupportTrait;
 

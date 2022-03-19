@@ -6,12 +6,12 @@ use App\Contracts\Queries\DocumentFolderQueryInterface as Query;
 use App\Contracts\Repositories\DocumentFolderRepositoryInterface as Repository;
 use App\Enums\ProcessFlag;
 use App\Models\DocumentFolder;
-use App\Services\Supports\WithRepositoryTrait;
+use App\Services\Supports\RepositoryUsingSupport;
 use Illuminate\Support\Facades\Auth;
 
 class DocumentFolderService extends Service
 {
-  use WithRepositoryTrait;
+  use RepositoryUsingSupport;
 
   /**
    * UserService constructor.

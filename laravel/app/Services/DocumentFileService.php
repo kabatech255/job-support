@@ -6,7 +6,7 @@ use App\Contracts\Queries\DocumentFileQueryInterface as Query;
 use App\Contracts\Repositories\DocumentFileRepositoryInterface as Repository;
 use App\Models\DocumentFile;
 use App\Services\Supports\FileSupportTrait;
-use App\Services\Supports\WithRepositoryTrait;
+use App\Services\Supports\RepositoryUsingSupport;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use App\Models\DocumentFolder;
@@ -15,7 +15,7 @@ use App\Services\FileUploadService;
 
 class DocumentFileService extends Service
 {
-  use WithRepositoryTrait,
+  use RepositoryUsingSupport,
     FileSupportTrait;
 
   /**

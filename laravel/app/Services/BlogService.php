@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Contracts\Queries\BlogQueryInterface as Query;
 use App\Contracts\Repositories\BlogRepositoryInterface as Repository;
 use App\Services\Supports\FileSupportTrait;
-use App\Services\Supports\WithRepositoryTrait;
+use App\Services\Supports\RepositoryUsingSupport;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Blog;
@@ -13,7 +13,7 @@ use App\Services\BlogImageService;
 
 class BlogService extends Service
 {
-  use WithRepositoryTrait;
+  use RepositoryUsingSupport;
   /**
    * @var BlogImageService
    */

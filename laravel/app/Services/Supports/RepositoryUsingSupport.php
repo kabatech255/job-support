@@ -5,7 +5,7 @@ namespace App\Services\Supports;
 use App\Contracts\Repositories\RepositoryInterface as Repository;
 use App\Contracts\Queries\QueryInterface as Query;
 
-trait WithRepositoryTrait
+trait RepositoryUsingSupport
 {
   private $repository;
   private $query;

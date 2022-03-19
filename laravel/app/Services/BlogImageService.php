@@ -7,14 +7,14 @@ use App\Contracts\Repositories\BlogImageRepositoryInterface as Repository;
 use App\Enums\ProcessFlag;
 use App\Services\FileUploadService;
 use App\Services\Supports\FileSupportTrait;
-use App\Services\Supports\WithRepositoryTrait;
+use App\Services\Supports\RepositoryUsingSupport;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Blog;
 use App\Models\BlogImage;
 
 class BlogImageService extends Service
 {
-  use WithRepositoryTrait;
+  use RepositoryUsingSupport;
   use FileSupportTrait;
 
   private $attachMethod = 'images';

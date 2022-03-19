@@ -7,7 +7,7 @@ use App\Contracts\Repositories\UserRepositoryInterface as UserRepository;
 use App\Contracts\Repositories\NotifyValidationRepositoryInterface as NotifyValidationRepository;
 use App\Contracts\Repositories\ActionTypeRepositoryInterface as ActionTypeRepository;
 use Illuminate\Support\Facades\Auth;
-use App\Services\Supports\WithRepositoryTrait;
+use App\Services\Supports\RepositoryUsingSupport;
 use Illuminate\Support\Collection;
 use App\Models\User;
 use App\Services\ScheduleService;
@@ -21,7 +21,7 @@ use App\Notifications\UserCreatedNotification;
 
 class UserService extends Service
 {
-  use WithRepositoryTrait,
+  use RepositoryUsingSupport,
     StrSupportTrait,
     FileSupportTrait;
 

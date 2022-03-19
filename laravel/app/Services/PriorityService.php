@@ -4,12 +4,12 @@ namespace App\Services;
 
 use App\Contracts\Queries\PriorityQueryInterface as Query;
 use App\Contracts\Repositories\PriorityRepositoryInterface as Repository;
-use App\Services\Supports\WithRepositoryTrait;
+use App\Services\Supports\RepositoryUsingSupport;
 use Illuminate\Support\Facades\Auth;
 
 class PriorityService extends Service
 {
-  use WithRepositoryTrait;
+  use RepositoryUsingSupport;
 
   /**
    * UserService constructor.

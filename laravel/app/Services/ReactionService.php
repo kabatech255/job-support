@@ -4,12 +4,12 @@ namespace App\Services;
 
 use App\Contracts\Queries\ReactionQueryInterface as Query;
 use App\Contracts\Repositories\ReactionRepositoryInterface as Repository;
-use App\Services\Supports\WithRepositoryTrait;
+use App\Services\Supports\RepositoryUsingSupport;
 use Illuminate\Support\Facades\Auth;
 
 class ReactionService extends Service
 {
-  use WithRepositoryTrait;
+  use RepositoryUsingSupport;
 
   /**
    * UserService constructor.
