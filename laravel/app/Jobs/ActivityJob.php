@@ -63,19 +63,7 @@ class ActivityJob implements ShouldQueue
   public function handle()
   {
     $actionType = $this->actionTypeRepository->findBy('key', $this->actionTypeKey);
-    if (is_array($this->bodyKey)) {
-      $body = '';
-      foreach ($this->bodyKey as $key) {
-        $body .= $this->model->{$key};
-        $body .= ' ';
-      }
-    } else {
-      $body = $this->model->{$this->bodyKey};
-    }
-    $content = $this->replaceAttribute($actionType[0]->template_message, [
-      'from' => $this->model->createdBy->full_name,
-      'body' => \Str::limit(trim($body), $this->bodyLength, '（...）'),
-    ]);
+    $content = $this->getContentFromTemplate($actionType);
     $this->store($actionType, $content);
   }
 
@@ -98,5 +86,32 @@ class ActivityJob implements ShouldQueue
   protected function members()
   {
     return $this->model->{$this->members}->all();
+  }
+
+  protected function getContentFromTemplate($actionType)
+  {
+    return $this->replaceAttribute($actionType[0]->template_message, [
+      'from' => $this->from(),
+      'body' => $this->body(),
+    ]);
+  }
+
+  protected function from()
+  {
+    return $this->model->createdBy->full_name;
+  }
+
+  protected function body()
+  {
+    if (is_array($this->bodyKey)) {
+      $body = '';
+      foreach ($this->bodyKey as $key) {
+        $body .= $this->model->{$key};
+        $body .= ' ';
+      }
+    } else {
+      $body = $this->model->{$this->bodyKey};
+    }
+    return \Str::limit(trim($body), $this->bodyLength, '（...）');
   }
 }

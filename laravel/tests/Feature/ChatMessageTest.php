@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\ChatMessage;
 use App\Models\ChatRoom;
+use App\Models\ReportCategory;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -169,5 +170,78 @@ class ChatMessageTest extends ChatRoomTest
 
     $result = parent::$openApiValidator->validate('deleteChatMessageId', 204, json_decode($response->getContent(), true));
     $this->assertFalse($result->hasErrors(), $result);
+  }
+
+  /**
+   * @test
+   * @group chat_report
+   */
+  public function should_チャットの通報()
+  {
+    $chatMessage = factory(ChatMessage::class)->create([
+      'body' => 'This is a message which will be reported.',
+      'created_by' => $this->user->id,
+      'chat_room_id' => $this->chatRoom->id,
+    ]);
+    $reportUser = $this->chatRoom->members->where('id', '<>', $this->user->id)->first();
+    $response = $this->actingAs($reportUser)->postJson(route('chatMessage.report', $chatMessage), [
+      'report_category_id' => ReportCategory::first()->id,
+    ]);
+    $response->assertCreated();
+    $this->assertDatabaseHas('chat_reports', [
+      'created_by' => $reportUser->id,
+      'chat_message_id' => $chatMessage->id,
+    ]);
+  }
+
+  /**
+   * @test
+   * @group chat_report
+   */
+  public function should_通報の理由に関するバリデーションルール()
+  {
+    $chatMessage = factory(ChatMessage::class)->create([
+      'body' => 'This is a message which shouldn\'t be reported.',
+      'created_by' => $this->user->id,
+      'chat_room_id' => $this->chatRoom->id,
+    ]);
+    $reportUser = $this->chatRoom->members->where('id', '<>', $this->user->id)->first();
+
+    // report_categoriesにないIDがリクエストボディに入っている
+    $maxReportCategoryId = ReportCategory::pluck('id')->max();
+    $invalidId = $maxReportCategoryId + 1;
+    $response = $this->actingAs($reportUser)->postJson(route('chatMessage.report', $chatMessage), [
+      'report_category_id' => $invalidId,
+    ]);
+
+    $response->assertStatus(422)->assertJsonValidationErrors([
+      'report_category_id',
+    ]);
+    $this->assertDatabaseMissing('chat_reports', [
+      'created_by' => $reportUser->id,
+      'chat_message_id' => $chatMessage->id,
+    ]);
+  }
+
+  /**
+   * @test
+   * @group chat_report
+   */
+  public function should_ルーム参加者以外のユーザによる通報は403()
+  {
+    $chatMessage = factory(ChatMessage::class)->create([
+      'body' => 'This is a message which shouldn\'t be reported.',
+      'created_by' => $this->user->id,
+      'chat_room_id' => $this->chatRoom->id,
+    ]);
+    $reportUser = User::whereNotIn('id', $this->chatRoom->members->pluck('id')->all())->first();
+    $response = $this->actingAs($reportUser)->postJson(route('chatMessage.report', $chatMessage), [
+      'report_category_id' => ReportCategory::first()->id,
+    ]);
+    $response->assertForbidden();
+    $this->assertDatabaseMissing('chat_reports', [
+      'created_by' => $reportUser->id,
+      'chat_message_id' => $chatMessage->id,
+    ]);
   }
 }

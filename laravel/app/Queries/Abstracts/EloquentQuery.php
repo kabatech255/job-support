@@ -9,8 +9,9 @@ use \Illuminate\Contracts\Pagination\LengthAwarePaginator;
 abstract class EloquentQuery extends CommonAbstractQuery
 {
   use BuilderTrait;
-
+  // キーワード検索の対象となるカラム
   private $targetColumns = [];
+
   private $relationTargets = [];
 
   /**
@@ -109,7 +110,7 @@ abstract class EloquentQuery extends CommonAbstractQuery
     if (isset($params['sort_key'])) {
       $query = $this->order($params, $query);
     } else {
-      $query->orderBy('id', 'desc');
+      $query->latest();
     }
     return $query;
   }

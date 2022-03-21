@@ -10,6 +10,7 @@ use App\Jobs\MessageSentActivityJob;
 use App\Jobs\MeetingPlaceCreateActivityJob;
 use App\Jobs\DepartmentCreateActivityJob;
 use App\Jobs\ProgressCreateActivityJob;
+use App\Jobs\ChatReportCreateActivityJob;
 
 class Activity
 {
@@ -19,7 +20,7 @@ class Activity
     'schedule.store' => ScheduleShareActivityJob::class,
     'chatMessage.store' => MessageSentActivityJob::class,
     // 'blogReport.store' => BlogReportActivityJob::class,
-    // 'chatReport.store' => ChatReportActivityJob::class,
+    'chatMessage.report' => ChatReportCreateActivityJob::class,
     'admin.user.store' => UserCreateActivityJob::class,
     'admin.admin.store' => AdminCreateActivityJob::class,
     'admin.meetingPlace.store' => MeetingPlaceCreateActivityJob::class,

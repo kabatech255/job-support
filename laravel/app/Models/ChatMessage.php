@@ -61,6 +61,7 @@ class ChatMessage extends Model implements RelationalDeleteInterface
 
   protected $appends = [
     'unread',
+    'is_report'
   ];
 
   const RELATIONS_ARRAY = [
@@ -144,5 +145,29 @@ class ChatMessage extends Model implements RelationalDeleteInterface
     return !($this->mine || $this->chatMessageReads->contains(function ($member) {
       return $member->id === Auth::user()->id;
     }));
+  }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+   */
+  public function chatReports()
+  {
+    return $this->belongsToMany(User::class, 'chat_reports', 'chat_message_id', 'created_by')
+      ->withTimestamps()
+      ->withPivot('report_category_id');
+  }
+
+  /**
+   * @return bool
+   */
+  public function getIsReportAttribute()
+  {
+    if (Auth::check()) {
+      return $this->chatReports->contains(function ($createdBy) {
+        return $createdBy->id === Auth::user()->id;
+      });
+    } else {
+      return false;
+    }
   }
 }

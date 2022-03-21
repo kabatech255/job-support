@@ -4,10 +4,12 @@ namespace App\Services;
 
 use App\Contracts\Queries\ChatMessageQueryInterface as Query;
 use App\Contracts\Repositories\ChatMessageRepositoryInterface as Repository;
+use App\Contracts\Repositories\ChatReportRepositoryInterface as ChatReportRepository;
 use App\Contracts\Repositories\ChatMessageImageRepositoryInterface as ChatMessageImageRepository;
 use App\Models\ActionType;
 use App\Models\ChatMessage;
 use App\Models\ChatRoom;
+use App\Models\ChatReport;
 use App\Services\Supports\RepositoryUsingSupport;
 use App\Services\FileUploadService;
 use App\Services\Supports\FileSupportTrait;
@@ -16,6 +18,7 @@ use Illuminate\Support\Facades\Notification;
 use App\Services\Supports\NotifySupport;
 use App\Events\MessageSent;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class ChatMessageService extends Service
 {
@@ -28,25 +31,35 @@ class ChatMessageService extends Service
    */
   private $attachMethod = 'messages';
   /**
-   * UserService constructor.
-   * @param Repository $repository
-   * @param Query $query
-   */
-  /**
    * @var UserRepository
    */
   private $userRepository;
 
+  /**
+   * @var ChatReportRepository
+   */
+  private $chatReportRepository;
+
+  /**
+   * UserService constructor.
+   * @param Repository $repository
+   * @param ChatReportRepository $chatReportRepository
+   * @param ChatMessageImageRepository $chatMessageImageRepository
+   * @param Query $query
+   * @param FileUploadService $fileUploadService
+   */
   public function __construct(
     Repository $repository,
+    ChatReportRepository $chatReportRepository,
+    ChatMessageImageRepository $chatMessageImageRepository,
     Query $query,
-    FileUploadService $fileUploadService,
-    ChatMessageImageRepository $chatMessageImageRepository
+    FileUploadService $fileUploadService
   ) {
     $this->setRepository($repository);
+    $this->chatReportRepository = $chatReportRepository;
+    $this->chatMessageImageRepository = $chatMessageImageRepository;
     $this->setQuery($query);
     $this->fileUploadService = $fileUploadService;
-    $this->chatMessageImageRepository = $chatMessageImageRepository;
   }
 
   /**
@@ -106,6 +119,21 @@ class ChatMessageService extends Service
     });
     $this->repository()->delete($id);
     return $chatMessage;
+  }
+
+  /**
+   * @param array $params
+   * @param ChatMessage|int $id
+   * @return ChatReport
+   */
+  public function report(array $params, $id): ChatReport
+  {
+    $chatMessage = $this->repository()->report($params, $id);
+    $chatReport = $this->chatReportRepository->single([
+      'chat_message_id' => $chatMessage->id,
+      'created_by' => Auth::user()->id
+    ]);
+    return $chatReport;
   }
 
   private function uploadImages($files, $chatMessage)

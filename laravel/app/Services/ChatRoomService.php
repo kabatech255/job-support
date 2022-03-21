@@ -49,8 +49,9 @@ class ChatRoomService extends Service
         'messages.images',
       ];
       $chatRooms = $author->chatRooms;
-      $chatRooms->load($loads);
-      return $chatRooms;
+      $sorted = $chatRooms->sortByDesc('created_at')->values();
+      $sorted->load($loads);
+      return $sorted->all();
     }
     return [];
   }

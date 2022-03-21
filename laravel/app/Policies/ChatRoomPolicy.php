@@ -47,6 +47,20 @@ class ChatRoomPolicy
   }
 
   /**
+   * Determine whether the user can update the model.
+   *
+   * @param \App\Models\User $user
+   * @param \App\Models\ChatRoom $chatRoom
+   * @return mixed
+   */
+  public function report(User $user, ChatRoom $chatRoom)
+  {
+    return $chatRoom->members->contains(function ($member) use ($user) {
+      return $member->id === $user->id;
+    });
+  }
+
+  /**
    * Determine whether the user can delete the model.
    *
    * @param \App\Models\User $user
