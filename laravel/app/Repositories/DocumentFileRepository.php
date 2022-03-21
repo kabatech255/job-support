@@ -43,7 +43,7 @@ class DocumentFileRepository extends EloquentRepository implements DocumentFileR
     if (isset($params['sharedMembers'])) {
       $model->sharedMembers()->sync($params['sharedMembers']);
     }
-    return $model->load(['createdBy', 'folder', 'sharedMembers']);;
+    return $model->load(['createdBy', 'folder', 'sharedMembers']);
   }
 
   /**

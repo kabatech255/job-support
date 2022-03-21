@@ -63,7 +63,7 @@ class ActionTypeSeeder extends Seeder
       [
         'key' => 'chat_report',
         'label_name' => 'チャットの通報',
-        'template_message' => '',
+        'template_message' => ':fromさんがチャット「:body」を通報しました',
         'link' => '/chat/report',
       ],
       [

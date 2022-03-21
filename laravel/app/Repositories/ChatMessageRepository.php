@@ -29,4 +29,20 @@ class ChatMessageRepository extends EloquentRepository implements ChatMessageRep
     // $chatMessage->load(['createdBy', 'to', 'chatMessageReads', 'images']);
     return $chatMessage;
   }
+
+  /**
+   * @param array $params
+   * @param ChatMessage|int $chatMessage
+   * @return ChatMessage
+   */
+  public function report(array $params, $id): ChatMessage
+  {
+    $createdBy = Auth::user()->id;
+    $chatMessage = $this->find($id);
+    $chatMessage->chatReports()->detach($createdBy);
+    $chatMessage->chatReports()->attach($createdBy, [
+      'report_category_id' => $params['report_category_id']
+    ]);
+    return $chatMessage;
+  }
 }

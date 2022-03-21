@@ -54,6 +54,8 @@ Route::group(['middleware' => 'api'], function () {
       Route::get('/organization/{id}', 'OrganizationController@show')->name('organization.show');
       // 優先順位
       Route::get('/priority', 'PriorityController@index')->name('priority.index');
+      // TODO:
+      Route::get('/report_category', 'ReportCategoryController@index')->name('reportCategory.index');
 
       // リソースの属する組織とリクエストユーザの組織が一致している場合にアクセス可能なエンドポイント
       Route::middleware(['org.match', 'org.filter'])->group(function () {
@@ -89,6 +91,7 @@ Route::group(['middleware' => 'api'], function () {
         Route::post('/chat_room/{id}/message', 'ChatMessageController@store')->name('chatMessage.store')->middleware('activity.job');
         Route::put('/chat_room/{id}/message/{chat_message_id}', 'ChatMessageController@update')->name('chatMessage.update');
         Route::delete('/chat_room/{id}/message/{chat_message_id}', 'ChatMessageController@destroy')->name('chatMessage.destroy');
+        Route::post('/chat_message/{id}/report', 'ChatMessageController@report')->name('chatMessage.report')->middleware('activity.job');;
         // 既読
         Route::post('/chat_room/{id}/read', 'ChatMessageReadController@store')->name('chatMessageRead.store');
         Route::get('/author/chat_message/unread/recently', 'ChatMessageReadController@unreadRecently')->name('chatMessageRead.unreadRecently');

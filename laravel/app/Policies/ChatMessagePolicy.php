@@ -78,7 +78,6 @@ class ChatMessagePolicy
    */
   public function restore(User $user, ChatMessage $chatMessage)
   {
-    //
   }
 
   /**

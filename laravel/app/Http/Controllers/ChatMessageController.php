@@ -6,10 +6,9 @@ use App\Events\MessageDelete;
 use App\Models\ChatMessage;
 use App\Models\ChatRoom;
 use App\Services\ChatMessageService;
-use Illuminate\Support\Facades\Route;
 use App\Http\Requests\ChatMessage\StoreRequest;
 use App\Http\Requests\ChatMessage\UpdateRequest;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\ChatMessage\ReportRequest;
 use Illuminate\Support\Facades\DB;
 use App\Events\MessageSent;
 
@@ -81,5 +80,24 @@ class ChatMessageController extends Controller
     }
     broadcast(new MessageDelete($result))->toOthers();
     return response('', 204);
+  }
+
+  /**
+   * @param ReportRequest $request
+   * @param ChatMessage $id
+   * @return \Illuminate\Http\Response
+   */
+  public function report(ReportRequest $request, ChatMessage $id)
+  {
+    $this->authorize('report', $id->chatRoom);
+    \DB::beginTransaction();
+    try {
+      $chatReport = $this->service->report($request->all(), $id);
+      \DB::commit();
+    } catch (\Exception $e) {
+      \DB::rollback();
+      throw $e;
+    }
+    return response($chatReport, 201);
   }
 }

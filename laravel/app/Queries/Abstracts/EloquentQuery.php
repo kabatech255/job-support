@@ -9,8 +9,9 @@ use \Illuminate\Contracts\Pagination\LengthAwarePaginator;
 abstract class EloquentQuery extends CommonAbstractQuery
 {
   use BuilderTrait;
-
+  // キーワード検索の対象となるカラム
   private $targetColumns = [];
+
   private $relationTargets = [];
 
   /**
