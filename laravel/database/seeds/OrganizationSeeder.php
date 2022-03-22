@@ -16,7 +16,8 @@ class OrganizationSeeder extends Seeder
   {
     DB::table('organizations')->truncate();
     $organization = factory(Organization::class, 1)->create([
-      'supervisor_id' => \TestUser::id()
+      'supervisor_id' => \TestUser::id(),
+      'updated_by' => \TestUser::id()
     ]);
 
     User::where('organization_id', null)->update([

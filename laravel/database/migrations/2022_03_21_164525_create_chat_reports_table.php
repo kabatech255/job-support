@@ -16,8 +16,8 @@ class CreateChatReportsTable extends Migration
     Schema::create('chat_reports', function (Blueprint $table) {
       $table->id();
       $table->unsignedBigInteger('chat_message_id')->comment('チャットメッセージID');
-      $table->unsignedBigInteger('created_by')->comment('通報者');
-      $table->unsignedBigInteger('report_category_id')->comment('通報の種類');
+      $table->unsignedBigInteger('created_by')->comment('報告者');
+      $table->unsignedBigInteger('report_category_id')->comment('報告の種類');
       $table->timestamps();
       $table->softDeletes();
 

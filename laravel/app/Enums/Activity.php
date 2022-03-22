@@ -11,6 +11,7 @@ use App\Jobs\MeetingPlaceCreateActivityJob;
 use App\Jobs\DepartmentCreateActivityJob;
 use App\Jobs\ProgressCreateActivityJob;
 use App\Jobs\ChatReportCreateActivityJob;
+use App\Jobs\OrganizationUpdateActivityJob;
 
 class Activity
 {
@@ -26,5 +27,6 @@ class Activity
     'admin.meetingPlace.store' => MeetingPlaceCreateActivityJob::class,
     'admin.department.store' => DepartmentCreateActivityJob::class,
     'admin.progress.store' => ProgressCreateActivityJob::class,
+    'admin.organization.update' => OrganizationUpdateActivityJob::class,
   ];
 }

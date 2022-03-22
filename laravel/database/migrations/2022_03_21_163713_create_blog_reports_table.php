@@ -16,7 +16,7 @@ class CreateBlogReportsTable extends Migration
     Schema::create('blog_reports', function (Blueprint $table) {
       $table->id();
       $table->unsignedBigInteger('blog_id')->comment('ブログID');
-      $table->unsignedBigInteger('created_by')->comment('通報者');
+      $table->unsignedBigInteger('created_by')->comment('報告者');
       $table->timestamps();
       $table->softDeletes();
 

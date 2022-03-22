@@ -176,7 +176,7 @@ class ChatMessageTest extends ChatRoomTest
    * @test
    * @group chat_report
    */
-  public function should_チャットの通報()
+  public function should_チャットの報告()
   {
     $chatMessage = factory(ChatMessage::class)->create([
       'body' => 'This is a message which will be reported.',
@@ -198,7 +198,7 @@ class ChatMessageTest extends ChatRoomTest
    * @test
    * @group chat_report
    */
-  public function should_通報の理由に関するバリデーションルール()
+  public function should_報告の理由に関するバリデーションルール()
   {
     $chatMessage = factory(ChatMessage::class)->create([
       'body' => 'This is a message which shouldn\'t be reported.',
@@ -227,7 +227,7 @@ class ChatMessageTest extends ChatRoomTest
    * @test
    * @group chat_report
    */
-  public function should_ルーム参加者以外のユーザによる通報は403()
+  public function should_ルーム参加者以外のユーザによる報告は403()
   {
     $chatMessage = factory(ChatMessage::class)->create([
       'body' => 'This is a message which shouldn\'t be reported.',
