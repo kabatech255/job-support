@@ -11,11 +11,13 @@ $faker = Factory::create('ja_JP');
 $factory->define(Organization::class, function ($faker) {
   return [
     'name' => $faker->company(),
+    'name_kana' => 'カブシキガイシャ',
     'postal_code' => $faker->postcode,
     'pref_id' => $faker->numberBetween(1, 47),
     'city' => $faker->city,
     'address' => $faker->streetAddress,
-    'tel' => str_replace('-', '', $faker->phoneNumber),
+    // 'tel' => str_replace('-', '', $faker->phoneNumber),
+    'tel' => '1234567890',
     'supervisor_id' => array_random(User::all()->pluck('id')->toArray()),
   ];
 });

@@ -54,6 +54,7 @@ class ActionType extends Model implements ModelInterface
   const MEETING_PLACE_CREATE_KEY = 'meeting_place_create';
   const BLOG_REPORT_KEY = 'blog_report';
   const CHAT_REPORT_KEY = 'chat_report';
+  const ORGANIZATION_UPDATE_KEY = 'organization_update';
 
   const LIMIT_TASK_KEY = 'daily_limit_task';
   const LIMIT_SCHEDULE_KEY = 'daily_schedule';
@@ -69,6 +70,7 @@ class ActionType extends Model implements ModelInterface
     self::DEPARTMENT_CREATE_KEY,
     self::PROGRESS_CREATE_KEY,
     self::MEETING_PLACE_CREATE_KEY,
+    self::ORGANIZATION_UPDATE_KEY,
   ];
 
   // Userとしてのアクション

@@ -28,7 +28,7 @@ Route::name('admin.')->group(function () {
    */
   Route::middleware(['auth:admin', 'org.exists'])->group(function () {
     // OrganizationPolicyでガードされている
-    Route::put('/organization/{id}', 'OrganizationController@update')->name('organization.update');
+    Route::put('/organization/{id}', 'OrganizationController@update')->name('organization.update')->middleware('activity.job');
     // 都道府県
     Route::get('/prefecture', 'PrefectureController@index')->name('prefecture.index');
 

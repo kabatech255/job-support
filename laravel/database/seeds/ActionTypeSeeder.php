@@ -56,14 +56,14 @@ class ActionTypeSeeder extends Seeder
       ],
       [
         'key' => 'blog_report',
-        'label_name' => 'ブログの通報',
+        'label_name' => 'ブログの報告',
         'template_message' => '',
         'link' => '/blog/report',
       ],
       [
         'key' => 'chat_report',
-        'label_name' => 'チャットの通報',
-        'template_message' => ':fromさんがチャット「:body」を通報しました',
+        'label_name' => 'チャットの報告',
+        'template_message' => ':fromさんがチャット「:body」を報告しました',
         'link' => '/chat/report',
       ],
       [
@@ -100,6 +100,13 @@ class ActionTypeSeeder extends Seeder
         'template_message' => ':fromさんが進捗度に「:body」を追加しました',
         'is_admin' => 1,
         'link' => '/master/progress',
+      ],
+      [
+        'key' => 'organization_update',
+        'label_name' => '組織情報の変更',
+        'template_message' => ':fromさんが組織情報を変更しました',
+        'is_admin' => 1,
+        'link' => '/organization',
       ],
     ];
 

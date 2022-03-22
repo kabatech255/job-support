@@ -57,6 +57,8 @@ class Organization extends Model
     'address',
     'tel',
     'supervisor_id',
+    'updated_by',
+    'deleted_by',
   ];
 
   protected $hidden = [
@@ -74,6 +76,14 @@ class Organization extends Model
   public function supervisor()
   {
     return $this->hasOne(User::class, 'id', 'supervisor_id');
+  }
+
+  /**
+   * @return \Illuminate\Database\Eloquent\Relations\HasOne
+   */
+  public function updatedBy()
+  {
+    return $this->hasOne(User::class, 'id', 'updated_by');
   }
   /**
    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

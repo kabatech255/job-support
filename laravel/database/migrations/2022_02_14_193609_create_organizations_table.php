@@ -22,6 +22,8 @@ class CreateOrganizationsTable extends Migration
       $table->string('address')->nullable()->comment('所在場所');
       $table->string('tel')->nullable()->comment('電話番号');
       $table->unsignedBigInteger('supervisor_id')->comment('責任者');
+      $table->unsignedBigInteger('updated_by')->nullable()->comment('更新者');
+      $table->unsignedBigInteger('deleted_by')->nullable()->comment('削除者');
 
       $table->timestamps();
       $table->softDeletes();
@@ -30,6 +32,12 @@ class CreateOrganizationsTable extends Migration
         ->onUpdate('cascade')
         ->onDelete('no action');
       $table->foreign('supervisor_id')->references('id')->on('users')
+        ->onUpdate('cascade')
+        ->onDelete('no action');
+      $table->foreign('updated_by')->references('id')->on('users')
+        ->onUpdate('cascade')
+        ->onDelete('no action');
+      $table->foreign('deleted_by')->references('id')->on('users')
         ->onUpdate('cascade')
         ->onDelete('no action');
     });
@@ -72,6 +80,8 @@ class CreateOrganizationsTable extends Migration
     Schema::table('organizations', function (Blueprint $table) {
       $table->dropForeign('organizations_supervisor_id_foreign');
       $table->dropForeign('organizations_pref_id_foreign');
+      $table->dropForeign('organizations_deleted_by_foreign');
+      $table->dropForeign('organizations_updated_by_foreign');
     });
     Schema::dropIfExists('organizations');
   }
