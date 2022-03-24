@@ -59,6 +59,7 @@ Route::name('admin.')->group(function () {
       Route::middleware(['org.filter'])->group(function () {
         Route::get('/user', 'UserController@index')->name('user.index');
         Route::get('/admin', 'AdminController@index')->name('admin.index');
+        Route::get('/chat_report', 'ChatReportController@index')->name('chatReport.index');
         Route::get('/department', 'DepartmentController@index')->name('department.index');
         Route::get('/meeting_place', 'MeetingPlaceController@index')->name('meetingPlace.index');
         Route::get('/progress', 'ProgressController@index')->name('progress.index');
