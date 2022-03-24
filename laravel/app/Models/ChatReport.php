@@ -7,6 +7,9 @@ use App\Models\ReportCategory;
 
 class ChatReport extends Model
 {
+
+  const RELATIONS_ARRAY = ['createdBy', 'chatMessage.chatRoom', 'chatMessage.createdBy', 'reportCategory'];
+
   protected $fillable = [
     'report_category_id'
   ];

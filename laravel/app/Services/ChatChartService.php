@@ -28,9 +28,9 @@ class ChatChartService extends ChartService
   protected function countsPerYearMonth(array $params)
   {
     if ($params['group'] === 'monthly') {
-      $records = parent::queryChart($params);
+      $records = parent::getChartQuery($params);
     } else {
-      $records = $this->queryChart($params);
+      $records = $this->getChartQuery($params);
     }
     return [
       'labels' => $this->getChartLabels($records->keys()->all(), $params['group']),
@@ -40,18 +40,22 @@ class ChatChartService extends ChartService
     ];
   }
 
-  protected function queryChart(array $params)
+  protected function getChartQuery(array $params)
   {
     $oldestDate = $this->oldestDate();
     $groupKey = $this->getGroupKey($params['group']);
 
-    return \DB::table($this->tableName)
+    $query = \DB::table($this->tableName)
       ->join('users', $this->tableName . '.created_by', '=', 'users.id')
       ->join($this->relatedTableName, "{$this->tableName}.chat_message_id", '=', "{$this->relatedTableName}.id")
       ->where("{$this->tableName}.report_category_id", '>', 0)
       ->where('users.organization_id', $params['createdBy:organization_id'])
-      ->whereDate("{$this->tableName}.created_at", '>', $oldestDate)
-      ->groupBy(\DB::raw("{$groupKey}"))
+      ->whereDate("{$this->tableName}.created_at", '>', $oldestDate);
+
+    if (isset($params['created_by_table'])) {
+      $query = $query->where("{$params['created_by_table']}.created_by", $params['created_by']);
+    }
+    return $query->groupBy(\DB::raw("{$groupKey}"))
       ->select(\DB::raw("{$groupKey} as keyName, COUNT(*) as C"))
       ->pluck('C', 'keyName');
   }
