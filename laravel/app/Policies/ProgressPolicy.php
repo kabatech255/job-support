@@ -41,7 +41,7 @@ class ProgressPolicy
    */
   public function create(Authenticatable $user)
   {
-    //
+    return true;
   }
 
   /**
