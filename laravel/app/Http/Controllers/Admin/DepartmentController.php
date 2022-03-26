@@ -75,6 +75,10 @@ class DepartmentController extends Controller
   {
     \DB::beginTransaction();
     try {
+      if ($id->members->count()) {
+        throw new \Exception('関連付けられたユーザーが存在するため削除できません。');
+      }
+
       $department = $this->service->delete($id);
       \DB::commit();
     } catch (\Exception $e) {

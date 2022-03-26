@@ -78,7 +78,10 @@ class ProgressController extends Controller
   {
     \DB::beginTransaction();
     try {
-      $task = $this->service->delete($id);
+      if ($id->tasks->count()) {
+        throw new \Exception('関連付けられたタスクが存在するため削除できません。');
+      }
+      $progress = $this->service->delete($id);
       \DB::commit();
     } catch (\Exception $e) {
       \DB::rollback();
@@ -92,6 +95,6 @@ class ProgressController extends Controller
       throw $e;
     }
     // 204のためNo Content
-    return response($task, 204);
+    return response($progress, 204);
   }
 }
