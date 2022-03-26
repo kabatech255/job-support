@@ -7,13 +7,11 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateRequest extends StoreRequest
 {
   /**
-   * Determine if the user is authorized to make this request.
-   *
    * @return bool
    */
   public function authorize()
   {
-    return true;
+    return $this->user()->can('update', $this->route('id'));
   }
 
   protected function nameArr()

@@ -10,6 +10,8 @@
 
 - Next.js のソースコード：https://github.com/kabatech255/job-support-next
 
+- [管理者システム（Nuxt.js） のソースコード](https://github.com/kabatech255/job-support-nuxt)
+
 ## 「デモユーザーとして試す」
 
 - デモユーザー「テスト太郎」としてログインし、サイト内のサービスをご精査いただけます
