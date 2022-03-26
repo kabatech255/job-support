@@ -19,6 +19,7 @@ class ProgressController extends Controller
 
   public function __construct(Service $service)
   {
+    $this->authorizeResource(Progress::class, 'id');
     $this->service = $service;
   }
   /**

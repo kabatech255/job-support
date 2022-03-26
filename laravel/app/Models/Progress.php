@@ -45,8 +45,17 @@ class Progress extends Model
     'deleted_by',
   ];
 
+  protected $appends = ['is_default'];
+
   const COMPLETE_VALUE = 128;
   const EXCEPT_VALUE = self::COMPLETE_VALUE;
+  const DEFAULT_NAMES = [
+    '未着手',
+    '作業中',
+    '完了',
+    '一時中断',
+    '中止',
+  ];
 
   /**
    * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -62,5 +71,10 @@ class Progress extends Model
   public function createdBy()
   {
     return $this->belongsTo(User::class, 'created_by', 'id');
+  }
+
+  public function getIsDefaultAttribute()
+  {
+    return in_array($this->name, self::DEFAULT_NAMES);
   }
 }

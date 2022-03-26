@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Models\Admin;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
-use App\Models\Role;
 use App\Enums\Role as RoleEnum;
 use Auth;
 use App\Services\Auth\CognitoGuard;
@@ -32,6 +31,7 @@ class AuthServiceProvider extends ServiceProvider
     'App\Models\Task' => 'App\Policies\TaskPolicy',
     'App\Models\User' => 'App\Policies\UserPolicy',
     'App\Models\Organization' => 'App\Policies\OrganizationPolicy',
+    'App\Models\Progress' => 'App\Policies\ProgressPolicy',
   ];
 
   /**
