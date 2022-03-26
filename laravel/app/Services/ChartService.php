@@ -10,6 +10,7 @@ use App\Contracts\Repositories\UserRepositoryInterface as UserRepository;
 class ChartService extends Service
 {
   use RepositoryUsingSupport;
+  const MONTHS = 11;
 
   protected $tableName = 'meeting_records';
   protected $relatedTableName = 'users';
@@ -69,7 +70,7 @@ class ChartService extends Service
 
   protected function oldestDate()
   {
-    return Carbon::parse('-1 year');
+    return Carbon::now()->firstOfMonth()->subMonths(self::MONTHS);
   }
 
   protected function getGroupKey($groupName = 'monthly')
@@ -116,14 +117,11 @@ class ChartService extends Service
 
   protected function defaultChartLabels()
   {
-    $oldestDate = $this->oldestDate();
-    $now = Carbon::now();
-    $months = $now->diffInMonths($oldestDate);
-    $labels = [$now->format('y-m')];
-    $m = $now;
-    for ($i = 0; $i < $months; $i++) {
-      $m = $m->subMonth();
-      $labels[] = $m->format('y-m');
+    $currentMonth = Carbon::now()->firstOfMonth();
+    $labels = [$currentMonth->format('y-m')];
+    for ($i = 0; $i < self::MONTHS; $i++) {
+      $currentMonth->subMonth();
+      $labels[] = $currentMonth->format('y-m');
     }
     return array_reverse($labels);
   }

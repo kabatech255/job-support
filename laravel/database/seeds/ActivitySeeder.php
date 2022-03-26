@@ -29,25 +29,25 @@ class ActivitySeeder extends Seeder
     ])->get();
 
     // 議事録追加のアクティビティ
-    $meetingRecordActionType = $actionTypes->firstWhere('key', ActionType::MEETING_RECORD_JOINED_KEY);
-    $meetingRecords = MeetingRecord::all();
-    $meetingRecords->each(function ($record) use ($meetingRecordActionType) {
-
-      $content = $this->replaceAttribute($meetingRecordActionType->template_message, [
-        'from' => $record->createdBy->full_name,
-        'body' => \Str::limit(trim($record->title), 20, '（...）'),
-      ]);
-
-      $record->members->each(function ($member) use ($record, $meetingRecordActionType, $content) {
-        Activity::create([
-          'user_id' => $member->id,
-          'created_by' => $record->created_by,
-          'action_type_id' => $meetingRecordActionType->id,
-          'model_id' => $record->id,
-          'content' => $content,
-        ]);
-      });
-    });
+    //     $meetingRecordActionType = $actionTypes->firstWhere('key', ActionType::MEETING_RECORD_JOINED_KEY);
+    //     $meetingRecords = MeetingRecord::all();
+    //     $meetingRecords->each(function ($record) use ($meetingRecordActionType) {
+    //
+    //       $content = $this->replaceAttribute($meetingRecordActionType->template_message, [
+    //         'from' => $record->createdBy->full_name,
+    //         'body' => \Str::limit(trim($record->title), 20, '（...）'),
+    //       ]);
+    //
+    //       $record->members->each(function ($member) use ($record, $meetingRecordActionType, $content) {
+    //         Activity::create([
+    //           'user_id' => $member->id,
+    //           'created_by' => $record->created_by,
+    //           'action_type_id' => $meetingRecordActionType->id,
+    //           'model_id' => $record->id,
+    //           'content' => $content,
+    //         ]);
+    //       });
+    //     });
 
     // 部署マスター追加のアクティビティ
     $departmentActionType = $actionTypes->firstWhere('key', ActionType::DEPARTMENT_CREATE_KEY);

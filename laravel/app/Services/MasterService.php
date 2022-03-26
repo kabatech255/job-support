@@ -13,11 +13,11 @@ class MasterService extends Service
    * @param array $params
    * @return array
    */
-  public function all(array $params): array
+  public function all(array $params, array $relation = ['createdBy']): array
   {
     $params['sort_key'] = 'id';
     $params['order_by'] = 'asc';
-    return $this->query()->all($params, ['createdBy']);
+    return $this->query()->all($params, $relation);
   }
 
   /**

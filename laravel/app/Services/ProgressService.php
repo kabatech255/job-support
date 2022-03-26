@@ -20,4 +20,18 @@ class ProgressService extends MasterService
     $this->setQuery($query);
     // else repository...
   }
+
+  /**
+   * @param array $params
+   * @return array
+   */
+  public function all(array $params, array $relation = ['createdBy']): array
+  {
+    $progress = parent::all($params, $relation);
+    return collect($progress)->map(function ($p) {
+      // Progressモデルで$appendsに加えると502
+      $p->task_count = $p->task_count;
+      return $p;
+    })->all();
+  }
 }

@@ -21,8 +21,11 @@ class ChatSeeder extends Seeder
     DB::table('chat_rooms')->truncate();
     DB::table('chat_room_shares')->truncate();
     $managerRole = '3';
+    $testUser = \TestUser::user();
+    $departmentIdByTestUser = !!$testUser ? $testUser->department_id : 0;
+
     $managers = User::with(['department'])->where('role_id', $managerRole)->get();
-    $managers->each(function ($manager) {
+    $managers->each(function ($manager) use ($departmentIdByTestUser) {
       // 部署のチャットルーム作成
       $room = factory(ChatRoom::class)->create([
         'created_by' => $manager->id,
@@ -35,10 +38,17 @@ class ChatSeeder extends Seeder
           'is_editable' => 1,
         ]]);
       });
-      factory(ChatMessage::class)->create([
+
+      $attributes = [
         'chat_room_id' => $room->id,
         'created_by' => $manager->id,
-      ]);
+      ];
+
+      if ($manager->department_id === $departmentIdByTestUser) {
+        $attributes['body'] = "ジョブサポをお試しくださりありがとうございます。\nチャット機能の他にも、当サイトには議事録作成機能、タスクやスケジュールの管理機能等を搭載しておりますので、是非お試し下さい。";
+      }
+
+      factory(ChatMessage::class)->create($attributes);
     });
   }
 }

@@ -54,6 +54,8 @@ class Department extends Model
     'deleted_by',
   ];
 
+  protected $appends = ['member_count'];
+
   /**
    * @return \Illuminate\Database\Eloquent\Relations\HasMany
    */
@@ -68,5 +70,13 @@ class Department extends Model
   public function createdBy()
   {
     return $this->belongsTo(User::class, 'created_by', 'id');
+  }
+
+  /**
+   * @return int
+   */
+  public function getMemberCountAttribute(): int
+  {
+    return $this->members->count();
   }
 }

@@ -45,7 +45,9 @@ class Progress extends Model
     'deleted_by',
   ];
 
-  protected $appends = ['is_default'];
+  protected $appends = [
+    'is_default',
+  ];
 
   const COMPLETE_VALUE = 128;
   const EXCEPT_VALUE = self::COMPLETE_VALUE;
@@ -76,5 +78,10 @@ class Progress extends Model
   public function getIsDefaultAttribute()
   {
     return in_array($this->name, self::DEFAULT_NAMES);
+  }
+
+  public function getTaskCountAttribute()
+  {
+    return $this->tasks->count();
   }
 }

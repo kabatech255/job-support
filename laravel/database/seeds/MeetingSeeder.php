@@ -20,13 +20,18 @@ class MeetingSeeder extends Seeder
     DB::table('meeting_members')->truncate();
     DB::table('meeting_records')->truncate();
     $interval = 5;
-
-    for ($i = 100; $i > 0; $i--) {
+    $diff = 0;
+    $firstDateOfNow = Carbon::now()->firstOfMonth();
+    $baseDate = $firstDateOfNow;
+    for ($i = 0; $i < 100; $i++) {
+      $month = (int)floor($i / $interval);
+      if ($month > $diff) {
+        $baseDate = $firstDateOfNow->subMonth();
+        $diff = $month;
+      }
       $members = User::all()->pluck('id')->shuffle()->splice(0, random_int(2, 15))->all();
       $createdBy = array_random($members);
-      $diff = (int)ceil($i / $interval);
-      $created_at = Carbon::parse("-{$diff}month")
-        ->firstOfMonth()
+      $created_at = $baseDate->firstOfMonth()
         ->addDays(random_int(0, 25))
         ->addHours(random_int(11, 18))
         ->format('Y-m-d H:i:s');
