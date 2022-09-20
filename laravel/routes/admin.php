@@ -24,7 +24,7 @@ Route::name('admin.')->group(function () {
    * ==========
    * - auth:admin...管理者認証
    * - org.exists...organization_idがnullでない
-   * - organization_idとアクセスするリソースのcreatedBy.organization_idが一致する
+   * - org.match...organization_idとアクセスするリソースのcreatedBy.organization_idが一致する
    */
   Route::middleware(['auth:admin', 'org.exists'])->group(function () {
     // OrganizationPolicyでガードされている

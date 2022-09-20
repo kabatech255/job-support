@@ -6,7 +6,7 @@
 
 ## リンク
 
-- サイトリンク：https://job-support.site
+- サイトリンク： ~~https://job-support.site~~ 公開終了しました
 
 - Next.js のソースコード：https://github.com/kabatech255/job-support-next
 
